@@ -1,0 +1,4 @@
+name: CAPI
+version: '${version}'
+main: me.catst0day.capi.CAPI
+api-version: '1.16'
