@@ -163,7 +163,7 @@ public class CAPI extends JavaPlugin {
 
     public void loadTranslations() {
         currentLang = getConfig().getString("lang", "EN").toUpperCase();
-        File translationsFolder = new File(getDataFolder(), "Translations");
+        File translationsFolder = new File(getDataFolder(), "core/src/main/resources/Translations");
         File langFile = new File(translationsFolder, currentLang + ".yml");
 
         if (!translationsFolder.exists() && !translationsFolder.mkdirs()) {
@@ -185,7 +185,7 @@ public class CAPI extends JavaPlugin {
                 currentLang = "EN";
                 langFile = new File(translationsFolder, "EN.yml");
                 fileDownloader.downloadFromResources(
-                        "Translations/EN.yml",
+                        "core/src/main/resources/Translations/EN.yml",
                         "plugins/CatAPI/Translations/EN.yml",
                         true
                 );

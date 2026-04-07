@@ -5,7 +5,19 @@ plugins {
 }
 
 group = "me.CatsT0day"
-version = "1.0.0.10X-build-000-test"
+version = "1.0.0.12X-build-001-test"
+
+
+sourceSets {
+    main {
+        java {
+            setSrcDirs(listOf("src/main/java"))
+        }
+        resources {
+            setSrcDirs(listOf("src/main/resources"))
+        }
+    }
+}
 
 repositories {
     mavenCentral()

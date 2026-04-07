@@ -16,7 +16,7 @@ public class WarpManager {
 
     public WarpManager(CAPI plugin) {
         this.plugin = plugin;
-        warpsFolder = new File(plugin.getDataFolder(), "warps");
+        warpsFolder = new File(plugin.getDataFolder(), "core/src/main/resources/warps");
         if (!warpsFolder.exists()) {
             warpsFolder.mkdirs();
         }
