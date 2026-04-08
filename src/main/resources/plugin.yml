@@ -1,5 +1,5 @@
 name: CatAPI
-version: '1.0.0.62X-build-007-test'
+version: '1.0.0.132X-build-002-test'
 main: me.catst0day.capi.CAPI
 api-version: 1.16.5
 description: CMI 2.0

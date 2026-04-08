@@ -1,4 +1,3 @@
-
 plugins {
     java
     id("com.github.johnrengelman.shadow") version "8.1.1"
@@ -6,7 +5,6 @@ plugins {
 
 group = "me.CatsT0day"
 version = "1.0.0.12X-build-001-test"
-
 
 sourceSets {
     main {
@@ -40,7 +38,13 @@ dependencies {
 
 tasks.processResources {
     filteringCharset = "UTF-8"
-    filesMatching("**/*.yml", "**/*.properties") {
+    filesMatching("**/*.yml") {
+        expand(
+            "version" to project.version,
+            "name" to project.name
+        )
+    }
+    filesMatching("**/*.properties") {
         expand(
             "version" to project.version,
             "name" to project.name
@@ -53,9 +57,9 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.shadowJar {
-    archiveBaseName.set("CAPI")
-    archiveClassifier.set("")
-    archiveVersion.set(project.version)
+    archiveBaseName = "CAPI"
+    archiveClassifier = ""
+    archiveVersion = project.version.toString()
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {

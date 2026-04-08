@@ -3,7 +3,7 @@
 # What is it?
   CAPI is open source minecraft plugin, 
   made by one developer, inpired by CMI and essentials
-  currenlty has 24 commands, and powerful API
+  currenlty has 26 commands, and powerful API
 ### building project from src:
 ```bash
 
