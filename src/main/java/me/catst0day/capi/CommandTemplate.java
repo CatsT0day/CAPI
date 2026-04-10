@@ -2,14 +2,12 @@ package me.catst0day.capi;
 
 import me.catst0day.capi.EventListeners.CAPIOnCommandEvent;
 import me.catst0day.capi.Managers.CAPIPermissionManager;
-import me.catst0day.capi.Utils.CommandRegistry;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

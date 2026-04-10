@@ -33,3 +33,7 @@ Before starting new work, update your main branch:
 bash
 git fetch upstream
 git merge upstream/main
+
+## Code Style & Guidelines
+ **Please, Follow the existing code style of the project.
+  Before contributing look at the code, when you understand it you can contribute, if you won't follow I will not accept your request**
