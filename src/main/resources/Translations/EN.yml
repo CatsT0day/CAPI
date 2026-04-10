@@ -1,0 +1,112 @@
+
+messages:
+  # Basic help and error messages
+  help:
+    - "&6======================="
+    -  ""
+    -  "&fCommand Help"
+    -    "&6  /heal - heal yourself or another player"
+    -    "&6  /feed - feed yourself or another player"
+    -    "&6  /spawn - teleport to spawn"
+    -    "&6  /tpa <player> - send teleport request"
+    -    "&6  /tpaccept - accept teleport request"
+    -    "&6  /tpdeny - deny teleport request"
+    -    "&6  /warp <name> - teleport to warp"
+    -    "&6  /setwarp <name> - create warp at current location"
+    -  ""
+    -  "&6======================="
+  noPermission: '&c[✘] &fYou do not have permission to use this command!'
+  playerNotFound: '&c[✘] &fPlayer not found.'
+  invalidMode: '&c[✘] &fInvalid mode specified.'
+  usage: '&c[✘] &fIncorrect command usage. Use: %s'
+
+  # Warp messages
+  warpTeleported: "&6[✔] &fTeleported to warp: &e{warpname}"
+  warpCreatedSuccessfully: "&6[✔] &fWarp '&e{warpname}&f' created successfully!"
+  warpAlreadyExists: "&c[✘] &fWarp named '&e{warpname}&f' already exists!"
+  warpNotFound: "&c[✘] &fWarp '&e{warpname}&f' not found!"
+  warpList: "&6Available warps: &e%s"
+  warpCreationFailed: "&c[✘] &fFailed to create warp. Please try again later or contact an administrator."
+  noWarpsAvailable: "&6Available warps: &eNo warps created"
+
+  # Spawn
+  spawnSet: '&6[✔] &fSpawn point successfully &6set'
+  spawnTeleportSuccess: '&6[✔] &fTeleporting to &6spawn...'
+
+  # Config reload
+  configReloaded: '&6[✔]  &fCatAPI configuration reloaded. Thanks for using my plugin!'
+
+  # Radar (/near)
+  NoOneAtNear: "&c[✘] &6radar > &fNo players around you"
+  InvalidRadius: "&c[✘] &6radar > &fInvalid radius. Use value between 1 and 100"
+  nearPlayers: '&6[✔] &6radar > &fPlayers within {radius} blocks: {players}'
+  CannotUseRadius: '&6[✔] &6radar > &fYou cannot use this radius'
+
+  # Repair (/fix, /repair)
+  repairSuccessAll: '&6[✔] repair > you repaired all items!'
+  repairSuccessHand: '&6[✔] repair > you successfully repaired the item in your hand'
+  repairNotSuccess: '&c[✘] repair > you cannot repair this item'
+
+  # Elytra
+  ElytraRequired: '&c[✘] &fYou don\'t have elytra equipped. Put them on and run the command again'
+
+  # TPA system
+  tpaSent: '&6[Ⓘ] &fTeleport request sent to player &e%player%&f!'
+  tpaReceived: '&6[Ⓘ] &ePlayer &f%player% &ewants to teleport to you!'
+  tpSuccess: '&6[✔] &fSuccessfully teleported to player &e%s&f!'
+  noPendingRequests: '&c[✘] &fYou have no pending teleport requests!'
+  tpaSenderOffline: '&c[✘] &fSender is no longer online!'
+  tpaDenied: '&c[✘] &fPlayer &e%player% &fdenied your teleport request!'
+  tpaRejected: '&eYou rejected the teleport request from &e%player%&f.'
+
+  # Spectator (/spec)
+  specSuccess: '&6[✔] &fYou started spectating &e%s&a.'
+
+  # God mode (/god)
+  godToggled: '&6[✔] &fYour god mode is %s.'
+  godToggleSuccess: '&6[✔] &fYou toggled god mode for &e%s&a.'
+  godModeItemPickupDenied: '&c[✘] &fYou cannot pick up items in god mode.'
+
+  # Fly (/fly)
+  flyToggled: '&6[✔] &fYour fly mode is %s.'
+  flyToggleSuccess: '&6[✔]&fYou toggled fly mode for &e%s&a.'
+
+  # Healing (/heal)
+  healSuccess: '&6[❤] &fYou have been healed.'
+  healTargeted: '&6[❤] &fYou healed player &6&f%s'
+
+  # Feeding (/feed, /eat)
+  feedSuccess: '&6[☕] &fYou ate something'
+  feedTargeted: '&6[☕] &fYou fed player &6&f%s'
+
+  # Teleport to player (/tphere)
+  tphereToYouSuccess: "&6[Ⓘ] &fYou were teleported to &e%s&a"
+  tphereSuccess: "&6[✔] &fPlayer successfully teleported to you: &e%s&a"
+
+  # Items
+  itemNoItemInHand: '&c[✘] &fYou don\'t have an item in your hand!'
+  itemSetNameSuccess: '&6[✔] &fItem name successfully set to: &e%s'
+  itemSetLoreSuccess: '&6[✔] &fItem lore successfully set.'
+  itemEnchantSuccess: '&6[✔] &fItem successfully enchanted: &e%s &flevel &e%d'
+  itemInvalidEnchantment: '&c[✘] &fUnknown enchantment: &e%s'
+  itemLevelMustBeNumber: '&c[✘] &fLevel must be a number!'
+  itemUsageEnchant: '&c[✘] &fUsage: &e/enchant <enchantment> <level>'
+
+
+  # Vanish (/vanish)
+  vanishEnabled: '&6[✔] &fYou entered &6vanish&f. You are invisible to other players.'
+  vanishDisabled: '&c[✘] &fYou exited &6vanish&f.'
+  noPermissionVanish: '&c[✘] &fYou do not have permission to use this command.'
+  vanishBossBarTitle: '&6Invisibility Mode'
+
+  # Sudo (/sudo)
+  sudoSuccess: '&6[✔] &fCommand executed as player &e%s&f: &6%s'
+  sudoTargetOffline: '&c[✘] &fTarget player &e%s&f is not online.'
+  sudoCommandFailed: '&c[✘] &fFailed to execute command as player &e%s&f.'
+
+  # Game mode messages
+  gameModeMessages:
+    SURVIVAL: '&a[✔] &fYou switched to &6Survival&f mode.'
+    CREATIVE: '&a[✔] &fYou switched to &6Creative&f mode.'
+    ADVENTURE: '&a[✔] &fYou switched to &6Adventure&f mode.'
+    SPECTATOR: '&a[✔] &fYou switched to &6Spectator&f mode.'

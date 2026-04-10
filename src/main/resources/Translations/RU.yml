@@ -1,0 +1,154 @@
+messages:
+  playerOnlyCommand: '&c[✘] &fЭту команду может использовать только игрок!'
+  commandError: '&c[✘] &fПроизошла ошибка при выполнении команды.'
+  cooldownMessage: "6[⚠] &fЗадержка на команду: &e%%&f"
+
+  teleportWithDelay: "&6[Ⓘ] &fТелепорт через &e%seconds%&f секунд..."
+  teleportSuccess: "&6[✔] &fВы успешно телепортированы!"
+  teleportCancelled: "&c[✘] &fТелепорт отменён!"
+  chunkNotLoaded: "&c[✘] &fНевозможно телепортировать: целевой чанк не загружен!"
+  help:
+    - "&6======================="
+    - ""
+    - "&fПомощь по командам"
+    - "  &6  /heal - захилить себя или другого игрока"
+    - "  &6  /feed - накормить себя или другого игрока"
+    - "  &6  /spawn - телепорт на спавн"
+    - "  &6  /tpa <игрок> - запрос на телепорт"
+    - "  &6  /tpaccept - принять запрос на телепортацию"
+    - "  &6  /tpdeny - отклонить запрос на телепортацию"
+    - "  &6  /warp <название> - телепорт на варп"
+    - "  &6  /setwarp <название> - создать варп в текущей позиции"
+    - "  &6  /home - показать меню домов или телепортироваться на дом"
+    - "  &6  /sethome <название> - установить точку дома"
+    - "  &6  /delhome <название> - удалить точку дома"
+    - ""
+    - "&6======================="
+
+  # Сообщения для домов
+  homeTeleported: "&6[✔] &fВы телепортированы на дом: &e{homename}"
+  homeCreatedSuccessfully: "&6[✔] &fДом '&e{homename}&f' успешно создан!"
+  homeAlreadyExists: "&c[✘] &fДом с названием '&e{homename}&f' уже существует!"
+  homeNotFound: "&c[✘] &fДом '&e{homename}&f' не найден!"
+  homeList: "&6Ваши дома: &e%s"
+  noHomesAvailable: "&6Ваши дома: &eНет созданных домов"
+  homeDeleteUsage: "&c[✘] &fИспользование: &e/delhome <название>"
+  homeDeletionSuccess: "&6[✔] &fДом '&e{homename}&f' успешно удалён!"
+  homeMenuTitle: "&6=== Ваши дома ==="
+  homeMenuFooter: "&6==============="
+
+  noPermission: '&c[✘] &fНет, &cты не можешь использовать&f эту команду!'
+  playerNotFound: '&c[✘] &fИгрок не найден.'
+  invalidMode: '&c[✘] &fТакого режима &cне существует.'
+  usage: '&c[✘] &fНеправильная команда, используйте: %s'
+
+  # Сообщения для варпов
+  warpTeleported: "&6[✔] &fВы телепортированы на варп: &e{warpname}"
+  warpCreatedSuccessfully: "&6[✔] &fВарп '&e{warpname}&f' успешно создан!"
+  warpAlreadyExists: "&c[✘] &fВарп с названием '&e{warpname}&f' уже существует!"
+  warpNotFound: "&c[✘] &fВарп '&e{warpname}&f' не найден!"
+  warpList: "&6Доступные варпы: &e%s"
+  warpCreationFailed: "&c[✘] &fНе удалось создать варп. Попробуйте позже или обратитесь к администратору."
+  noWarpsAvailable: "&6Доступные варпы: &eНет созданных варпов"
+
+  # Спавн
+  spawnSet: '&6[✔] &fСпавн успешно &6установлен'
+  spawnTeleportSuccess: '&6[✔] &fТелепортация на &6спавн...'
+
+  # Перезагрузка конфигурации
+  configReloaded: '&6[✔]  &fКонфигурация CatAPI перезагружена, спасибо что используешь мой плагин.'
+
+
+  # Радар (/near)
+  NoOneAtNear: "&c[✘] &6радар > &fвокруг вас никого нет"
+  InvalidRadius: "&c[✘] &6радар > &fНеверный радиус, используйте от 1 до 100"
+  nearPlayers: '&6[✔] &6радар > &fОкружающие игроки в радиусе {radius}: {players}'
+  CannotUseRadius: '&6[✔] &6радар > &fВы не можете использовать этот радиус'
+
+  # Починка (/fix, /repair)
+  repairSuccessAll: '&6[✔] починка > вы починили все предметы!'
+  repairSuccessHand: '&6[✔] починка > вы успешно починили предмет в вашей руке'
+  repairNotSuccess: '&c[✘] починка > вы не можете починить этот предмет'
+
+
+  # Элитра
+  ElytraRequired: '&c[✘] &fУ вас нет элитр, наденьте их и пропишите команду снова'
+
+  # TPA система
+  tpaSent: '&6[Ⓘ] &fЗапрос на телепортацию отправлен игроку &e%player%&f!'
+  tpaReceived: '&6[Ⓘ] &eИгрок &f%player% &eхочет к вам телепортироваться!'
+  tpSuccess: '&6[✔] &fВы успешно телепортировались к игроку &e%s&f!'
+  noPendingRequests: '&c[✘] &fУ вас нет ожидающих запросов на телепортацию!'
+  tpaSenderOffline: '&c[✘] &fОтправитель больше не в сети!'
+  tpaDenied: '&c[✘] &fИгрок &e%player% &f отклонил ваш запрос на телепортацию!'
+  tpaRejected: '&eВы отклонили запрос на телепортацию от &e%player%&f.'
+  acceptButton: "[ПРИНЯТЬ]"
+  denyButton: "[ОТКЛОНИТЬ]"
+
+
+  # Спектатор (/spec)
+  specSuccess: '&6[✔] &fВы начали следить за &e%s&a.'
+
+  # Игровой режим (/gm)
+  gmSuccess: '&6[✔] &fВы переключились в режим &e%s&a.'
+
+  # Режим бога (/god)
+  godToggled: '&6[✔] &fВаш режим бога %s.'
+  godToggleSuccess: '&6[✔] &fВы изменили режим бога для &e%s&a.'
+  godModeItemPickupDenied: '&c[✘] &fВы не можете подбирать предметы в режиме бога.'
+  godDamageDenied: '&c[✘] &fВы не можете подбирать предметы в режиме бога.'
+
+
+  # Полёт (/fly)
+  flyToggled: '&6[✔] &fВаш режим полёта %s.'
+  flyToggleSuccess: '&6[✔]&fВы изменили режим полёта для &e%s&a.'
+
+  # Лечение (/heal)
+  healSuccess: '&6[❤] &fВы были исцелены.'
+  healTargeted: '&6[❤] &fВы вылечили игрока &6&f%s'
+  healDamaged: '&6[❤] &fВы получили урон! Хил прекратился'
+
+  # Кормление (/feed, /eat)
+  feedSuccess: '&6[☕] &fВы поели'
+  feedTargeted: '&6[☕] &fВы покормили игрока &6&f%s'
+  feedDamaged: '&6[☕] &fВы получили урон! Кормление прекратилось'
+
+  # Телепорт к игроку (/tphere)
+  tphereToYouSuccess: "&6[Ⓘ] &fВас телепортировал к себе &e%s&a"
+  tphereSuccess: "&6[✔] &fИгрок успешно телепортирован к вам &e%s&a"
+
+
+  # Предметы
+  itemNoItemInHand: '&c[✘] &fУ вас нет предмета в руке!'
+  itemSetNameSuccess: '&6[✔] &fНазвание предмета успешно установлено: &e%s'
+  itemSetLoreSuccess: '&6[✔] &fОписание предмета успешно установлено.'
+  itemEnchantSuccess: '&6[✔] &fПредмет успешно зачарован: &e%s &fуровень &e%d'
+  itemInvalidEnchantment: '&c[✘] &fНеизвестное зачарование: &e%s'
+  itemLevelMustBeNumber: '&c[✘] &fУровень должен быть числом!'
+  itemUsageEnchant: '&c[✘] &fИспользование: &e/enchant <зачарование> <уровень>'
+
+  # Ваниш (/vanish)
+  vanishEnabled: '&6[✔] &fВы вошли в &6ваниш&f. Вы невидимы для других игроков.'
+  vanishDisabled: '&c[✘] &fВы вышли из &6ваниша&f.'
+  noVanishedPlayers: '&7В данный момент нет vanished‑игроков'
+  vanishedPlayersTitle: 'Список vanished‑игроков'
+  online: '&aOnline'
+  offline: '&cOffline'
+  vanishSuccess: '&6[✔] &fИгрок &e%player%&f вошёл в режим vanish'
+  vanishDisabledTarget: '&6[✔] &fИгрок &e%player%&f вышел из режима vanish'
+  vanishAdminEnabled: '&eАдминистратор активировал для вас режим vanish'
+  vanishAdminDisabled: '&eАдминистратор деактивировал для вас режим vanish'
+
+
+  # Sudo (/sudo)
+  sudoSuccess: '&6[✔] &fКоманда успешно выполнена от имени игрока &e%s&f: &6%s'
+  sudoTargetOffline: '&c[✘] &fЦелевой игрок &e%s&f не в сети.'
+  sudoCommandFailed: '&c[✘] &fНе удалось выполнить команду от имени игрока &e%s&f.'
+
+
+  # Сообщения игровых режимов
+  gameModeMessages:
+    SURVIVAL: '&a[✔] &fВы переключились в режим &6сурвайвал.'
+    CREATIVE: '&a[✔] &fВы переключились в режим &6креатив.'
+    ADVENTURE: '&a[✔] &fВы переключились в режим &6адвенчер.'
+    SPECTATOR: '&a[✔] &fВы переключились в режим &6спектатор.'

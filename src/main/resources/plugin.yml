@@ -1,0 +1,111 @@
+name: CatAPI
+version: '1.0.0.133-019-BitX'
+main: me.catst0day.capi.CAPI
+api-version: 1.17
+website: https://github.com/CatsT0day/CAPI/
+
+description: CMI 2.0
+author: CatsTOday
+
+commands:
+  capi:
+    description: Main commands of the plugin
+    usage: /catapi reload
+    permission: catapi.*
+
+permissions:
+  capi.main:
+    description: gives perm to use main command (not all cmds)
+  catapi.*:
+    description: All CatAPI permissions
+    children:
+      catapi.warp.*: true
+      catapi.sudo: true
+      catapi.reload: true
+      catapi.tp: true
+      catapi.vanish: true
+      catapi.enchant: true
+      catapi.tphere: true
+      catapi.setspawn: true
+      catapi.spawn: true
+      catapi.spec: true
+      catapi.gm: true
+      catapi.god: true
+      catapi.fly: true
+      catapi.heal: true
+      catapi.feed: true
+      catapi.fix: true
+      catapi.near: true
+      catapi.help: true
+  capi.update.notify:
+    description: Receive update notifications for CAPI updates
+    default: op
+  catapi.warp.*:
+    description: All warp permissions
+    children:
+      catapi.warp.use: true
+      catapi.warp.set: true
+
+  catapi.warp.use:
+    description: Permission to use /warp command
+    default: true
+  catapi.warp.set:
+    description: Permission to use /setwarp command
+    default: op
+  catapi.sudo:
+    description: Permission to use /sudo command
+    default: op
+  catapi.reload:
+    description: Permission to reload the plugin via /catapi
+    default: op
+  catapi.help:
+    description: Permission to use the help command
+    default: true
+  catapi.tp:
+    description: Permission to use teleport commands
+    default: op
+  catapi.vanish:
+    description: Allows using the vanish command
+    default: op
+  catapi.enchant:
+    description: Allows enchanting items via command
+    default: op
+  catapi.tphere:
+    description: Permission to use the /tphere command
+    default: op
+  catapi.setspawn:
+    description: Permission to set the spawn point
+    default: op
+  catapi.spawn:
+    description: Permission to teleport to the spawn
+    default: true
+  catapi.spec:
+    description: Permission to enter spectator mode
+    default: op
+  catapi.gm:
+    description: Permission to change game mode
+    default: op
+  catapi.god:
+    description: Permission to enable god mode
+    default: op
+  catapi.fly:
+    description: Permission to enable flying
+    default: op
+  catapi.heal:
+    description: Permission to heal players
+    default: op
+  catapi.feed:
+    description: Permission to feed players
+    default: op
+  catapi.fix:
+    description: Permission to repair items
+    default: op
+  catapi.near:
+    description: Permission to use the nearby players radar
+    default: op
+  catapi.near.radius.5:
+    description: Permission to use the nearby players radar
+    default: op
+  catapi.cooldown.bypass:
+    description: Permission to bypass cooldowns
+    default: op
