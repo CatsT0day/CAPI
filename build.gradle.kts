@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "me.CatsT0day"
-version = "1.0.0.133-019-BitX"
+version = "1.0.2.133-020"
 
 sourceSets {
     main {
@@ -20,10 +20,16 @@ sourceSets {
 repositories {
     mavenCentral()
     maven {
-        url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+        url = uri("https://repo.papermc.io/repository/maven-public/")
     }
     maven {
         url = uri("https://oss.sonatype.org/content/groups/public/")
+    }
+    maven {
+        url = uri("https://ci.ender.zone/plugin/repository/snapshots/")
+    }
+    maven {
+        url = uri("https://repo.lucko.me/")
     }
 }
 
@@ -33,8 +39,14 @@ java {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
     implementation("org.reflections:reflections:0.10.2")
+    compileOnly("net.luckperms:api:4.4") {
+        isTransitive = false
+    }
+    compileOnly("net.luckperms:api:5.4") {
+        isTransitive = false
+    }
 }
 
 tasks.processResources {

@@ -49,13 +49,13 @@ public class Sethome extends CommandTemplate {
         if (!canSetMoreHomes(player)) {
             int maxHomes = getMaxHomes(player);
             sender.sendMessage(plugin.getMessage("homeLimitReached")
-                    .replace("{max}", String.valueOf(maxHomes)));
+                    .replace("%max%", String.valueOf(maxHomes)));
             return true;
         }
 
         if (plugin.getInstance().getHomeManager().setHome(player.getUniqueId(), homeName, location)) {
             sender.sendMessage(plugin.getMessage("homeSet")
-                    .replace("{homename}", homeName));
+                    .replace("%homename%", homeName));
         } else {
             sender.sendMessage(plugin.getMessage("homeSetFailed"));
         }
@@ -76,7 +76,7 @@ public class Sethome extends CommandTemplate {
 
     private int getMaxHomes(Player player) {
         for (int i = 100; i >= 1; i--) {
-            if (permissionManager.hasPermission(player, CAPIPermissionManager.CAPIPerm.MAXHOMES, String.valueOf(i))) {
+            if (permissionManager.hasPermission(player, CAPIPermissionManager.CAPIPerm.MAX_HOMES, String.valueOf(i))) {
                 return i;
             }
         }

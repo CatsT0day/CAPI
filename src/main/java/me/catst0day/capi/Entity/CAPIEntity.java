@@ -58,8 +58,7 @@ public class CAPIEntity {
 
     public String getCustomName() {
         String name;
-        if (this.getEnt() instanceof Player) {
-            Player player = (Player) this.getEnt();
+        if (this.getEnt() instanceof Player player) {
             name = player.getDisplayName() != null ? player.getDisplayName() : player.getName();
         } else {
             name = translatedNames.get(this.getEnt().getType());
@@ -77,9 +76,7 @@ public class CAPIEntity {
         return null;
     }
 
-    /**
-     * Проверяет, является ли сущность рамкой предмета
-     */
+
     public static boolean isItemFrame(Entity entity) {
         if (entity == null) return false;
         return entity.getType() == EntityType.ITEM_FRAME;
@@ -93,20 +90,15 @@ public class CAPIEntity {
             bs.setSpawnedType(type);
             bsm.setBlockState(bs);
 
-            // Простая установка имени предмета
             String displayName = type.name().toLowerCase().replace("_", " ");
             displayName = displayName.substring(0, 1).toUpperCase() + displayName.substring(1) + " Spawner";
             bsm.setDisplayName(displayName);
             is.setItemMeta(bsm);
-        } catch (Throwable e) {
-            // В случае ошибки просто возвращаем исходный предмет
+        } catch (Throwable ignored) {
         }
         return is;
     }
 
-    /**
-     * Сериализация сущности в строку
-     */
     public static String serialize(Entity ent) {
         if (ent == null) return null;
         StringBuilder str = new StringBuilder();
@@ -122,9 +114,6 @@ public class CAPIEntity {
         return str.toString();
     }
 
-    /**
-     * Десериализация строки в сущность
-     */
     public static Entity deserialize(String data) {
         if (data == null || data.isEmpty()) return null;
 
@@ -132,16 +121,10 @@ public class CAPIEntity {
         if (parts.length == 0) return null;
 
         CAPIEntityType type = CAPIEntityType.getByName(parts[0]);
-        if (type == null) return null;
-
-        // Здесь должна быть логика создания сущности по типу
-        // В реальной реализации потребуется дополнительная логика для создания сущностей
-        return null; // Заглушка — реализация зависит от контекста использования
+        return null;
     }
 
-    /**
-     * Получение максимального здоровья сущности
-     */
+
     public static double getMaxHealth(Entity entity) {
         if (!(entity instanceof LivingEntity)) return 0d;
 

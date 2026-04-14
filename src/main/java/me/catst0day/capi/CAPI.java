@@ -1,14 +1,16 @@
 package me.catst0day.capi;
 
+import me.catst0day.capi.Bossbar.CAPIBarStyle;
+import me.catst0day.capi.Chat.CAPIChatColor;
 import me.catst0day.capi.Managers.CAPIPermissionManager;
 import me.catst0day.capi.Shedulers.CAPIMainScheduler;
-import me.catst0day.capi.EventListeners.BossBarInfo;
+import me.catst0day.capi.Bossbar.CAPIBossBarInfo;
 import me.catst0day.capi.Managers.CAPIHomeManager;
 import me.catst0day.capi.Managers.CAPIWarpManager;
 import me.catst0day.capi.User.CAPIUser;
+import me.catst0day.capi.Utils.VersionChecker;
 import org.bukkit.*;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
+import me.catst0day.capi.Bossbar.CAPIBarColor;
 import org.bukkit.boss.BossBar;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -18,6 +20,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import static me.catst0day.capi.CAPIOnEnableInitter.langConfig;
+import static me.catst0day.capi.Utils.Util.log;
 
 public class CAPI extends JavaPlugin {
     private static me.catst0day.capi.CAPI instance;
@@ -32,6 +35,7 @@ public class CAPI extends JavaPlugin {
     private CAPIHomeManager homeManager;
     private CAPIWarpManager warpManager;
     private CAPIPermissionManager permManager;
+    private VersionChecker versionCheckManager;
     private CommandTemplate CmdTemplate;
     public static String prefix;
 
@@ -56,10 +60,10 @@ public class CAPI extends JavaPlugin {
     }
 
     public CAPIPermissionManager getPermissionManager() {
-        if (this.permManager == null) {
-            this.permManager = new CAPIPermissionManager();
-        }
-        return this.permManager;
+     if (this.permManager == null) {
+     this.permManager = new CAPIPermissionManager(this);
+           }
+         return this.permManager;
     }
 
 
@@ -68,6 +72,17 @@ public class CAPI extends JavaPlugin {
             this.warpManager = new CAPIWarpManager(this);
         }
         return this.warpManager;
+    }
+
+
+    public VersionChecker getVersionCheckManager() {
+        if (versionCheckManager == null) {
+            this.versionCheckManager = new VersionChecker(
+                    CAPI.getInstance(),
+                    "CatsT0day", "CAPI"
+            );
+        }
+        return this.versionCheckManager;
     }
 
     // API
@@ -124,12 +139,48 @@ public class CAPI extends JavaPlugin {
 
         if (langConfig.contains(messagePath)) {
             String message = langConfig.getString(messagePath, defaultValue);
-            return ChatColor.translateAlternateColorCodes('&', message);
+            return CAPIChatColor.translate(message);
         }
 
         getLogger().warning("No key for translation: " + key);
         return defaultValue;
     }
+
+    public String sendCFGmessage(Player plr, String key) {
+        String messagePath = "messages." + key;
+        String defaultValue = "Msg '" + key + "' not loaded";
+
+        if (langConfig == null) {
+            log("Translation not loaded!");
+            return CAPI.getInstance().getUser(plr).sendMsg(defaultValue);
+        }
+
+        if (langConfig.contains(messagePath)) {
+            String message = langConfig.getString(messagePath, defaultValue);
+            return CAPI.getInstance().getUser(plr).sendMsg(message);
+        }
+
+        log("No key for translation: " + key);
+        return defaultValue;
+    }
+    public String sendCFGmessage(CommandSender plr, String key) {
+        String messagePath = "messages." + key;
+        String defaultValue = "Msg '" + key + "' not loaded";
+
+        if (langConfig == null) {
+            log("Translation not loaded!");
+            return getUser((Player) plr).sendMsg(defaultValue);
+        }
+
+        if (langConfig.contains(messagePath)) {
+            String message = langConfig.getString(messagePath, defaultValue);
+            return getUser((Player) plr).sendMsg(message);
+        }
+
+        log("No key for translation: " + key);
+        return defaultValue;
+    }
+
 
     public String getGameModeMessage(GameMode mode) {
         String messagePath = "messages.gameModeMessages." + mode.name();
@@ -141,7 +192,7 @@ public class CAPI extends JavaPlugin {
         }
 
         String message = langConfig.getString(messagePath, defaultValue);
-        return ChatColor.translateAlternateColorCodes('&', message);
+        return CAPIChatColor.translate(message);
     }
 
 
@@ -181,11 +232,11 @@ public class CAPI extends JavaPlugin {
         }
 
 
-        BossBarInfo bossBarInfo = new BossBarInfo(this, player, "teleport_delay");
+        CAPIBossBarInfo bossBarInfo = new CAPIBossBarInfo(this, player, "teleport_delay");
         bossBarInfo.setTitleOfBar(getMessage("teleportWithDelay")
                 .replace("%seconds%", String.valueOf(delaySeconds)));
-        bossBarInfo.setColor(BarColor.BLUE);
-        bossBarInfo.setStyle(BarStyle.SOLID);
+        bossBarInfo.setColor(CAPIBarColor.BLUE);
+        bossBarInfo.setStyle(CAPIBarStyle.SOLID);
         bossBarInfo.setSeconds(delaySeconds);
 
 
@@ -244,30 +295,24 @@ public class CAPI extends JavaPlugin {
         return new CAPIUser(player.getUniqueId());
     }
 
-    // Основной метод — получает CAPIUser по имени игрока
+
     public CAPIUser getUser(String playerName) {
         if (playerName == null) {
             return null;
         }
 
-        // Сначала ищем онлайн‑игрока
         Player onlinePlayer = Bukkit.getPlayer(playerName);
         if (onlinePlayer != null) {
             return new CAPIUser(onlinePlayer.getUniqueId());
         }
-
-        // Если онлайн не найден, ищем оффлайн‑игрока по имени
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
-
-        // Проверяем, что игрок существует (играл хотя бы раз)
         if (offlinePlayer.hasPlayedBefore() || offlinePlayer.isOnline()) {
             return new CAPIUser(offlinePlayer.getUniqueId());
         }
 
-        return null; // Игрок не найден
+        return null;
     }
 
-    // Дополнительный вариант — по UUID (самый быстрый, если UUID уже известен)
     public CAPIUser getUser(UUID uuid) {
         if (uuid == null) {
             return null;

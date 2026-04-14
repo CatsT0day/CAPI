@@ -1,4 +1,4 @@
-package me.catst0day.capi.EventListeners;
+package me.catst0day.capi.Bossbar;
 
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -9,9 +9,9 @@ import me.catst0day.capi.Annotations.Events.EventAnnotation;
 public final class CAPIBossBarHideEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancel;
-    private BossBarInfo bossBar = null;
+    private CAPIBossBarInfo bossBar = null;
 
-    public CAPIBossBarHideEvent(BossBarInfo bossBar) {
+    public CAPIBossBarHideEvent(CAPIBossBarInfo bossBar) {
         this.bossBar = bossBar;
     }
 
@@ -34,11 +34,11 @@ public final class CAPIBossBarHideEvent extends Event implements Cancellable {
         return cancel;
     }
 
-    public BossBarInfo getBossBar() {
+    public CAPIBossBarInfo getBossBar() {
         return bossBar;
     }
 
-    public void setBossBar(BossBarInfo bossBar) {
+    public void setBossBar(CAPIBossBarInfo bossBar) {
         this.bossBar = bossBar;
     }
 }

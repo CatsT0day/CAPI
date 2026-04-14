@@ -13,7 +13,7 @@ public class CAPIHomeManager {
     public CAPIHomeManager(CAPI plugin) {
         this.plugin = plugin;
         this.homes = new HashMap<>();
-        loadHomes(); // Загружаем дома при создании менеджера
+        loadHomes();
     }
 
     public void loadHomes() {

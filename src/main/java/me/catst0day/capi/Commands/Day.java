@@ -15,7 +15,7 @@ public class Day extends CommandTemplate {
     @Override
     protected boolean execute(CommandSender sender, Player player, String[] args) {
         player.getWorld().setTime(0);
-        sender.sendMessage(plugin.getMessage("daySet"));
+        plugin.sendCFGmessage(sender, "daySet");
         return true;
     }
 

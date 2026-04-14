@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static me.catst0day.capi.Utils.Util.log;
+
 public class FileDownloader {
     private final Plugin plugin;
     private static final List<String> VALID_TYPES = new ArrayList<>(Arrays.asList("yml", "txt", "jar"));
@@ -18,24 +20,16 @@ public class FileDownloader {
         this.plugin = plugin;
     }
 
-    /**
-     * Загружает файл из ресурсов плагина.
-     *
-     * @param resourcePath путь к файлу в ресурсах плагина (например, "Translations/EN.yml")
-     * @param targetPath путь для сохранения файла на диске
-     * @param inform выводить ли сообщения в консоль?
-     */
+
     public void downloadFromResources(String resourcePath, String targetPath, boolean inform) {
-        // Проверка расширения файла
         String fileExtension = getFileExtension(resourcePath);
         if (!VALID_TYPES.contains(fileExtension)) {
-            if (inform) Util.log("Unsupported file extension: " + fileExtension);
+            if (inform) log("Unsupported file extension: " + fileExtension);
             return;
         }
 
         CAPIMainScheduler.runTask(plugin, () -> {
             try {
-                // Создаём директорию, если её нет
                 File targetFile = new File(targetPath);
                 if (!targetFile.getParentFile().exists()) {
                     targetFile.getParentFile().mkdirs();
@@ -46,15 +40,15 @@ public class FileDownloader {
 
                 // Проверяем, что файл действительно создан
                 if (targetFile.exists()) {
-                    Util.log("Successfully loaded resource: " + resourcePath + " -> " + targetPath);
+                    log("Successfully loaded resource: " + resourcePath + " -> " + targetPath);
                     afterDownload();
                 } else {
-                    Util.log("Failed to load resource: " + resourcePath);
+                    log("Failed to load resource: " + resourcePath);
                     failedDownload();
                 }
             } catch (Exception e) {
                 if (inform) {
-                    Util.log("Error loading resource '" + resourcePath + "': " + e.getMessage());
+                    log("Error loading resource '" + resourcePath + "': " + e.getMessage());
                 }
                 failedDownload();
             }
@@ -68,10 +62,8 @@ public class FileDownloader {
     }
 
     public void afterDownload() {
-        // Реализация по умолчанию — ничего не делает
     }
 
     public void failedDownload() {
-        // Реализация по умолчанию — ничего не делает
     }
 }

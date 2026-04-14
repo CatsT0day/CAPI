@@ -1,10 +1,11 @@
 package me.catst0day.capi.Entity.Listeners;
 
+import me.catst0day.capi.Bossbar.CAPIBarStyle;
 import me.catst0day.capi.Shedulers.CAPIMainScheduler;
-import me.catst0day.capi.EventListeners.BossBarInfo;
+import me.catst0day.capi.Bossbar.CAPIBossBarInfo;
 import org.bukkit.ChatColor;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
+import me.catst0day.capi.Bossbar.CAPIBarColor;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -13,12 +14,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.HashMap;
 
 public class CAPIOnEntityHitEventListener implements Listener {
     private final Plugin plugin;
-    private final HashMap<UUID, BossBarInfo> activeBars = new HashMap<>();
+    private final HashMap<UUID, CAPIBossBarInfo> activeBars = new HashMap<>();
 
     public CAPIOnEntityHitEventListener(Plugin plugin) {
         this.plugin = plugin;
@@ -38,29 +40,26 @@ public class CAPIOnEntityHitEventListener implements Listener {
 
     private void showBossBarForEntity(Player player, LivingEntity entity) {
         double currentHealth = entity.getHealth();
-        double maxHealth = entity.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).getValue();
+        double maxHealth = Objects.requireNonNull(entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue();
         UUID entityId = entity.getUniqueId();
         String barName = "entity_health_" + entityId;
 
-        // Удаляем старый боссбар, если он существует
-        BossBarInfo oldBar = activeBars.get(entityId);
+
+        CAPIBossBarInfo oldBar = activeBars.get(entityId);
         if (oldBar != null) {
-            oldBar.remove(); // Используем встроенный метод удаления
+            oldBar.remove();
         }
 
-        // Создаём новый боссбар
-        BossBarInfo barInfo = new BossBarInfo(plugin, player, barName);
 
-        // Настраиваем параметры
+        CAPIBossBarInfo barInfo = new CAPIBossBarInfo(plugin, player, barName);
         barInfo.setPercentage(maxHealth, currentHealth);
         barInfo.setTitleOfBar(ChatColor.RED + entity.getType().name() + " " +
                 ChatColor.WHITE + "(" + (int) currentHealth + "/" + (int) maxHealth + " HP)");
-        barInfo.setColor(BarColor.RED);
-        barInfo.setStyle(BarStyle.SOLID);
-        barInfo.setKeepForTicks(40); // 2 секунды (40 тиков)
-        barInfo.setMakeVisible(true); // Обязательно устанавливаем видимость
+        barInfo.setColor(CAPIBarColor.RED);
+        barInfo.setStyle(CAPIBarStyle.SOLID);
+        barInfo.setKeepForTicks(40);
+        barInfo.setMakeVisible(true);
 
-        // Показываем боссбар — теперь безопасно, так как createBossBar() вызывается внутри getBar()
         BossBar bossBar = barInfo.getBar();
         if (bossBar != null) {
             bossBar.addPlayer(player);
@@ -69,15 +68,12 @@ public class CAPIOnEntityHitEventListener implements Listener {
             return;
         }
 
-        // Сохраняем в кэш
+
         activeBars.put(entityId, barInfo);
 
-        // Запускаем таймер на удаление через 2 секунды
         CAPIMainScheduler.runTaskLater(plugin, () -> {
-            // Удаляем из кэша
             activeBars.remove(entityId);
-            // Скрываем боссбар через метод remove() класса BossBarInfo
             barInfo.remove();
-        }, 40L); // 40 тиков = 2 секунды
+        }, 40L);
     }
 }

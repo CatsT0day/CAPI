@@ -112,7 +112,7 @@ public abstract class CommandTemplate implements CommandExecutor, TabCompleter {
         if (!(sender instanceof Player)) return true;
 
         Player player = (Player) sender;
-        return player.hasPermission(perm.getPermission());
+        return player.hasPermission(perm.getPermission(args));
     }
 
     private boolean executeWithPlayer(Player player, String[] args) {

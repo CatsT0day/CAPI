@@ -1,5 +1,5 @@
 
-package me.catst0day.capi.EventListeners;
+package me.catst0day.capi.Bossbar;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Random;
 import me.catst0day.capi.Shedulers.CAPITask;
 
-public class BossBarInfo {
+public class CAPIBossBarInfo {
     private Player player;
     private Double percentage = null;
     private Double adjustPerc = null;
@@ -38,30 +38,26 @@ public class BossBarInfo {
     private long nextColorChange = 0L;
     private final Plugin plugin;
 
-    public BossBarInfo(Plugin plugin, String nameOfBar) {
+    public CAPIBossBarInfo(Plugin plugin, String nameOfBar) {
         this(plugin, null, nameOfBar, null);
     }
 
-    public BossBarInfo(Plugin plugin, Player player, String nameOfBar) {
+    public CAPIBossBarInfo(Plugin plugin, Player player, String nameOfBar) {
         this(plugin, player, nameOfBar, null);
     }
 
-    public BossBarInfo(Plugin plugin, Player player, String nameOfBar, BossBar bar) {
+    public CAPIBossBarInfo(Plugin plugin, Player player, String nameOfBar, BossBar bar) {
         this.plugin = plugin;
         this.player = player;
         this.nameOfBar = nameOfBar;
         this.bar = bar;
         started = System.currentTimeMillis();
-        // Создаём бар, если он не передан
-        createBossBar();
+        CBar();
     }
 
-    /**
-     * Создаёт BossBar, если он ещё не создан, используя текущие настройки объекта
-     */
-    private void createBossBar() {
+    private void CBar() {
         if (bar != null) {
-            return; // Бар уже создан
+            return;
         }
 
         if (player == null) {
@@ -75,20 +71,18 @@ public class BossBarInfo {
 
         bar = Bukkit.createBossBar(NamespacedKey.minecraft(getNameOfBar()), title, color, style);
 
-        // Применяем процент, если он задан
         if (percentage != null) {
             bar.setProgress(percentage);
         }
 
-        // Если видимость включена, показываем бар игроку сразу
         if (makeVisible) {
             bar.addPlayer(player);
             bar.setVisible(true);
         }
     }
 
-    public BossBarInfo clone(Player player) {
-        BossBarInfo barInfo = new BossBarInfo(plugin, player, nameOfBar);
+    public CAPIBossBarInfo clone(Player player) {
+        CAPIBossBarInfo barInfo = new CAPIBossBarInfo(plugin, player, nameOfBar);
         barInfo.percentage = percentage;
         barInfo.adjustPerc = adjustPerc;
         barInfo.keepFor = keepFor;
@@ -104,8 +98,7 @@ public class BossBarInfo {
         barInfo.global = global;
         barInfo.colors = colors == null ? null : new ArrayList<>(colors);
         barInfo.colorChangeIntervalTicks = colorChangeIntervalTicks;
-        // Инициализируем бар в клоне
-        barInfo.createBossBar();
+        barInfo.CBar();
         return barInfo;
     }
 
@@ -140,7 +133,7 @@ public class BossBarInfo {
     }
 
     public BossBar getBar() {
-        createBossBar(); // Гарантируем, что бар создан
+        CBar();
         return bar;
     }
 
@@ -162,12 +155,10 @@ public class BossBarInfo {
             }
         }
         this.percentage = percentage;
-
-        // Обновляем прогресс бара, если он существует
         if (bar != null) {
             bar.setProgress(this.percentage);
         } else {
-            createBossBar();
+            CBar();
         }
     }
 
@@ -233,16 +224,16 @@ public class BossBarInfo {
     public void setTitleOfBar(String titleOfBar) {
         if (titleOfBar == null || titleOfBar.isEmpty()) {
             this.titleOfBar = null;
-        } else {
+        } else
+        {
             this.titleOfBar = titleOfBar;
         }
         withPlaceholder = containsPlaceholder(titleOfBar);
 
-        // Обновляем заголовок бара, если он существует
         if (bar != null && player != null) {
             bar.setTitle(getTitleOfBar(player));
         } else if (player != null) {
-            createBossBar();
+            CBar();
         }
     }
 
@@ -254,13 +245,14 @@ public class BossBarInfo {
         return startingColor;
     }
 
-    public void setColor(BarColor startingColor) {
-        this.startingColor = startingColor;
+
+    public void setColor(CAPIBarColor startingColor) {
+        this.startingColor = startingColor.toBukkitColor();
 
         if (bar != null) {
-            bar.setColor(startingColor);
+            bar.setColor(startingColor.toBukkitColor());
         } else {
-            createBossBar();
+            CBar();
         }
     }
 
@@ -276,13 +268,13 @@ public class BossBarInfo {
         return style;
     }
 
-    public void setStyle(BarStyle style) {
-        this.style = style;
+    public void setStyle(CAPIBarStyle style) {
+        this.style = style.toBukkitStyle();
 
         if (bar != null) {
-            bar.setStyle(style);
+            bar.setStyle(style.toBukkitStyle());
         } else {
-            createBossBar();
+            CBar();
         }
     }
 
@@ -371,7 +363,7 @@ public class BossBarInfo {
                 bar.setVisible(false);
             }
         } else if (makeVisible && player != null) {
-            createBossBar();
+            CBar();
         }
     }
 
@@ -404,7 +396,6 @@ public class BossBarInfo {
     }
 
     public void updateCycle() {
-        // Логика обновления цикла (можно расширить при необходимости)
     }
 
     public List<ChatColor> getColors() {

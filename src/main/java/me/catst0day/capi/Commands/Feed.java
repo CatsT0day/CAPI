@@ -17,9 +17,7 @@ public class Feed extends CommandTemplate implements Listener {
 
     public Feed(CAPI plugin) {
         super(plugin, "feed",  List.of("f"), CAPIPermissionManager.CAPIPerm.FEED, true, 5000L,"feed yourself or somebody else (1 feed point peer second, if you get damaged the feedeng will stop)");
-        // Устанавливаем аргументы для таб‑комплита
         setTabCompleteArguments(List.of("self", "target"));
-        // Регистрируем слушатель событий в плагине
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -46,11 +44,11 @@ public class Feed extends CommandTemplate implements Listener {
         int currentFood = target.getFoodLevel();
         if (currentFood >= 20) {
             if (target == player) {
-                target.sendMessage(plugin.getMessage("feedSuccess"));
+                plugin.sendCFGmessage(target, "feedSuccess") ;
             } else {
-                target.sendMessage(plugin.getMessage("feedTargeted")
+                plugin.sendCFGmessage(target,"feedTargeted"
                         .replace("%s", player.getName()));
-                player.sendMessage(plugin.getMessage("feedTargeted")
+                plugin.sendCFGmessage(target,"feedTargeted"
                         .replace("%s", target.getName()));
             }
             return true;
@@ -94,7 +92,6 @@ public class Feed extends CommandTemplate implements Listener {
     @Override
     protected List<String> tabComplete(Player player, String[] args) {
         if (args.length == 1) {
-            // Предлагаем варианты: self или имена онлайн‑игроков
             List<String> completions = getOnlinePlayerNames(args[0]);
             completions.add("self");
             return completions;
@@ -102,32 +99,24 @@ public class Feed extends CommandTemplate implements Listener {
         return null;
     }
 
-    /**
-     * Обрабатывает событие получения урона игроком
-     */
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player damagedPlayer = (Player) event.getEntity();
 
-        // Проверяем, находится ли игрок в процессе кормления
         if (isPlayerFeeding(damagedPlayer)) {
             stopFeeding(damagedPlayer);
             damagedPlayer.sendMessage(plugin.getMessage("feedDamaged"));
         }
     }
 
-    /**
-     * Проверяет, находится ли игрок в процессе кормления
-     */
+
     private boolean isPlayerFeeding(Player player) {
         return feedingTask != null;
     }
 
-    /**
-     * Останавливает процесс кормления для игрока
-     */
+
     private void stopFeeding(Player player) {
         if (feedingTask != null) {
             feedingTask.cancel();

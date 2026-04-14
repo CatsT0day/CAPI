@@ -12,8 +12,8 @@ public class CAPIGuiButton {
     private ItemStack item;
     private Integer slot;
     private final List<String> lore = new ArrayList<>();
-    private Consumer<Player> onClick;      // ЛКМ
-    private Consumer<Player> onRightClick; // ПКМ
+    private Consumer<Player> onClick;
+    private Consumer<Player> onRightClick;
     private boolean closeOnClick = false;
     private CAPIGui gui;
 
@@ -44,19 +44,18 @@ public class CAPIGuiButton {
         }
     }
 
-    /** Действие при клике левой кнопкой мыши */
+
     public CAPIGuiButton onLeftClick(Consumer<Player> action) {
         this.onClick = action;
         return this;
     }
 
-    /** Действие при клике правой кнопкой мыши */
     public CAPIGuiButton onRightClick(Consumer<Player> action) {
         this.onRightClick = action;
         return this;
     }
 
-    /** Закрывать GUI после клика */
+
     public CAPIGuiButton closeOnClick() {
         this.closeOnClick = true;
         return this;
@@ -81,7 +80,6 @@ public class CAPIGuiButton {
         }
     }
 
-    // Сеттеры для GUI и слота
     public void setGui(CAPIGui gui) { this.gui = gui; }
     public void setSlot(Integer slot) { this.slot = slot; }
     public Integer getSlot() { return slot; }

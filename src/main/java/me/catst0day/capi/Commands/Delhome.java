@@ -27,18 +27,18 @@ public class Delhome extends CommandTemplate {
         }
 
         if (args.length != 1) {
-            sender.sendMessage(plugin.getMessage("delhomeUsage"));
+            plugin.sendCFGmessage(sender, "Usage".formatted("/delhome <homename>"));
             return true;
         }
 
         String homeName = args[0];
 
-        if (plugin.getInstance().getHomeManager().deleteHome(player.getUniqueId(), homeName)) {
-            sender.sendMessage(plugin.getMessage("homeDeleted")
-                    .replace("{homename}", homeName));
+        if (CAPI.getInstance().getHomeManager().deleteHome(player.getUniqueId(), homeName)) {
+            plugin.sendCFGmessage(sender, "homeDeleted")
+                    .replace("{homename}", homeName);
         } else {
-            sender.sendMessage(plugin.getMessage("homeDeleteFailed")
-                    .replace("{homename}", homeName));
+            plugin.sendCFGmessage(sender, "homeDeleteFailed")
+                    .replace("{homename}", homeName);
         }
         return true;
     }
@@ -50,7 +50,7 @@ public class Delhome extends CommandTemplate {
         try {
             if (args.length == 1) {
                 String prefix = args[0].toLowerCase();
-                List<String> playerHomes = plugin.getInstance().getHomeManager().getPlayerHomes(player.getUniqueId());
+                List<String> playerHomes = CAPI.getInstance().getHomeManager().getPlayerHomes(player.getUniqueId());
                 for (String home : playerHomes) {
                     if (home.toLowerCase().startsWith(prefix)) {
                         completions.add(home);

@@ -45,12 +45,12 @@ public class Enchant extends CommandTemplate {
     protected boolean execute(Player player, String[] args) {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || item.getType().isAir()) {
-            player.sendMessage(plugin.getMessage("itemNoItemInHand"));
+            plugin.sendCFGmessage(player, "itemNoItemInHand");
             return true;
         }
 
         if (args.length < 2) {
-            player.sendMessage(plugin.getMessage("usage")
+            plugin.sendCFGmessage(player,"usage"
                     .replace("%s", "/enchant <ench> <lvl>"));
             return true;
         }
@@ -60,21 +60,21 @@ public class Enchant extends CommandTemplate {
         try {
             level = Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
-            player.sendMessage(plugin.getMessage("itemLevelMustBeNumber"));
+            plugin.sendCFGmessage(player,"itemLevelMustBeNumber");
             return true;
         }
 
         Enchantment enchantment = Enchantment.getByName(enchantName);
         if (enchantment == null) {
-            player.sendMessage(plugin.getMessage("itemInvalidEnchantment")
+            plugin.sendCFGmessage(player,"itemInvalidEnchantment"
                     .replace("%s", enchantName));
             return true;
         }
 
         item.addUnsafeEnchantment(enchantment, level);
-        player.sendMessage(plugin.getMessage("itemEnchantSuccess")
+        plugin.sendCFGmessage(player,"itemEnchantSuccess")
                 .replace("%s", enchantName)
-                .replace("%d", String.valueOf(level)));
+                .replace("%d", String.valueOf(level));
         return true;
     }
 

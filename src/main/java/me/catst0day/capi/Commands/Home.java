@@ -145,7 +145,7 @@ public class Home extends CommandTemplate {
 
     private int getMaxHomes(Player player) {
         for (int i = 100; i >= 1; i--) {
-            if (permissionManager.hasPermission(player, CAPIPermissionManager.CAPIPerm.MAXHOMES, String.valueOf(i))) {
+            if (permissionManager.hasPermission(player, CAPIPermissionManager.CAPIPerm.MAX_HOMES, String.valueOf(i))) {
                 return i;
             }
         }

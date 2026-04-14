@@ -1,10 +1,15 @@
+
 package me.catst0day.capi.Commands;
 
+import me.catst0day.capi.Bossbar.CAPIBarStyle;
 import me.catst0day.capi.CommandTemplate;
 import me.catst0day.capi.CAPI;
+import me.catst0day.capi.Bossbar.CAPIBossBarInfo;
 import me.catst0day.capi.Managers.CAPIPermissionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import me.catst0day.capi.Bossbar.CAPIBarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import java.util.Arrays;
@@ -12,10 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.HashSet;
+import java.util.HashMap;
 
 public class Vanish extends CommandTemplate {
 
     private final HashSet<UUID> vanishedPlayers = new HashSet<>();
+    private final HashMap<UUID, CAPIBossBarInfo> bossBars = new HashMap<>();
     private final CAPIPermissionManager permissionManager;
 
     public Vanish(CAPI plugin) {
@@ -26,7 +33,7 @@ public class Vanish extends CommandTemplate {
                 CAPIPermissionManager.CAPIPerm.VANISH,
                 false,
                 0,
-                 "enter vanish (cool invisibility)"
+                "enter vanish (cool invisibility)"
         );
         setTabCompleteArguments(Arrays.asList("on", "off", "list", "-s"));
         this.permissionManager = plugin.getPermissionManager();
@@ -50,7 +57,6 @@ public class Vanish extends CommandTemplate {
         Boolean vanishState = null;
         boolean silent = false;
 
-        // Парсинг аргументов
         for (String arg : args) {
             if (arg.equalsIgnoreCase("-s")) {
                 silent = true;
@@ -72,7 +78,6 @@ public class Vanish extends CommandTemplate {
             }
         }
 
-        // Если цель не указана — используем отправителя
         if (target == null) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage(plugin.getMessage("playerOnlyCommand"));
@@ -81,12 +86,9 @@ public class Vanish extends CommandTemplate {
             target = (Player) sender;
         }
 
-        // Обработка состояния vanish
         if (vanishState == null) {
-            // Переключение состояния
             toggleVanish(target, sender, silent);
         } else {
-            // Установка конкретного состояния
             if (vanishState) {
                 enableVanish(target, sender, silent);
             } else {
@@ -108,10 +110,18 @@ public class Vanish extends CommandTemplate {
         if (!isVanished(player)) {
             vanishedPlayers.add(player.getUniqueId());
 
-            // Скрываем игрока от всех
             for (Player online : Bukkit.getOnlinePlayers()) {
                 online.hidePlayer(plugin, player);
             }
+
+            CAPIBossBarInfo bossBar = new CAPIBossBarInfo(plugin, player, "vanish_" + player.getUniqueId().toString());
+            bossBar.setTitleOfBar("&cИгрок " + player.getName() + " &4невидим");
+            bossBar.setColor(CAPIBarColor.WHITE);
+            bossBar.setStyle(CAPIBarStyle.SEGMENTED_20);
+            bossBar.setPercentage(1.0);
+            bossBar.setMakeVisible(true);
+
+            bossBars.put(player.getUniqueId(), bossBar);
 
             if (!silent) {
                 if (sender == player) {
@@ -129,9 +139,13 @@ public class Vanish extends CommandTemplate {
         if (isVanished(player)) {
             vanishedPlayers.remove(player.getUniqueId());
 
-            // Показываем игрока всем
             for (Player online : Bukkit.getOnlinePlayers()) {
                 online.showPlayer(plugin, player);
+            }
+
+            CAPIBossBarInfo bossBar = bossBars.remove(player.getUniqueId());
+            if (bossBar != null) {
+                bossBar.remove();
             }
 
             if (!silent) {
@@ -168,7 +182,6 @@ public class Vanish extends CommandTemplate {
         }
     }
 
-
     @Override
     protected List<String> tabComplete(Player player, String[] args) {
         if (args.length == 1) {
@@ -177,5 +190,12 @@ public class Vanish extends CommandTemplate {
             return getOnlinePlayerNames(args[1]);
         }
         return new ArrayList<>();
+    }
+
+    public void cleanupBossBars() {
+        for (CAPIBossBarInfo bar : bossBars.values()) {
+            bar.remove();
+        }
+        bossBars.clear();
     }
 }

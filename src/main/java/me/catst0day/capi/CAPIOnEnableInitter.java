@@ -1,7 +1,6 @@
 
 package me.catst0day.capi;
 
-import me.catst0day.capi.Commands.*;
 import me.catst0day.capi.Entity.Listeners.CAPIOnEntityHitEventListener;
 import me.catst0day.capi.EventListeners.CAPIHideAchievements;
 import me.catst0day.capi.EventListeners.CAPIOnEntityDamageEvent;
@@ -39,6 +38,7 @@ public class CAPIOnEnableInitter {
     private final HashMap<UUID, Boolean> inArena = new HashMap<>();
     private final HashMap<UUID, UUID> tpaRequests = new HashMap<>();
     private final HashMap<UUID, BossBar> bossBars = new HashMap<>();
+    private VersionChecker versionChecker;
     public static YamlConfiguration langConfig;
     public static String currentLang;
 
@@ -48,8 +48,10 @@ public class CAPIOnEnableInitter {
 
     public void OnEnable(CAPI plugin) {
         instance = plugin;
-        VersionChecker versionChecker = new VersionChecker(plugin, "CatsT0day", "CAPI");
-        versionChecker.checkForUpdates();
+        if (this.versionChecker == null) {
+            this.versionChecker = new VersionChecker(plugin, "CatsT0day", "CAPI");
+        }
+        this.versionChecker.checkForUpdates();
         Util.printStartupBanner(plugin);
         plugin.saveDefaultConfig();
         plugin.reloadConfig();

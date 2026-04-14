@@ -2,6 +2,7 @@
 package me.catst0day.capi.User;
 
 import me.catst0day.capi.CAPI;
+import me.catst0day.capi.Chat.CAPIChatColor;
 import me.catst0day.capi.Entity.CAPIEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,6 +16,8 @@ import org.bukkit.GameMode;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static me.catst0day.capi.Utils.Util.log;
 
 public class CAPIUser {
     private UUID uuid;
@@ -303,6 +306,27 @@ public class CAPIUser {
         return allowFlight;
     }
 
+    public String sendMsg(String message) {
+        if (message == null) {
+            return null;
+        }
+
+        Player player = getPlayer();
+
+        if (player == null) {
+            log("&4Error: No player!");
+            return message;
+        }
+
+        try {
+            String translatedMessage = CAPIChatColor.translate(message);
+            player.sendMessage(translatedMessage);
+        } catch (Exception e) {
+            log("&4Error: idk what happened, this should explain everything:" + e.getMessage());
+        }
+
+        return message;
+    }
     public void setAllowFlight(boolean allowFlight) {
         this.allowFlight = allowFlight;
         if (isOnline()) {
