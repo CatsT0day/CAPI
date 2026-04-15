@@ -1,5 +1,5 @@
 name: CAPI
-version: '1.0.2.133-020'
+version: '1.0.2.133-022-U'
 main: me.catst0day.capi.CAPI
 api-version: 1.13
 website: https://github.com/CatsT0day/CAPI/
@@ -10,7 +10,7 @@ author: CatsTOday
 commands:
   capi:
     description: Main commands of the plugin
-    permission: catapi.*
+    permission: catapi.main
 
 permissions:
   capi.main:

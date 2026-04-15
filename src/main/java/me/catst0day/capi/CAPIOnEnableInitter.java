@@ -14,11 +14,14 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.command.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.SimplePluginManager;
 
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.net.JarURLConnection;
@@ -30,6 +33,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 import static me.catst0day.capi.Utils.Util.log;
+import static org.bukkit.Bukkit.getCommandMap;
 
 public class CAPIOnEnableInitter {
     private static me.catst0day.capi.CAPI instance;
@@ -85,19 +89,19 @@ public class CAPIOnEnableInitter {
         try {
             packageURL = classLoader.getResource(path);
         } catch (Exception e) {
-            log("Error getting package resource: " + e.getMessage());
+            log("&cError getting package resource: " + e.getMessage());
             return;
         }
 
         if (packageURL == null) {
-            log("Package " + packageName + " not found!");
+            log("&cPackage " + packageName + " not found!");
             return;
         }
 
         try {
             if ("jar".equals(packageURL.getProtocol())) {
-                // Processing JAR archive
-                log("Scanning JAR archive for package: " + packageName);
+                // Обработка JAR архива
+                log("&eScanning JAR archive for package: " + packageName);
 
                 JarURLConnection connection = (JarURLConnection) packageURL.openConnection();
                 JarFile jarFile = connection.getJarFile();
@@ -107,33 +111,22 @@ public class CAPIOnEnableInitter {
                     while (entries.hasMoreElements()) {
                         JarEntry entry = entries.nextElement();
                         String name = entry.getName();
-
-                        // Check if file is in the correct package and is a .class file
                         if (name.startsWith(path) && name.endsWith(".class") && !name.contains("$")) {
                             String className = name.substring(0, name.length() - 6).replace('/', '.');
 
                             try {
                                 Class<?> clazz = Class.forName(className);
-
-                                // Check conditions: inherits CommandTemplate, not an interface, not abstract
                                 if (CommandTemplate.class.isAssignableFrom(clazz) &&
                                         !clazz.isInterface() &&
                                         !Modifier.isAbstract(clazz.getModifiers())) {
 
                                     Constructor<?> constructor = clazz.getConstructor(CAPI.class);
                                     CommandTemplate commandInstance = (CommandTemplate) constructor.newInstance(plugin);
-                                    registerCommand(commandInstance.getName(), commandInstance);
-
-                                    // Register aliases
-                                    if (commandInstance.getAliases() != null) {
-                                        for (String alias : commandInstance.getAliases()) {
-                                            registerCommand(alias, commandInstance);
-                                        }
-                                    }
+                                    registerCommandInBothFormats(plugin, commandInstance);
                                 }
                             } catch (ClassNotFoundException | NoSuchMethodException |
                                      IllegalAccessException | InstantiationException e) {
-                                log("Error registering command " + className + ": " + e.getMessage());
+                                log("&cError registering command " + className + ": " + e.getMessage());
                             } catch (InvocationTargetException e) {
                                 throw new RuntimeException(e);
                             }
@@ -143,15 +136,15 @@ public class CAPIOnEnableInitter {
                     try {
                         jarFile.close();
                     } catch (IOException e) {
-                        log("Failed to close JAR file: " + e.getMessage());
+                        log("&cFailed to close JAR file: " + e.getMessage());
                     }
                 }
             } else {
-                log("Scanning directory (" + packageName + ")");
+                log("&eScanning directory (" + packageName + ")");
                 File packageDir = new File(packageURL.toURI());
 
                 if (!packageDir.exists() || !packageDir.isDirectory()) {
-                    log("Directory (" + packageName + ") does not exist");
+                    log("&cDirectory (" + packageName + ") does not exist");
                     return;
                 }
 
@@ -168,31 +161,79 @@ public class CAPIOnEnableInitter {
 
                                 Constructor<?> constructor = clazz.getConstructor(CAPI.class);
                                 CommandTemplate commandInstance = (CommandTemplate) constructor.newInstance(plugin);
-                                registerCommand(commandInstance.getName(), commandInstance);
 
-                                // Register aliases
-                                if (commandInstance.getAliases() != null) {
-                                    for (String alias : commandInstance.getAliases()) {
-                                        registerCommand(alias, commandInstance);
-                                    }
-                                }
+                                registerCommandInBothFormats(plugin, commandInstance);
                             }
                         } catch (ClassNotFoundException | NoSuchMethodException |
                                  IllegalAccessException | InstantiationException e) {
-                            log("Error registering command " + className + ": " + e.getMessage());
+                            log("&cError registering command " + className + ": " + e.getMessage());
                         } catch (InvocationTargetException e) {
                             throw new RuntimeException(e);
                         }
                     }
                 }
             }
-        } catch (IOException | URISyntaxException e) {
-            log("Error working with package resources: " + e.getMessage());
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (URISyntaxException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    private static void registerCommandInBothFormats(CAPI plugin, CommandTemplate command) {
+        String commandName = command.getName();
+
+        SimpleCommandMap commandMap = (SimpleCommandMap) getCommandMap();
+        if (commandMap == null) {
+            log("&cFailed to get command map for command: " + commandName);
+            return;
+        }
+
+        Command bukkitCommand = new Command(commandName) {
+            @Override
+            public boolean execute(CommandSender sender, String label, String[] args) {
+                return command.onCommand(sender, this, label, args);
+            }
+
+            @Override
+            public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
+                return Objects.requireNonNull(((TabCompleter) command).onTabComplete(sender, this, alias, args));
+            }
+        };
+
+        commandMap.register(plugin.getName(), bukkitCommand);
+        log("&aCommand registered: &6/" + commandName);
+
+        if (command.getAliases() != null) {
+            for (String alias : command.getAliases()) {
+                Command aliasCommand = new Command(alias) {
+                    @Override
+                    public boolean execute(CommandSender sender, String label, String[] args) {
+                        return command.onCommand(sender, this, label, args); // ИЗМЕНЕНО: передаём 'this' вместо 'plugin'
+                    }
+
+                    @Override
+                    public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
+                        if (command instanceof TabCompleter) {
+                            return ((TabCompleter) command).onTabComplete(sender, this, alias, args);
+                        }
+                        return super.tabComplete(sender, alias, args);
+                    }
+                };
+                commandMap.register(plugin.getName(), aliasCommand);
+                log("&aAlias registered: &6/" + alias);
+            }
+        }
+
+        registerCommand(commandName, command);
+        if (command.getAliases() != null) {
+            for (String alias : command.getAliases()) {
+                registerCommand(alias, command);
+            }
         }
     }
 
 
-    public static void loadTranslations() {
+        public static void loadTranslations() {
         currentLang = instance.getConfig().getString("lang", "EN").toUpperCase();
         File translationsFolder = new File(instance.getDataFolder(), "Translations");
         File langFile = new File(translationsFolder, currentLang + ".yml");
@@ -217,7 +258,8 @@ public class CAPIOnEnableInitter {
 
         try {
             langConfig = YamlConfiguration.loadConfiguration(langFile);
-            log("Successfully loaded translation: " + langFile.getName());
+            String msg = "Successfully loaded translation (&7" + langFile.getName() + ")";
+            log(msg);
         } catch (Exception e) {
             log("Error while loading translation: " + e.getMessage());
             langConfig = new YamlConfiguration();

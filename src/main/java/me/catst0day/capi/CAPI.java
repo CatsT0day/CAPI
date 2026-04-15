@@ -24,7 +24,6 @@ import static me.catst0day.capi.Utils.Util.log;
 
 public class CAPI extends JavaPlugin {
     private static me.catst0day.capi.CAPI instance;
-    private CAPIOnEnableInitter initializer;
     private final HashMap<UUID, Boolean> godMode = new HashMap<>();
     private final HashMap<UUID, Boolean> flyMode = new HashMap<>();
     private final HashMap<UUID, UUID> tpaRequests = new HashMap<>();
@@ -41,9 +40,11 @@ public class CAPI extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.initializer = new CAPIOnEnableInitter();
-        this.initializer.OnEnable(this);
+
+        CAPIOnEnableInitter initializer = new CAPIOnEnableInitter();
+        initializer.OnEnable(this);
     }
+
 
     public static CAPI getInstance() {
         if (instance == null) {
@@ -220,7 +221,6 @@ public class CAPI extends JavaPlugin {
             delayTicks = 140L;
         }
 
-// Если задержка нулевая — телепортируем сразу
         if (delaySeconds == 0) {
             if (target != null && target.getWorld() != null) {
                 player.teleport(target);
