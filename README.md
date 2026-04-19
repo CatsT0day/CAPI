@@ -1,10 +1,13 @@
-# CAPI - a lots of commands, API and other!
+# CAPI - 30 commands, API, customizable massages.
 
-# What is it?
-CAPI is open source minecraft plugin,
-made by one developer, inpired by CMI and essentials
-currenlty has 26 commands, and powerful API
-### building project from src:
+## What is this?
+CAPI is **A+** code minecraft plugin, made by one person, 
+i created it, because wanted to create my own "CMI", 
+there's a lots of "basic" commands, like /feed (custom realization), 
+/heal (same as /feed),
+/gm - the same as cmi, just more customizable
+
+### building project:
 ```bash
 
 # Build the plugin (creates shadowed jar with all NMS versions)
@@ -19,7 +22,7 @@ currenlty has 26 commands, and powerful API
 # Run a test server (Paper 1.21.11)
 ./gradlew runServer
 ```
-### Testing
+### Testing:
 ```bash
 # Run all tests
 ./gradlew test
@@ -39,6 +42,7 @@ add this to the settings.gradle.kts:
 		repositories {
 			mavenCentral()
 			maven { url = uri("https://jitpack.io") }
+# add other repos like paper here
 		}
 	}
 ```
@@ -56,6 +60,7 @@ Add it in your root settings.gradle at the end of repositories:
 		repositories {
 			mavenCentral()
 			maven { url 'https://jitpack.io' }
+# same
 		}
 	}
 ```
