@@ -193,7 +193,8 @@ public class CAPIPermissionManager {
         HOME("capi.home", "Perm to use /home"),
         NEAR_RADIUS("capi.near.radius.$1", "Max radius for /near"),
         NIGHT("capi.night", "set night time"),
-        TPA("capi.tpa", "send teleport request to player");
+        TPA("capi.tpa", "send teleport request to player"),
+        SUICIDE("capi.killyourself", "kill your self");
 
         private final String permission;
         private final String description;
