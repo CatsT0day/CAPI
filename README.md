@@ -204,4 +204,4 @@ private CAPIGuiButton createButton(Player player, String homeName) {
     return button;
 }
 ```
-# in this plugin, there's no licinse, but please respect my hours of developing, you can inspect my code, and even learn programming with it, just like I did with CMI, but please, don't steal it, instead of stealing it, you can become the contributor of this project, again as I said, there's no license, and its open source!
+Thats it! Thanks for visiting/downloading my plugin 
