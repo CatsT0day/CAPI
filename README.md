@@ -204,5 +204,9 @@ private CAPIGuiButton createButton(Player player, String homeName) {
     return button;
 }
 ```
+<<<<<<< HEAD
 *****That's it, read license and contributing files!*****
 Thanks for reading/contributing/downloading
+=======
+Thats it! Thanks for visiting/downloading my plugin 
+>>>>>>> origin/master
