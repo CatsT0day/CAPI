@@ -2,6 +2,8 @@ package me.catst0day.capi;
 
 import me.catst0day.capi.Bossbar.CAPIBarStyle;
 import me.catst0day.capi.Chat.CAPIChatColor;
+import me.catst0day.capi.Commands.commandAPI.CAPICommandTemplate;
+import me.catst0day.capi.Managers.CAPIAliasManager;
 import me.catst0day.capi.Managers.CAPIPermissionManager;
 import me.catst0day.capi.Shedulers.CAPIMainScheduler;
 import me.catst0day.capi.Bossbar.CAPIBossBarInfo;
@@ -17,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 import static me.catst0day.capi.CAPIOnEnableInitter.langConfig;
@@ -34,8 +37,9 @@ public class CAPI extends JavaPlugin {
     private CAPIHomeManager homeManager;
     private CAPIWarpManager warpManager;
     private CAPIPermissionManager permManager;
+    private CAPIAliasManager aliasManager;
     private VersionChecker versionCheckManager;
-    private CommandTemplate CmdTemplate;
+    private CAPICommandTemplate CmdTemplate;
     public static String prefix;
 
     @Override
@@ -95,7 +99,7 @@ public class CAPI extends JavaPlugin {
         Player target = args.length == 1 ? Bukkit.getPlayer(args[0]) : player;
 
         if (target == null) {
-            player.sendMessage(getMessage("playerNotFound"));
+            Objects.requireNonNull(player).sendMessage(getMessage("playerNotFound"));
             return;
         }
 
@@ -318,6 +322,10 @@ public class CAPI extends JavaPlugin {
             return null;
         }
         return new CAPIUser(uuid);
+    }
+
+    public CAPIAliasManager getAliasManager() {
+        return aliasManager;
     }
 }
 

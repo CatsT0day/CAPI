@@ -8,12 +8,12 @@ Thank you for your interest in contributing to the CAPI project! I welcome contr
 1. **Fork the repository**: Click the **Fork** button in the top‑right corner of the [CAPI repository page](https://github.com/CatsT0day/CAPI) to create your own copy.
 2. **Clone your fork** to your local machine:
 ```bash
-   git clone https://github.com/Contributor-put-your-username-here/CAPI.git
+   git clone https://github.com/CatsT0day/CAPI
    cd CAPI
 ```
 3. **Set up the upstream remote to keep your fork in sync with the original repository:**
 ```bash
-git remote add upstream https://github.com/CatsT0day/CAPI.git
+git remote add upstream https://github.com/CatsT0day/CAPI
 ```
 Branching Strategy
 Never work directly on the main branch.

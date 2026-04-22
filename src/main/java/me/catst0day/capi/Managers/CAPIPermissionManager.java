@@ -10,6 +10,7 @@ import me.catst0day.capi.Managers.Perms.NoneHandler;
 import me.catst0day.capi.Managers.Perms.PermissionInfo;
 import me.catst0day.capi.Managers.Perms.PermissionInterface;
 import me.catst0day.capi.Shedulers.CAPIMainScheduler;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -106,7 +107,7 @@ public class CAPIPermissionManager {
     }
 
     public boolean isSetPermission(CommandSender var1, String var2) {
-        return var1 instanceof Player ? this.isSetPermission((Player) var1, var2) : true;
+        return !(var1 instanceof Player) || this.isSetPermission((Player) var1, var2);
     }
 
     public boolean isSetPermission(Player var1, String var2) {
@@ -116,9 +117,7 @@ public class CAPIPermissionManager {
     private static HashMap<String, Boolean> getAll(Player var0, String var1) {
         var1 = var1.endsWith(".") ? var1 : var1 + ".";
         HashMap<String, Boolean> var2 = new HashMap<>();
-        Iterator<PermissionAttachmentInfo> var4 = var0.getEffectivePermissions().iterator();
-        while (var4.hasNext()) {
-            PermissionAttachmentInfo var3 = var4.next();
+        for (PermissionAttachmentInfo var3 : var0.getEffectivePermissions()) {
             if (var3.getPermission().startsWith(var1)) {
                 var2.put(var3.getPermission(), var3.getValue());
             }
@@ -161,7 +160,6 @@ public class CAPIPermissionManager {
         return var6;
     }
 
-
     public enum CAPIPerm {
         MAIN("capi.main", "gives perm to use main command (not all cmds)"),
         UPDATE_NOTIFY("capi.update.notify", "Receive update notifications for CAPI updates"),
@@ -194,7 +192,12 @@ public class CAPIPermissionManager {
         NEAR_RADIUS("capi.near.radius.$1", "Max radius for /near"),
         NIGHT("capi.night", "set night time"),
         TPA("capi.tpa", "send teleport request to player"),
-        SUICIDE("capi.killyourself", "kill your self");
+        SUICIDE("capi.killyourself", "kill your self"),
+        ALIAS_EDITOR("capi.aliaseditor", "edit aliases"),
+        AFK("capi.afk", "enter afk mode"),
+        AFKCHECK("capi.afkcheck","chech afk mode"),
+        PWEATHER("capi.playerweather", "set plr's weather"),
+        PTIME("capi.playertime", "set plr's time");
 
         private final String permission;
         private final String description;

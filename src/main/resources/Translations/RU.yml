@@ -25,8 +25,27 @@ messages:
     - ''
     - '#ff6600======================='
 
-
-  # Сообщения для домов
+  afkSuccess: '#ff6600✔ &fВы перешли в AFK режим.'
+  afkFail: '#ff6600✘ &fНе удалось перейти в AFK режим.'
+  afkReason: '#ff6600✘ &fПричина AFK: &e%reason%'
+  afkCheck: '#ff6600✔ &fВы в AFK режиме: &e%is_afk%'
+  afkSTitle1: "&fНе уходите!....."
+  afkSTitle2: "&fСнова?"
+  afkSTitle3: "&fПерекус?"
+  afkSTitle4: "&fНе ешьте много печенья!"
+  # /pweather
+  currentWeather: '#ff6600Ⓘ &fТекущая погода для &e%player%&f: &6%weather%'
+  weatherReset: '#ff6600✔ &fПогода для &e%player%&f сброшена к глобальной.'
+  yourWeatherReset: '#ff6600✔ &fВаша погода сброшена к глобальной.'
+  weatherSet: '#ff6600✔ &fПогода для &e%player%&f установлена: &6%weather%'
+  yourWeatherSet: '#ff6600✔ &fВаша погода установлена: &6%weather%'
+  weatherDefault: '&fпо умолчанию'
+  weatherSunny: '&aЯсно'
+  weatherRainy: '&9Дождь'
+  # /afkcheck
+  afkCheckSuccess: '#ff6600✔ &fВы в AFK режиме: &e%is_afk%'
+  afkCheckFail: '#ff6600✘ &fНе удалось проверить AFK статус.'
+  # /home
   homeTeleported: '#ff6600✔ &fВы телепортированы на дом: &e{homename}'
   homeCreatedSuccessfully: '#ff6600✔ &fДом &e"{homename}"&f успешно создан!'
   homeAlreadyExists: '#ff6600✘ &fДом с названием &e"{homename}"&f уже существует!'
@@ -35,14 +54,18 @@ messages:
   homeDeleteUsage: '#ff6600✘ &fИспользование: &e/delhome <название>'
   homeDeletionSuccess: '#ffff00⚝ &fДом &e"{homename}"&f успешно удалён!'
   homeSet: '#ffff00⚝ &fТочка дома #ff6600%homename% &fустановлена!'
-
+  # /suicide
+  suicideMessage: '#ff6600✝ &fВы так устали, что решили немного… исчезнуть. Увидимся в следующей жизни!'
+  suicideSuccess: '#ff6600✝ &fВнимание! Игрок &e%s&f отправился в путешествие — без обратного билета.'
+  suicideCancelled: '#ff6600✘ &fВселенная передумала: «Нет, оставайся, ты ещё нужен!»'
+  suicidePlayerOnly: '#ff6600⚠ &fБоты и сервер не могут самоустраняться — только живые игроки!'
 
   noPermission: '#ff6600✘ &fНет, &cты не можешь использовать&f эту команду!'
   playerNotFound: '#ff6600✘ &fИгрок не найден.'
   invalidMode: '#ff6600✘ &fТакого режима &cне существует.'
   usage: '#ff6600✘ &fНеправильная команда, используйте: %s'
 
-  # Сообщения для варпов
+  # /warp
   warpTeleported: '#ff6600✔ &fВы телепортированы на варп: &e{warpname}'
   warpCreatedSuccessfully: '#ff6600✔ &fВарп &e"{warpname}"&f успешно создан!'
   warpAlreadyExists: '#ff6600✘ &fВарп с названием &e"{warpname}"&f уже существует!'
@@ -51,7 +74,7 @@ messages:
   warpCreationFailed: '#ff6600✘ &fНе удалось создать варп. Попробуйте позже или обратитесь к администратору.'
   noWarpsAvailable: '#ff6600&fДоступные варпы: &eНет созданных варпов'
 
-  # Спавн
+  # /spawn
   spawnSet: '#ff6600✔ &fСпавн успешно &6установлен'
   spawnTeleportSuccess: '#ff6600✔ &fТелепортация на &6спавн...'
 
@@ -59,7 +82,7 @@ messages:
   configReloaded: '#ff6600✔ &fКонфигурация CatAPI перезагружена, спасибо что используешь мой плагин.'
 
 
-  # Радар (/near)
+  # /near
   NoOneAtNear: '#ff6600✇ &6Радар &f› Вокруг вас никого нет'
   InvalidRadius: '#ff6600✇ &6Радар &f› Неверный радиус, используйте от 1 до 100'
   nearPlayers: '#ff6600✇ &6Радар &f› Окружающие игроки в радиусе {radius}: {players}'

@@ -1,6 +1,7 @@
 
 package me.catst0day.capi;
 
+import me.catst0day.capi.Commands.commandAPI.CAPICommandTemplate;
 import me.catst0day.capi.Entity.Listeners.CAPIOnEntityHitEventListener;
 import me.catst0day.capi.EventListeners.CAPIHideAchievements;
 import me.catst0day.capi.EventListeners.CAPIOnEntityDamageEvent;
@@ -14,14 +15,11 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.command.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.SimplePluginManager;
 
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.net.JarURLConnection;
@@ -63,7 +61,7 @@ public class CAPIOnEnableInitter {
         fileDownloader = new FileDownloader(plugin);
         loadTranslations();
 
-        registerAllCommandsFromPackage(plugin, "me.catst0day.capi.Commands");
+        registerAllCommandsFromPackage(plugin, "me.catst0day.capi.Commands.Cmds");
         setupMain(plugin);
         this.homeManager = new CAPIHomeManager(plugin);
         this.warpManager = new CAPIWarpManager(plugin);
@@ -116,12 +114,12 @@ public class CAPIOnEnableInitter {
 
                             try {
                                 Class<?> clazz = Class.forName(className);
-                                if (CommandTemplate.class.isAssignableFrom(clazz) &&
+                                if (CAPICommandTemplate.class.isAssignableFrom(clazz) &&
                                         !clazz.isInterface() &&
                                         !Modifier.isAbstract(clazz.getModifiers())) {
 
                                     Constructor<?> constructor = clazz.getConstructor(CAPI.class);
-                                    CommandTemplate commandInstance = (CommandTemplate) constructor.newInstance(plugin);
+                                    CAPICommandTemplate commandInstance = (CAPICommandTemplate) constructor.newInstance(plugin);
                                     registerCommandInBothFormats(plugin, commandInstance);
                                 }
                             } catch (ClassNotFoundException | NoSuchMethodException |
@@ -155,12 +153,12 @@ public class CAPIOnEnableInitter {
                         try {
                             Class<?> clazz = Class.forName(className);
 
-                            if (CommandTemplate.class.isAssignableFrom(clazz) &&
+                            if (CAPICommandTemplate.class.isAssignableFrom(clazz) &&
                                     !clazz.isInterface() &&
                                     !Modifier.isAbstract(clazz.getModifiers())) {
 
                                 Constructor<?> constructor = clazz.getConstructor(CAPI.class);
-                                CommandTemplate commandInstance = (CommandTemplate) constructor.newInstance(plugin);
+                                CAPICommandTemplate commandInstance = (CAPICommandTemplate) constructor.newInstance(plugin);
 
                                 registerCommandInBothFormats(plugin, commandInstance);
                             }
@@ -179,7 +177,7 @@ public class CAPIOnEnableInitter {
             throw new RuntimeException(ex);
         }
     }
-    private static void registerCommandInBothFormats(CAPI plugin, CommandTemplate command) {
+    private static void registerCommandInBothFormats(CAPI plugin, CAPICommandTemplate command) {
         String commandName = command.getName();
 
         SimpleCommandMap commandMap = (SimpleCommandMap) getCommandMap();
@@ -272,7 +270,7 @@ public class CAPIOnEnableInitter {
             log("Executor for command '%s' is null!".formatted(commandName));
             return;
         }
-        CommandTemplate.getRegisteredCommands().put(commandName, executor);
+        CAPICommandTemplate.getRegisteredCommands().put(commandName, executor);
         log("Subcommand '%s' loaded and available via /capi.".formatted(commandName));
     }
 
@@ -287,11 +285,10 @@ public class CAPIOnEnableInitter {
             @Override
             public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (args.length == 0) {
-                    // Show help for available commands
                     sender.sendMessage("=== CAPI Commands ===");
-                    List<String> subCommands = new ArrayList<>(CommandTemplate.getRegisteredCommands().keySet());
+                    List<String> subCommands = new ArrayList<>(CAPICommandTemplate.getRegisteredCommands().keySet());
                     for (String subCommand : subCommands) {
-                        CommandTemplate cmd = (CommandTemplate) CommandTemplate.getRegisteredCommands().get(subCommand);
+                        CAPICommandTemplate cmd = (CAPICommandTemplate) CAPICommandTemplate.getRegisteredCommands().get(subCommand);
                         if (cmd != null) {
                             sender.sendMessage("/capi " + subCommand + " - " + cmd.getDescription());
                         }
@@ -300,7 +297,7 @@ public class CAPIOnEnableInitter {
                 }
 
                 String subCommandName = args[0].toLowerCase();
-                CommandExecutor subCommandExecutor = CommandTemplate.getRegisteredCommands().get(subCommandName);
+                CommandExecutor subCommandExecutor = CAPICommandTemplate.getRegisteredCommands().get(subCommandName);
 
                 if (subCommandExecutor == null) {
                     sender.sendMessage(plugin.getMessage("unknownCommand")
@@ -323,16 +320,16 @@ public class CAPIOnEnableInitter {
 
                 if (args.length == 1) {
                     // Complete with available subcommands
-                    completions.addAll(CommandTemplate.getRegisteredCommands().keySet().stream()
+                    completions.addAll(CAPICommandTemplate.getRegisteredCommands().keySet().stream()
                             .filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
                             .collect(Collectors.toList()));
                     return completions;
                 } else if (args.length > 1) {
-                    // Try to get tab completion from the subcommand
+                    // Try to get tabCompl completion from the subcommand
                     String subCommandName = args[0].toLowerCase();
-                    CommandExecutor subCommand = CommandTemplate.getRegisteredCommands().get(subCommandName);
+                    CommandExecutor subCommand = CAPICommandTemplate.getRegisteredCommands().get(subCommandName);
 
-                    if (subCommand instanceof CommandTemplate cmdTemplate) {
+                    if (subCommand instanceof CAPICommandTemplate cmdTemplate) {
                         String[] subArgs = new String[args.length - 1];
                         System.arraycopy(args, 1, subArgs, 0, subArgs.length);
                         List<String> subCompletions = cmdTemplate.onTabComplete(sender, command, alias, subArgs);

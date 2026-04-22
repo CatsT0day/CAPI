@@ -35,10 +35,8 @@ public class FileDownloader {
                     targetFile.getParentFile().mkdirs();
                 }
 
-                // Загружаем файл из ресурсов плагина
                 plugin.saveResource(resourcePath, false);
 
-                // Проверяем, что файл действительно создан
                 if (targetFile.exists()) {
                     log("Successfully loaded resource: " + resourcePath + " -> " + targetPath);
                     afterDownload();

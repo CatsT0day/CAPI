@@ -2,11 +2,11 @@
 
 ## What is this?
 CAPI is **A+** code minecraft plugin, made by one person, 
-i created it, because wanted to create my own "CMI", 
+I created it, because wanted to create my own "CMI", 
 there's a lots of "basic" commands, like /feed (custom realization), 
 /heal (same as /feed),
 /gm - the same as cmi, just more customizable
-
+I even added alias editor!
 ### building project:
 ```bash
 
@@ -42,7 +42,7 @@ add this to the settings.gradle.kts:
 		repositories {
 			mavenCentral()
 			maven { url = uri("https://jitpack.io") }
-# add other repos like paper here
+        // add other repos like paper here
 		}
 	}
 ```
@@ -60,7 +60,7 @@ Add it in your root settings.gradle at the end of repositories:
 		repositories {
 			mavenCentral()
 			maven { url 'https://jitpack.io' }
-# same
+        // same
 		}
 	}
 ```
@@ -204,4 +204,5 @@ private CAPIGuiButton createButton(Player player, String homeName) {
     return button;
 }
 ```
-# in this plugin, there's no licinse, but please respect my hours of developing, you can inspect my code, and even learn programming with it, just like I did with CMI, but please, don't steal it, instead of stealing it, you can become the contributor of this project, again as I said, there's no license, and its open source!
+*****That's it, read license and contributing files!*****
+Thanks for reading/contributing/downloading

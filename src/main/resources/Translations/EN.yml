@@ -102,7 +102,7 @@ messages:
   # Sudo (/sudo)
   sudoSuccess: '&6[✔] &fCommand executed as player &e%s&f: &6%s'
   sudoTargetOffline: '&c[✘] &fTarget player &e%s&f is not online.'
-  sudoCommandFailed: '&c[✘] &fFailed to execute command as player &e%s&f.'
+  sudoCommandFailed: '&c[✘] &fFailed to perform command as player &e%s&f.'
 
   # Game mode messages
   gameModeMessages:
