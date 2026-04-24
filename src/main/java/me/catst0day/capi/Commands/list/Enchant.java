@@ -1,7 +1,6 @@
 package me.catst0day.capi.Commands.list;
 
 import me.catst0day.capi.CAPI;
-import me.catst0day.capi.Commands.commandAPI.CAPICommandAnnotation;
 import me.catst0day.capi.Commands.commandAPI.CAPICommandTemplate;
 import me.catst0day.capi.Managers.CAPIPermissionManager;
 import org.bukkit.command.CommandSender;
@@ -10,67 +9,32 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.enchantments.Enchantment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-@CAPICommandAnnotation(
-        name = "enchant",
-        aliases = {"ench"},
-        permission = CAPIPermissionManager.CAPIPerm.ENCHANT,
-        requirePlayer = true,
-        cooldownSeconds = 10000,
-        description = "enchant item in your hand"
-)
 public class Enchant extends CAPICommandTemplate {
-    private String successMsg;
-    private String errorMsg;
-    private String usageMsg;
 
     public Enchant(CAPI plugin) {
-        super(plugin);
-        setTabCompleteArguments(Arrays.asList(
-                "PROTECTION",
-                "FIRE_PROTECTION",
-                "FEATHER_FALLING",
-                "BLAST_PROTECTION",
-                "PROJECTILE_PROTECTION",
-                "RESPIRATION",
-                "AQUA_AFFINITY",
-                "THORNS",
-                "SHARPNESS",
-                "SMITE",
-                "BANE_OF_ARTHROPODS",
-                "KNOCKBACK",
-                "FIRE_ASPECT",
-                "LOOTING",
-                "EFFICIENCY",
-                "SILK_TOUCH",
-                "UNBREAKING",
-                "FORTUNE",
-                "POWER",
-                "PUNCH",
-                "FLAME",
-                "INFINITY"
-        ));
-    }
+    super(plugin, "enchant", List.of(), CAPIPermissionManager.CAPIPerm.ENCHANT, true, 0, "Enchant itme in your hand");
 
-    @Override
-    public void get(CAPI plugin) {
-        successMsg = plugin.getMessage("itemEnchantSuccess");
-        errorMsg = plugin.getMessage("commandError");
-        usageMsg = plugin.getMessage("itemUsageEnchant");
+        setTabCompleteArguments(List.of(
+                "PROTECTION", "FIRE_PROTECTION", "FEATHER_FALLING", "BLAST_PROTECTION",
+                "PROJECTILE_PROTECTION", "RESPIRATION", "AQUA_AFFINITY", "THORNS",
+                "SHARPNESS", "SMITE", "BANE_OF_ARTHROPODS", "KNOCKBACK",
+                "FIRE_ASPECT", "LOOTING", "EFFICIENCY", "SILK_TOUCH",
+                "UNBREAKING", "FORTUNE", "POWER", "PUNCH", "FLAME", "INFINITY"
+        ));
     }
 
     @Override
     protected boolean perform(Player player, String[] args) {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || item.getType().isAir()) {
-            plugin.sendCFGmessage(player, "itemNoItemInHand");
+            plugin.sendCFGmessage(player, plugin.getMessage("itemNoItemInHand"));
             return true;
         }
 
         if (args.length < 2) {
-            plugin.sendCFGmessage(player, usageMsg);
+            plugin.sendCFGmessage(player, plugin.getMessage("itemUsageEnchant"));
             return true;
         }
 
@@ -79,10 +43,11 @@ public class Enchant extends CAPICommandTemplate {
         try {
             level = Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
-            plugin.sendCFGmessage(player, "itemLevelMustBeNumber");
+            plugin.sendCFGmessage(player, plugin.getMessage("itemLevelMustBeNumber"));
             return true;
         }
 
+        @SuppressWarnings("deprecation")
         Enchantment enchantment = Enchantment.getByName(enchantName);
         if (enchantment == null) {
             plugin.sendCFGmessage(player,
@@ -92,17 +57,16 @@ public class Enchant extends CAPICommandTemplate {
 
         item.addUnsafeEnchantment(enchantment, level);
         plugin.sendCFGmessage(player,
-                successMsg.replace("%s", enchantName).replace("%d", String.valueOf(level)));
+                plugin.getMessage("itemEnchantSuccess")
+                        .replace("%s", enchantName)
+                        .replace("%d", String.valueOf(level)));
         return true;
     }
 
     @Override
     protected boolean perform(CommandSender sender, Player player, String[] args) {
-        if (!(sender instanceof Player)) {
-            plugin.sendCFGmessage(sender, "playerOnlyCommand");
-            return true;
-        }
-        return perform((Player) sender, args);
+        // Так как requirePlayer = true, этот метод вызовется только если executeWithPlayer вернет false
+        return perform(player, args);
     }
 
     @Override
@@ -116,7 +80,6 @@ public class Enchant extends CAPICommandTemplate {
                     completions.add(enchant);
                 }
             }
-            completions.sort(String.CASE_INSENSITIVE_ORDER);
         } else if (args.length == 2) {
             for (int i = 1; i <= 5; i++) {
                 completions.add(String.valueOf(i));

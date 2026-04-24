@@ -5,7 +5,7 @@ import me.catst0day.capi.Chat.CAPIChatColor;
 import me.catst0day.capi.Commands.commandAPI.CAPICommandTemplate;
 import me.catst0day.capi.Managers.CAPIAliasManager;
 import me.catst0day.capi.Managers.CAPIPermissionManager;
-import me.catst0day.capi.Shedulers.CAPIMainScheduler;
+import me.catst0day.capi.Schedulers.CAPIMainScheduler;
 import me.catst0day.capi.Bossbar.CAPIBossBarInfo;
 import me.catst0day.capi.Managers.CAPIHomeManager;
 import me.catst0day.capi.Managers.CAPIWarpManager;
@@ -19,7 +19,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.UUID;
 
 import static me.catst0day.capi.CAPIOnEnableInitter.langConfig;
@@ -44,11 +43,9 @@ public class CAPI extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
         CAPIOnEnableInitter initializer = new CAPIOnEnableInitter();
         initializer.OnEnable(this);
     }
-
 
     public static CAPI getInstance() {
         if (instance == null) {
@@ -65,12 +62,11 @@ public class CAPI extends JavaPlugin {
     }
 
     public CAPIPermissionManager getPermissionManager() {
-     if (this.permManager == null) {
-     this.permManager = new CAPIPermissionManager(this);
-           }
-         return this.permManager;
+        if (this.permManager == null) {
+            this.permManager = new CAPIPermissionManager(this);
+        }
+        return this.permManager;
     }
-
 
     public CAPIWarpManager getWarpManager() {
         if (this.warpManager == null) {
@@ -78,7 +74,6 @@ public class CAPI extends JavaPlugin {
         }
         return this.warpManager;
     }
-
 
     public VersionChecker getVersionCheckManager() {
         if (versionCheckManager == null) {
@@ -90,6 +85,13 @@ public class CAPI extends JavaPlugin {
         return this.versionCheckManager;
     }
 
+    public CAPIAliasManager getAliasManager() {
+        if (aliasManager == null) {
+            aliasManager = new CAPIAliasManager(this);
+        }
+        return aliasManager;
+    }
+
     // API
     public boolean isGodMode(UUID uuid) {
         return godMode.getOrDefault(uuid, false);
@@ -99,7 +101,7 @@ public class CAPI extends JavaPlugin {
         Player target = args.length == 1 ? Bukkit.getPlayer(args[0]) : player;
 
         if (target == null) {
-            Objects.requireNonNull(player).sendMessage(getMessage("playerNotFound"));
+            if (player != null) player.sendMessage(getMessage("playerNotFound"));
             return;
         }
 
@@ -119,7 +121,6 @@ public class CAPI extends JavaPlugin {
                     .replace("%player%", target.getName()));
         }
     }
-
 
     public boolean isFlyMode(UUID uuid) {
         return flyMode.getOrDefault(uuid, false);
@@ -152,40 +153,44 @@ public class CAPI extends JavaPlugin {
     }
 
     public String sendCFGmessage(Player plr, String key) {
+        if (plr == null) return "";
+
         String messagePath = "messages." + key;
         String defaultValue = "Msg '" + key + "' not loaded";
 
         if (langConfig == null) {
             log("Translation not loaded!");
-            return CAPI.getInstance().getUser(plr).sendMsg(defaultValue);
+            return getUser(plr).sendMsg(defaultValue);
         }
 
         if (langConfig.contains(messagePath)) {
             String message = langConfig.getString(messagePath, defaultValue);
-            return CAPI.getInstance().getUser(plr).sendMsg(message);
+            return getUser(plr).sendMsg(message);
         }
 
         log("No key for translation: " + key);
         return defaultValue;
     }
+
     public String sendCFGmessage(CommandSender plr, String key) {
+        if (!(plr instanceof Player player)) return "";
+
         String messagePath = "messages." + key;
         String defaultValue = "Msg '" + key + "' not loaded";
 
         if (langConfig == null) {
             log("Translation not loaded!");
-            return getUser((Player) plr).sendMsg(defaultValue);
+            return getUser(player).sendMsg(defaultValue);
         }
 
         if (langConfig.contains(messagePath)) {
             String message = langConfig.getString(messagePath, defaultValue);
-            return getUser((Player) plr).sendMsg(message);
+            return getUser(player).sendMsg(message);
         }
 
         log("No key for translation: " + key);
         return defaultValue;
     }
-
 
     public String getGameModeMessage(GameMode mode) {
         String messagePath = "messages.gameModeMessages." + mode.name();
@@ -199,8 +204,6 @@ public class CAPI extends JavaPlugin {
         String message = langConfig.getString(messagePath, defaultValue);
         return CAPIChatColor.translate(message);
     }
-
-
 
     public void teleport(Player player, Location target) {
         long delayTicks = 0L;
@@ -228,13 +231,12 @@ public class CAPI extends JavaPlugin {
         if (delaySeconds == 0) {
             if (target != null && target.getWorld() != null) {
                 player.teleport(target);
-                player.sendMessage(getMessage("teleportSuccess"));
+                if (player != null) player.sendMessage(getMessage("teleportSuccess"));
             } else {
-                player.sendMessage(getMessage("invalidLocation"));
+                if (player != null) player.sendMessage(getMessage("invalidLocation"));
             }
             return;
         }
-
 
         CAPIBossBarInfo bossBarInfo = new CAPIBossBarInfo(this, player, "teleport_delay");
         bossBarInfo.setTitleOfBar(getMessage("teleportWithDelay")
@@ -243,17 +245,14 @@ public class CAPI extends JavaPlugin {
         bossBarInfo.setStyle(CAPIBarStyle.SOLID);
         bossBarInfo.setSeconds(delaySeconds);
 
-
         bossBars.put(player.getUniqueId(), bossBarInfo.getBar());
-
 
         final int[] taskIdHolder = new int[1];
 
         taskIdHolder[0] = CAPIMainScheduler.scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
-
-                if (!player.isValid() || !bossBarInfo.stillRunning()) {
+                if (player == null || !player.isValid() || !bossBarInfo.stillRunning()) {
                     Bukkit.getScheduler().cancelTask(taskIdHolder[0]);
                     bossBarInfo.remove();
                     bossBars.remove(player.getUniqueId());
@@ -271,7 +270,7 @@ public class CAPI extends JavaPlugin {
                         player.teleport(target);
                         player.sendMessage(getMessage("teleportSuccess"));
                     } else {
-                        player.sendMessage(getMessage("chunkNotLoaded"));
+                        if (player != null) player.sendMessage(getMessage("chunkNotLoaded"));
                     }
 
                     bossBarInfo.remove();
@@ -289,16 +288,21 @@ public class CAPI extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        Bukkit.getScheduler().cancelTasks(this);
+        for (BossBar bar : bossBars.values()) {
+            bar.removeAll();
+        }
+        bossBars.clear();
     }
+
     public CAPIUser getUser(CommandSender sender, String playerName) {
         return getUser(playerName);
     }
 
     public CAPIUser getUser(Player player) {
+        if (player == null) return null;
         return new CAPIUser(player.getUniqueId());
     }
-
 
     public CAPIUser getUser(String playerName) {
         if (playerName == null) {
@@ -323,10 +327,4 @@ public class CAPI extends JavaPlugin {
         }
         return new CAPIUser(uuid);
     }
-
-    public CAPIAliasManager getAliasManager() {
-        return aliasManager;
-    }
 }
-
-

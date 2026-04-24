@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import static me.catst0day.capi.Utils.Util.log;
 
-public abstract class CAPICommandTemplate implements CommandExecutor, TabCompleter, Cmd {
+public abstract class CAPICommandTemplate implements CommandExecutor, TabCompleter {
     private static final HashMap<String, CommandExecutor> registeredCommands = new HashMap<>();
     protected final CAPI plugin;
     protected final String name;
@@ -26,27 +26,8 @@ public abstract class CAPICommandTemplate implements CommandExecutor, TabComplet
     private final long cooldownSeconds;
     protected final String description;
 
-    protected CAPICommandTemplate(CAPI plugin) {
-        this.plugin = plugin;
-        CAPICommandAnnotation annotation = this.getClass().getAnnotation(CAPICommandAnnotation.class);
 
-        if (annotation != null) {
-            this.name = annotation.name();
-            this.aliases = Arrays.asList(annotation.aliases());
-            this.perm = annotation.permission();
-            this.requirePlayer = annotation.requirePlayer();
-            this.cooldownSeconds = annotation.cooldownSeconds();
-            this.description = annotation.description();
-        } else {
-            throw new RuntimeException("Command class must be annotated with @CAPICommandAnnotation");
-        }
 
-        registeredCommands.put(name, this);
-        for (String alias : aliases) {
-            registeredCommands.put(alias, this);
-        }
-    }
-    @Deprecated(since = "1.0.2.133-022-UT" ,forRemoval = true)
     protected CAPICommandTemplate(CAPI plugin, String name, List<String> aliases,
                                   CAPIPermissionManager.CAPIPerm perm, boolean requirePlayer,
                                   long cooldownSeconds, String description) {
@@ -66,19 +47,23 @@ public abstract class CAPICommandTemplate implements CommandExecutor, TabComplet
         }
     }
 
-    @Override
-    public void get(CAPI plugin) {}
 
-    @Override
+
     public boolean perform(CAPI plugin, CommandSender sender, String[] args) {
         return onCommand(sender, args);
     }
 
     private boolean onCommand(CommandSender sender, String[] args) {
+        if (sender == null) {
+            log("Command executed with null sender - ignoring");
+            return false;
+        }
+
         CAPIOnCommandEvent event = new CAPIOnCommandEvent(sender, this.name, args);
         plugin.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
-            return event.getCommandResult();
+            Boolean result = event.getCommandResult();
+            return result != null ? result : false;
         }
 
         if (!hasPermission(sender, args)) {
@@ -109,8 +94,9 @@ public abstract class CAPICommandTemplate implements CommandExecutor, TabComplet
             }
             return perform(sender, player, args);
         } catch (Exception e) {
-            sender.sendMessage(plugin.getMessage("commandError"));
-            log("Error executing command " + name + ": " + e.getMessage());
+            if (sender != null) sender.sendMessage(plugin.getMessage("commandError"));
+            log("&4Error executing command " + name + "&7( &6" + e.getMessage() + "&7)");
+            e.printStackTrace();
             return false;
         }
     }
@@ -174,21 +160,27 @@ public abstract class CAPICommandTemplate implements CommandExecutor, TabComplet
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         return perform(plugin, sender, args);
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
-        if (requirePlayer && !(sender instanceof Player)) return null;
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+
+        if (requirePlayer && !(sender instanceof Player)) {
+            return Collections.emptyList();
+        }
+
         Player player = (Player) sender;
 
         if (!tabCompleteArguments.isEmpty() && args.length == 1) {
             return tabCompleteArguments.stream()
-                    .filter(arg -> arg.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+                    .filter(arg -> arg.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
         }
 
-        return tabCompl(player, args);
+        List<String> result = tabCompl(player, args);
+        return result != null ? result : Collections.emptyList();
     }
 
     protected abstract boolean perform(CommandSender sender, Player player, String[] args);

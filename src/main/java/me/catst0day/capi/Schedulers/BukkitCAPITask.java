@@ -1,5 +1,5 @@
 
-package me.catst0day.capi.Shedulers;
+package me.catst0day.capi.Schedulers;
 
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.plugin.Plugin;

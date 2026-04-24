@@ -1,112 +1,97 @@
-
 messages:
-  # Basic help and error messages
+  playerOnlyCommand: '╔═════════════════════════════════\n║ #ff6600⚠ &fError! This command is for players only.\n╚═════════════════════════════════'
+  commandError: '╔═════════════════════════════════\n║ #ff6600✘ &fAn error occurred during execution.\n╚═════════════════════════════════'
+  cooldownMessage: '╔═════════════════════════════════\n║ #ff6600⚠ &fCooldown: &e%%&f seconds\n╚═════════════════════════════════'
+  teleportWithDelay: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fTeleporting in &e%seconds%&f sec...\n╚═════════════════════════════════'
+  teleportSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fYou have been teleported!\n╚═════════════════════════════════'
+  teleportCancelled: '╔═════════════════════════════════\n║ #ff6600✘ &fTeleport cancelled!\n╚═════════════════════════════════'
+  chunkNotLoaded: '╔═════════════════════════════════\n║ #ff6600✘ &fError: Chunk not loaded!\n╚═════════════════════════════════'
+
   help:
-    - "&6======================="
-    -  ""
-    -  "&fCommand Help"
-    -    "&6  /heal - heal yourself or another player"
-    -    "&6  /feed - feed yourself or another player"
-    -    "&6  /spawn - teleport to spawn"
-    -    "&6  /tpa <player> - send teleport request"
-    -    "&6  /tpaccept - accept teleport request"
-    -    "&6  /tpdeny - deny teleport request"
-    -    "&6  /warp <name> - teleport to warp"
-    -    "&6  /setwarp <name> - create warp at current location"
-    -  ""
-    -  "&6======================="
-  noPermission: '&c[✘] &fYou do not have permission to use this command!'
-  playerNotFound: '&c[✘] &fPlayer not found.'
-  invalidMode: '&c[✘] &fInvalid mode specified.'
-  usage: '&c[✘] &fIncorrect command usage. Use: %s'
+    - '#ff6600╔════════════ Help Menu ══════════════'
+    - '&6 /heal &f- heal a player'
+    - '&6 /feed &f- feed a player'
+    - '&6 /spawn &f- teleport to spawn'
+    - '&6 /tpa &f- teleport request'
+    - '&6 /warp &f- teleport to warps'
+    - '&6 /home &f- manage homes'
+    - '#ff6600╚═════════════════════════════════'
+  helpUnavailable: '╔═════════════════════════════════\n║ #ff6600✘ &fCommand list is unavailable.\n╚═════════════════════════════════'
 
-  # Warp messages
-  warpTeleported: "&6[✔] &fTeleported to warp: &e{warpname}"
-  warpCreatedSuccessfully: "&6[✔] &fWarp '&e{warpname}&f' created successfully!"
-  warpAlreadyExists: "&c[✘] &fWarp named '&e{warpname}&f' already exists!"
-  warpNotFound: "&c[✘] &fWarp '&e{warpname}&f' not found!"
-  warpList: "&6Available warps: &e%s"
-  warpCreationFailed: "&c[✘] &fFailed to create warp. Please try again later or contact an administrator."
-  noWarpsAvailable: "&6Available warps: &eNo warps created"
+  backNoInfo: '╔═════════════════════════════════\n║ #ff6600✘ &fNo location to return to!\n╚═════════════════════════════════'
+  backWorldBlacklisted: '╔═════════════════════════════════\n║ #ff6600✘ &fWorld is blacklisted!\n╚═════════════════════════════════'
+  backFeedback: '╔═════════════════════════════════\n║ #ff6600✔ &fBack: &e[worldName] &7([x], [y], [z])\n╚═════════════════════════════════'
+  backSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fSuccessfully returned.\n╚═════════════════════════════════'
 
-  # Spawn
-  spawnSet: '&6[✔] &fSpawn point successfully &6set'
-  spawnTeleportSuccess: '&6[✔] &fTeleporting to &6spawn...'
+  speedCurrent: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fYour speed: &e%s\n╚═════════════════════════════════'
+  speedInvalid: '╔═════════════════════════════════\n║ #ff6600✘ &fInvalid value (0-10).\n╚═════════════════════════════════'
+  speedSetWalk: '╔═════════════════════════════════\n║ #ff6600✔ &fWalk speed &e%player% &fis now &6%s\n╚═════════════════════════════════'
+  speedSetFly: '╔═════════════════════════════════\n║ #ff6600✔ &fFly speed &e%player% &fis now &6%s\n╚═════════════════════════════════'
 
-  # Config reload
-  configReloaded: '&6[✔]  &fCatAPI configuration reloaded. Thanks for using my plugin!'
+  currentTime: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fTime for &e%player%&f: &6%time%\n╚═════════════════════════════════'
+  timeFrozen: '╔═════════════════════════════════\n║ #ff6600✔ &fTime frozen for &e%player%&f.\n╚═════════════════════════════════'
+  timeUnfrozen: '╔═════════════════════════════════\n║ #ff6600✔ &fTime unfrozen for &e%player%&f.\n╚═════════════════════════════════'
+  timeReset: '╔═════════════════════════════════\n║ #ff6600✔ &fTime reset for &e%player%&f.\n╚═════════════════════════════════'
+  timeSet: '╔═════════════════════════════════\n║ #ff6600✔ &fTime for &e%player%&f set to: &6%time%\n╚═════════════════════════════════'
+  yourTimeReset: '╔═════════════════════════════════\n║ #ff6600✔ &fYour time reset to server time.\n╚═════════════════════════════════'
+  yourTimeSet: '╔═════════════════════════════════\n║ #ff6600✔ &fYour time set to &6%time%\n╚═════════════════════════════════'
 
-  # Radar (/near)
-  NoOneAtNear: "&c[✘] &6radar > &fNo players around you"
-  InvalidRadius: "&c[✘] &6radar > &fInvalid radius. Use value between 1 and 100"
-  nearPlayers: '&6[✔] &6radar > &fPlayers within {radius} blocks: {players}'
-  CannotUseRadius: '&6[✔] &6radar > &fYou cannot use this radius'
+  enabled: '&aenabled'
+  disabled: '&cdisabled'
 
-  # Repair (/fix, /repair)
-  repairSuccessAll: '&6[✔] repair > you repaired all items!'
-  repairSuccessHand: '&6[✔] repair > you successfully repaired the item in your hand'
-  repairNotSuccess: '&c[✘] repair > you cannot repair this item'
+  afkSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fYou are now AFK.\n╚═════════════════════════════════'
+  afkFail: '╔═════════════════════════════════\n║ #ff6600✘ &fFailed to enter AFK mode.\n╚═════════════════════════════════'
+  afkReason: '╔═════════════════════════════════\n║ #ff6600✘ &fAFK Reason: &e%reason%\n╚═════════════════════════════════'
+  afkCheck: '╔═════════════════════════════════\n║ #ff6600✔ &fAFK Status: &e%is_afk%\n╚═════════════════════════════════'
 
-  # Elytra
-  ElytraRequired: '&c[✘] &fYou don\'t have elytra equipped. Put them on and run the command again'
+  currentWeather: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fWeather for &e%player%&f: &6%weather%\n╚═════════════════════════════════'
+  weatherReset: '╔═════════════════════════════════\n║ #ff6600✔ &fWeather reset for &e%player%&f.\n╚═════════════════════════════════'
+  yourWeatherReset: '╔═════════════════════════════════\n║ #ff6600✔ &fYour weather has been reset.\n╚═════════════════════════════════'
+  weatherSet: '╔═════════════════════════════════\n║ #ff6600✔ &fWeather for &e%player%&f: &6%weather%\n╚═════════════════════════════════'
+  yourWeatherSet: '╔═════════════════════════════════\n║ #ff6600✔ &fYour weather set to: &6%weather%\n╚═════════════════════════════════'
 
-  # TPA system
-  tpaSent: '&6[Ⓘ] &fTeleport request sent to player &e%player%&f!'
-  tpaReceived: '&6[Ⓘ] &ePlayer &f%player% &ewants to teleport to you!'
-  tpSuccess: '&6[✔] &fSuccessfully teleported to player &e%s&f!'
-  noPendingRequests: '&c[✘] &fYou have no pending teleport requests!'
-  tpaSenderOffline: '&c[✘] &fSender is no longer online!'
-  tpaDenied: '&c[✘] &fPlayer &e%player% &fdenied your teleport request!'
-  tpaRejected: '&eYou rejected the teleport request from &e%player%&f.'
+  homeTeleported: '╔═════════════════════════════════\n║ #ff6600✔ &fHome: &e{homename}\n╚═════════════════════════════════'
+  homeCreatedSuccessfully: '╔═════════════════════════════════\n║ #ff6600✔ &fHome &e"{homename}" &fcreated!\n╚═════════════════════════════════'
+  homeAlreadyExists: '╔═════════════════════════════════\n║ #ff6600✘ &fHome &e"{homename}" &falready exists.\n╚═════════════════════════════════'
+  homeNotFound: '╔═════════════════════════════════\n║ #ff6600✘ &fHome &e"{homename}" &fnot found.\n╚═════════════════════════════════'
+  homeDeletionSuccess: '╔═════════════════════════════════\n║ #ffff00⚝ &fHome &e"{homename}" &fdeleted.\n╚═════════════════════════════════'
+  homeSet: '╔═════════════════════════════════\n║ #ffff00⚝ &fHome &e%homename% &fset!\n╚═════════════════════════════════'
 
-  # Spectator (/spec)
-  specSuccess: '&6[✔] &fYou started spectating &e%s&a.'
+  suicideMessage: '╔═════════════════════════════════\n║ #ff6600✝ &fYou chose to... disappear.\n╚═════════════════════════════════'
+  suicideSuccess: '╔═════════════════════════════════\n║ #ff6600✝ &fPlayer &e%s &fleft this world.\n╚═════════════════════════════════'
 
-  # God mode (/god)
-  godToggled: '&6[✔] &fYour god mode is %s.'
-  godToggleSuccess: '&6[✔] &fYou toggled god mode for &e%s&a.'
-  godModeItemPickupDenied: '&c[✘] &fYou cannot pick up items in god mode.'
+  noPermission: '╔═════════════════════════════════\n║ #ff6600✘ &fYou &cdo not have permission&f!\n╚═════════════════════════════════'
+  playerNotFound: '╔═════════════════════════════════\n║ #ff6600✘ &fPlayer not found.\n╚═════════════════════════════════'
 
-  # Fly (/fly)
-  flyToggled: '&6[✔] &fYour fly mode is %s.'
-  flyToggleSuccess: '&6[✔]&fYou toggled fly mode for &e%s&a.'
+  warpTeleported: '╔═════════════════════════════════\n║ #ff6600✔ &fWarp: &e{warpname}\n╚═════════════════════════════════'
+  warpCreatedSuccessfully: '╔═════════════════════════════════\n║ #ff6600✔ &fWarp &e"{warpname}" &fcreated!\n╚═════════════════════════════════'
+  warpNotFound: '╔═════════════════════════════════\n║ #ff6600✘ &fWarp &e"{warpname}" &fnot found.\n╚═════════════════════════════════'
 
-  # Healing (/heal)
-  healSuccess: '&6[❤] &fYou have been healed.'
-  healTargeted: '&6[❤] &fYou healed player &6&f%s'
+  spawnSet: '╔═════════════════════════════════\n║ #ff6600✔ &fSpawn successfully &6set\n╚═════════════════════════════════'
+  spawnTeleportSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fTeleporting to &6spawn...\n╚═════════════════════════════════'
 
-  # Feeding (/feed, /eat)
-  feedSuccess: '&6[☕] &fYou ate something'
-  feedTargeted: '&6[☕] &fYou fed player &6&f%s'
+  repairSuccessAll: '╔═════════════════════════════════\n║ #ff6600✔ &fAll items repaired!\n╚═════════════════════════════════'
+  repairSuccessHand: '╔═════════════════════════════════\n║ #ff6600✔ &fItem in hand repaired.\n╚═════════════════════════════════'
 
-  # Teleport to player (/tphere)
-  tphereToYouSuccess: "&6[Ⓘ] &fYou were teleported to &e%s&a"
-  tphereSuccess: "&6[✔] &fPlayer successfully teleported to you: &e%s&a"
+  tpaSent: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fRequest sent to &e%player%&f!\n╚═════════════════════════════════'
+  tpaReceived: '╔═════════════════════════════════\n║ #ff6600Ⓘ &ePlayer &f%player% &ewants to TP!\n╚═════════════════════════════════'
+  tpSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fTeleported to &e%s&f!\n╚═════════════════════════════════'
+  tpaDenied: '╔═════════════════════════════════\n║ #ff6600✘ &fPlayer &e%player% &fdenied request.\n╚═════════════════════════════════'
 
-  # Items
-  itemNoItemInHand: '&c[✘] &fYou don\'t have an item in your hand!'
-  itemSetNameSuccess: '&6[✔] &fItem name successfully set to: &e%s'
-  itemSetLoreSuccess: '&6[✔] &fItem lore successfully set.'
-  itemEnchantSuccess: '&6[✔] &fItem successfully enchanted: &e%s &flevel &e%d'
-  itemInvalidEnchantment: '&c[✘] &fUnknown enchantment: &e%s'
-  itemLevelMustBeNumber: '&c[✘] &fLevel must be a number!'
-  itemUsageEnchant: '&c[✘] &fUsage: &e/enchant <enchantment> <level>'
+  gmSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fGamemode set to &e%s&a.\n╚═════════════════════════════════'
+  godToggled: '╔═════════════════════════════════\n║ #ff6600✔ &fGod mode %s.\n╚═════════════════════════════════'
+  flyToggled: '╔═════════════════════════════════\n║ #ff6600✔ &fFly mode %s.\n╚═════════════════════════════════'
 
+  healSuccess: '╔═════════════════════════════════\n║ #ff6600❤ &fYou have been healed.\n╚═════════════════════════════════'
+  healTargeted: '╔═════════════════════════════════\n║ #ff6600❤ &fYou healed &e%s\n╚═════════════════════════════════'
+  feedSuccess: '╔═════════════════════════════════\n║ #ff6600☕ &fHunger satisfied.\n╚═════════════════════════════════'
+  feedTargeted: '╔═════════════════════════════════\n║ #ff6600☕ &fYou fed &e%s\n╚═════════════════════════════════'
 
-  # Vanish (/vanish)
-  vanishEnabled: '&6[✔] &fYou entered &6vanish&f. You are invisible to other players.'
-  vanishDisabled: '&c[✘] &fYou exited &6vanish&f.'
-  noPermissionVanish: '&c[✘] &fYou do not have permission to use this command.'
-  vanishBossBarTitle: '&6Invisibility Mode'
+  vanishEnabled: '╔═════════════════════════════════\n║ #ff6600✔ &fVanish &6enabled&f.\n╚═════════════════════════════════'
+  vanishDisabled: '╔═════════════════════════════════\n║ #ff6600✘ &fVanish &6disabled&f.\n╚═════════════════════════════════'
 
-  # Sudo (/sudo)
-  sudoSuccess: '&6[✔] &fCommand executed as player &e%s&f: &6%s'
-  sudoTargetOffline: '&c[✘] &fTarget player &e%s&f is not online.'
-  sudoCommandFailed: '&c[✘] &fFailed to perform command as player &e%s&f.'
-
-  # Game mode messages
   gameModeMessages:
-    SURVIVAL: '&a[✔] &fYou switched to &6Survival&f mode.'
-    CREATIVE: '&a[✔] &fYou switched to &6Creative&f mode.'
-    ADVENTURE: '&a[✔] &fYou switched to &6Adventure&f mode.'
-    SPECTATOR: '&a[✔] &fYou switched to &6Spectator&f mode.'
+    SURVIVAL: '╔═════════════════════════════════\n║ #ff6600⚡ &fGamemode: &6Survival\n╚═════════════════════════════════'
+    CREATIVE: '╔═════════════════════════════════\n║ #ff6600⚡ &fGamemode: &6Creative\n╚═════════════════════════════════'
+    ADVENTURE: '╔═════════════════════════════════\n║ #ff6600⚡ &fGamemode: &6Adventure\n╚═════════════════════════════════'
+    SPECTATOR: '╔═════════════════════════════════\n║ #ff6600⚡ &fGamemode: &6Spectator\n╚═════════════════════════════════'

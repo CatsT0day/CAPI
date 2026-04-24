@@ -1,0 +1,97 @@
+messages:
+  playerOnlyCommand: '╔═════════════════════════════════\n║ #ff6600⚠ &fFehler! Dieser Befehl ist nur für Spieler.\n╚═════════════════════════════════'
+  commandError: '╔═════════════════════════════════\n║ #ff6600✘ &fEin Fehler ist aufgetreten.\n╚═════════════════════════════════'
+  cooldownMessage: '╔═════════════════════════════════\n║ #ff6600⚠ &fWartezeit: &e%%&f Sekunden\n╚═════════════════════════════════'
+  teleportWithDelay: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fTeleport in &e%seconds%&f Sek...\n╚═════════════════════════════════'
+  teleportSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fErfolgreich teleportiert!\n╚═════════════════════════════════'
+  teleportCancelled: '╔═════════════════════════════════\n║ #ff6600✘ &fTeleport abgebrochen!\n╚═════════════════════════════════'
+  chunkNotLoaded: '╔═════════════════════════════════\n║ #ff6600✘ &fFehler: Chunk nicht geladen!\n╚═════════════════════════════════'
+
+  help:
+    - '#ff6600╔════════════ Hilfe-Menü ══════════════'
+    - '&6 /heal &f- einen Spieler heilen'
+    - '&6 /feed &f- einen Spieler füttern'
+    - '&6 /spawn &f- zum Spawn teleportieren'
+    - '&6 /tpa &f- Teleport-Anfrage senden'
+    - '&6 /warp &f- zu Warps teleportieren'
+    - '&6 /home &f- Homes verwalten'
+    - '#ff6600╚═════════════════════════════════'
+  helpUnavailable: '╔═════════════════════════════════\n║ #ff6600✘ &fHilfe ist derzeit nicht verfügbar.\n╚═════════════════════════════════'
+
+  backNoInfo: '╔═════════════════════════════════\n║ #ff6600✘ &fKein Rückkehrort gefunden!\n╚═════════════════════════════════'
+  backWorldBlacklisted: '╔═════════════════════════════════\n║ #ff6600✘ &fWelt ist auf der schwarzen Liste!\n╚═════════════════════════════════'
+  backFeedback: '╔═════════════════════════════════\n║ #ff6600✔ &fZurück: &e[worldName] &7([x], [y], [z])\n╚═════════════════════════════════'
+  backSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fErfolgreich zurückgekehrt.\n╚═════════════════════════════════'
+
+  speedCurrent: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fDeine Geschwindigkeit: &e%s\n╚═════════════════════════════════'
+  speedInvalid: '╔═════════════════════════════════\n║ #ff6600✘ &fUngültiger Wert (0-10).\n╚═════════════════════════════════'
+  speedSetWalk: '╔═════════════════════════════════\n║ #ff6600✔ &fLaufgeschwindigkeit für &e%player% &fist &6%s\n╚═════════════════════════════════'
+  speedSetFly: '╔═════════════════════════════════\n║ #ff6600✔ &fFluggeschwindigkeit für &e%player% &fist &6%s\n╚═════════════════════════════════'
+
+  currentTime: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fZeit für &e%player%&f: &6%time%\n╚═════════════════════════════════'
+  timeFrozen: '╔═════════════════════════════════\n║ #ff6600✔ &fZeit für &e%player%&f eingefroren.\n╚═════════════════════════════════'
+  timeUnfrozen: '╔═════════════════════════════════\n║ #ff6600✔ &fZeit für &e%player%&f läuft wieder.\n╚═════════════════════════════════'
+  timeReset: '╔═════════════════════════════════\n║ #ff6600✔ &fZeit für &e%player%&f zurückgesetzt.\n╚═════════════════════════════════'
+  timeSet: '╔═════════════════════════════════\n║ #ff6600✔ &fZeit für &e%player%&f auf &6%time% &fgesetzt\n╚═════════════════════════════════'
+  yourTimeReset: '╔═════════════════════════════════\n║ #ff6600✔ &fDeine Zeit wurde zurückgesetzt.\n╚═════════════════════════════════'
+  yourTimeSet: '╔═════════════════════════════════\n║ #ff6600✔ &fDeine Zeit auf &6%time% &fgesetzt.\n╚═════════════════════════════════'
+
+  enabled: '&aaktiviert'
+  disabled: '&cdeaktiviert'
+
+  afkSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fDu bist jetzt AFK.\n╚═════════════════════════════════'
+  afkFail: '╔═════════════════════════════════\n║ #ff6600✘ &fAFK-Modus fehlgeschlagen.\n╚═════════════════════════════════'
+  afkReason: '╔═════════════════════════════════\n║ #ff6600✘ &fAFK Grund: &e%reason%\n╚═════════════════════════════════'
+  afkCheck: '╔═════════════════════════════════\n║ #ff6600✔ &fAFK Status: &e%is_afk%\n╚═════════════════════════════════'
+
+  currentWeather: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fWetter für &e%player%&f: &6%weather%\n╚═════════════════════════════════'
+  weatherReset: '╔═════════════════════════════════\n║ #ff6600✔ &fWetter für &e%player%&f zurückgesetzt.\n╚═════════════════════════════════'
+  yourWeatherReset: '╔═════════════════════════════════\n║ #ff6600✔ &fDein Wetter wurde zurückgesetzt.\n╚═════════════════════════════════'
+  weatherSet: '╔═════════════════════════════════\n║ #ff6600✔ &fWetter für &e%player%&f: &6%weather%\n╚═════════════════════════════════'
+  yourWeatherSet: '╔═════════════════════════════════\n║ #ff6600✔ &fDein Wetter auf &6%weather% &fgesetzt.\n╚═════════════════════════════════'
+
+  homeTeleported: '╔═════════════════════════════════\n║ #ff6600✔ &fHome: &e{homename}\n╚═════════════════════════════════'
+  homeCreatedSuccessfully: '╔═════════════════════════════════\n║ #ff6600✔ &fHome &e"{homename}" &ferstellt!\n╚═════════════════════════════════'
+  homeAlreadyExists: '╔═════════════════════════════════\n║ #ff6600✘ &fHome &e"{homename}" &fexistiert bereits\n╚═════════════════════════════════'
+  homeNotFound: '╔═════════════════════════════════\n║ #ff6600✘ &fHome &e"{homename}" &fnicht gefunden.\n╚═════════════════════════════════'
+  homeDeletionSuccess: '╔═════════════════════════════════\n║ #ffff00⚝ &fHome &e"{homename}" &fgelöscht.\n╚═════════════════════════════════'
+  homeSet: '╔═════════════════════════════════\n║ #ffff00⚝ &fHome &e%homename% &fgesetzt!\n╚═════════════════════════════════'
+
+  suicideMessage: '╔═════════════════════════════════\n║ #ff6600✝ &fDu hast gewählt... zu gehen.\n╚═════════════════════════════════'
+  suicideSuccess: '╔═════════════════════════════════\n║ #ff6600✝ &fSpieler &e%s &fhat uns verlassen.\n╚═════════════════════════════════'
+
+  noPermission: '╔═════════════════════════════════\n║ #ff6600✘ &fDu hast &ckeine Rechte&f!\n╚═════════════════════════════════'
+  playerNotFound: '╔═════════════════════════════════\n║ #ff6600✘ &fSpieler nicht gefunden.\n╚═════════════════════════════════'
+
+  warpTeleported: '╔═════════════════════════════════\n║ #ff6600✔ &fWarp: &e{warpname}\n╚═════════════════════════════════'
+  warpCreatedSuccessfully: '╔═════════════════════════════════\n║ #ff6600✔ &fWarp &e"{warpname}" &ferstellt!\n╚═════════════════════════════════'
+  warpNotFound: '╔═════════════════════════════════\n║ #ff6600✘ &fWarp &e"{warpname}" &fnicht gefunden.\n╚═════════════════════════════════'
+
+  spawnSet: '╔═════════════════════════════════\n║ #ff6600✔ &fSpawn erfolgreich &6gesetzt\n╚═════════════════════════════════'
+  spawnTeleportSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fTeleport zum &6Spawn...\n╚═════════════════════════════════'
+
+  repairSuccessAll: '╔═════════════════════════════════\n║ #ff6600✔ &fAlle Items wurden repariert!\n╚═════════════════════════════════'
+  repairSuccessHand: '╔═════════════════════════════════\n║ #ff6600✔ &fItem in der Hand repariert.\n╚═════════════════════════════════'
+
+  tpaSent: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fAnfrage an &e%player% &fgesendet!\n╚═════════════════════════════════'
+  tpaReceived: '╔═════════════════════════════════\n║ #ff6600Ⓘ &eSpieler &f%player% &ewill zu dir TP!\n╚═════════════════════════════════'
+  tpSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fZu &e%s &fteleportiert!\n╚═════════════════════════════════'
+  tpaDenied: '╔═════════════════════════════════\n║ #ff6600✘ &fSpieler &e%player% &fhat abgelehnt.\n╚═════════════════════════════════'
+
+  gmSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fSpielmodus auf &e%s &fgesetzt.\n╚═════════════════════════════════'
+  godToggled: '╔═════════════════════════════════\n║ #ff6600✔ &fGott-Modus %s.\n╚═════════════════════════════════'
+  flyToggled: '╔═════════════════════════════════\n║ #ff6600✔ &fFlug-Modus %s.\n╚═════════════════════════════════'
+
+  healSuccess: '╔═════════════════════════════════\n║ #ff6600❤ &fDu wurdest geheilt.\n╚═════════════════════════════════'
+  healTargeted: '╔═════════════════════════════════\n║ #ff6600❤ &e%s &fwurde geheilt.\n╚═════════════════════════════════'
+  feedSuccess: '╔═════════════════════════════════\n║ #ff6600☕ &fHunger gestillt.\n╚═════════════════════════════════'
+  feedTargeted: '╔═════════════════════════════════\n║ #ff6600☕ &fDu hast &e%s &fgefüttert.\n╚═════════════════════════════════'
+
+  vanishEnabled: '╔═════════════════════════════════\n║ #ff6600✔ &6Vanish &faktiviert.\n╚═════════════════════════════════'
+  vanishDisabled: '╔═════════════════════════════════\n║ #ff6600✘ &6Vanish &fdeaktiviert.\n╚═════════════════════════════════'
+
+  gameModeMessages:
+    SURVIVAL: '╔═════════════════════════════════\n║ #ff6600⚡ &fSpielmodus: &6Überleben\n╚═════════════════════════════════'
+    CREATIVE: '╔═════════════════════════════════\n║ #ff6600⚡ &fSpielmodus: &6Kreativ\n╚═════════════════════════════════'
+    ADVENTURE: '╔═════════════════════════════════\n║ #ff6600⚡ &fSpielmodus: &6Abenteuer\n╚═════════════════════════════════'
+    SPECTATOR: '╔═════════════════════════════════\n║ #ff6600⚡ &fSpielmodus: &6Zuschauer\n╚═════════════════════════════════'

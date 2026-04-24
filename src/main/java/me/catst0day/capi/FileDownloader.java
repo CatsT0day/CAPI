@@ -1,7 +1,6 @@
 package me.catst0day.capi;
 
-import me.catst0day.capi.Shedulers.CAPIMainScheduler;
-import me.catst0day.capi.Utils.Util;
+import me.catst0day.capi.Schedulers.CAPIMainScheduler;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;

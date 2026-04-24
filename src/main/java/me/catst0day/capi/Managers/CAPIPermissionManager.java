@@ -9,7 +9,7 @@ import me.catst0day.capi.Managers.Perms.LuckPermsHandler5;
 import me.catst0day.capi.Managers.Perms.NoneHandler;
 import me.catst0day.capi.Managers.Perms.PermissionInfo;
 import me.catst0day.capi.Managers.Perms.PermissionInterface;
-import me.catst0day.capi.Shedulers.CAPIMainScheduler;
+import me.catst0day.capi.Schedulers.CAPIMainScheduler;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -28,7 +28,7 @@ public class CAPIPermissionManager {
 
     public CAPIPermissionManager(CAPI var1) {
         this.plugin = var1;
-        CAPIMainScheduler.runTask(this::checkPermissions, var1);
+        CAPIMainScheduler.runTask(plugin, this::checkPermissions);
     }
 
     private void permissionMessage(String var1) {
@@ -197,7 +197,11 @@ public class CAPIPermissionManager {
         AFK("capi.afk", "enter afk mode"),
         AFKCHECK("capi.afkcheck","chech afk mode"),
         PWEATHER("capi.playerweather", "set plr's weather"),
-        PTIME("capi.playertime", "set plr's time");
+        PTIME("capi.playertime", "set plr's time"),
+        BACK("capi.back", "back to death loc"),
+        CLEAR("capi.claerinventory", "clear user invenotry"),
+        INVSEE("capi.seeinventory","see other player's invenory's"),
+        ELYTRAFLY("capi.elytrafly", "fly with elytra");
 
         private final String permission;
         private final String description;

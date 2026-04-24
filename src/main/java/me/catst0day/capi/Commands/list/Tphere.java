@@ -1,7 +1,6 @@
 package me.catst0day.capi.Commands.list;
 
 import me.catst0day.capi.CAPI;
-import me.catst0day.capi.Commands.commandAPI.CAPICommandAnnotation;
 import me.catst0day.capi.Commands.commandAPI.CAPICommandTemplate;
 import me.catst0day.capi.Managers.CAPIPermissionManager.CAPIPerm;
 import org.bukkit.Bukkit;
@@ -10,86 +9,46 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-
-@CAPICommandAnnotation(
-        name = "tphere",
-        aliases = {"teleporthere"},
-        permission = CAPIPerm.TPHERE,
-        requirePlayer = true,
-        cooldownSeconds = 0,
-        description = "Teleport another player to your location"
-)
 public class Tphere extends CAPICommandTemplate {
 
-    private String noPermissionMsg;
-    private String usageMsg;
-    private String playerNotFoundMsg;
-    private String tphereSuccessMsg;
-    private String tphereToYouSuccessMsg;
-
     public Tphere(CAPI plugin) {
-        super(plugin);
-    }
-
-    @Override
-    public void get(CAPI plugin) {
-        noPermissionMsg = plugin.getMessage("noPermission");
-        usageMsg = plugin.getMessage("usage");
-        playerNotFoundMsg = plugin.getMessage("playerNotFound");
-        tphereSuccessMsg = plugin.getMessage("tphereSuccess");
-        tphereToYouSuccessMsg = plugin.getMessage("tphereToYouSuccess");
-    }
-
-    @Override
-    protected boolean hasPermission(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) return true;
-        return plugin.getPermissionManager().hasPermission(player, CAPIPerm.TPHERE);
+        super(plugin, "tphere", List.of("s"), CAPIPerm.TPHERE, true, 0, "Teleport a player to you");
     }
 
     @Override
     protected boolean perform(CommandSender sender, Player player, String[] args) {
-        if (!hasPermission(sender, args)) {
-            sender.sendMessage(noPermissionMsg);
-            return true;
-        }
+        if (player == null) return true;
 
         if (args.length != 1) {
-            sender.sendMessage(usageMsg.replace("%s", "/tphere <игрок>"));
+            sender.sendMessage(plugin.getMessage("usage").replace("%s", "/tphere <player>"));
             return true;
         }
 
-        String targetName = args[0];
-        Player target = Bukkit.getPlayer(targetName);
+        Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            sender.sendMessage(playerNotFoundMsg);
+            sender.sendMessage(plugin.getMessage("playerNotFound"));
             return true;
         }
 
         target.teleport(player.getLocation());
-        sender.sendMessage(tphereSuccessMsg.replace("%s", target.getName()));
-        target.sendMessage(tphereToYouSuccessMsg.replace("%s", player.getName()));
-
+        sender.sendMessage(plugin.getMessage("tphereSuccess").replace("%s", target.getName()));
+        target.sendMessage(plugin.getMessage("tphereToYouSuccess").replace("%s", player.getName()));
         return true;
     }
 
     @Override
     protected boolean perform(Player player, String[] args) {
-        return false;
+        return perform((CommandSender) player, player, args);
     }
 
     @Override
     protected List<String> tabCompl(Player player, String[] args) {
         List<String> completions = new ArrayList<>();
-
         if (args.length == 1) {
             String prefix = args[0].toLowerCase();
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                String name = onlinePlayer.getName();
-                if (name.toLowerCase().startsWith(prefix)) {
-                    completions.add(name);
-                }
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (p.getName().toLowerCase().startsWith(prefix)) completions.add(p.getName());
             }
-            completions.sort(String.CASE_INSENSITIVE_ORDER);
         }
         return completions;
     }

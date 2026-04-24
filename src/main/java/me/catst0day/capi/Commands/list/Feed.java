@@ -1,163 +1,116 @@
 package me.catst0day.capi.Commands.list;
 
 import me.catst0day.capi.CAPI;
-import me.catst0day.capi.Commands.commandAPI.CAPICommandAnnotation;
 import me.catst0day.capi.Commands.commandAPI.CAPICommandTemplate;
 import me.catst0day.capi.Managers.CAPIPermissionManager;
-import me.catst0day.capi.Shedulers.CAPIMainScheduler;
+import me.catst0day.capi.Schedulers.CAPIMainScheduler;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
-@CAPICommandAnnotation(
-        name = "feed",
-        aliases = {"f"},
-        permission = CAPIPermissionManager.CAPIPerm.FEED,
-        requirePlayer = true,
-        cooldownSeconds = 5000,
-        description = "feed yourself or somebody else (1 feed point per second, if you get damaged the feeding will stop)"
-)
 public class Feed extends CAPICommandTemplate implements Listener {
-    private String successMsg;
-    private String targetMsg;
-    private String notFoundMsg;
-    private String noPermissionMsg;
-    private String damagedMsg;
 
-    private int feedingTaskId = -1; // ID задачи в планировщике
+    private final Map<UUID, Integer> feedingTasks = new HashMap<>();
 
     public Feed(CAPI plugin) {
-        super(plugin);
-        setTabCompleteArguments(List.of("self", "target"));
+        super(plugin, "feed", List.of("eat"), CAPIPermissionManager.CAPIPerm.FEED, true, 0, "Restore hunger over time");
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
-    public void get(CAPI plugin) {
-        successMsg = plugin.getMessage("feedSuccess");
-        targetMsg = plugin.getMessage("feedTargeted");
-        notFoundMsg = plugin.getMessage("playerNotFound");
-        noPermissionMsg = plugin.getMessage("noPermission");
-        damagedMsg = plugin.getMessage("feedDamaged");
-    }
-
-    @Override
     protected boolean perform(Player player, String[] args) {
-        if (feedingTaskId != -1) {
-            CAPIMainScheduler.runTaskLater(plugin, () -> {
-                CAPIMainScheduler.scheduleSyncRepeatingTask(plugin, null, 0, 0);
-            }, 0);
-            feedingTaskId = -1;
-        }
+        Player target = (args.length == 0 || args[0].equalsIgnoreCase("self"))
+                ? player : Bukkit.getPlayer(args[0]);
 
-        Player target = player;
-        if (args.length > 0 && !args[0].equalsIgnoreCase("self")) {
-            target = plugin.getServer().getPlayer(args[0]);
-            if (target == null) {
-                plugin.sendCFGmessage(player, notFoundMsg);
-                return true;
-            }
-            if (!player.hasPermission("catapi.feed.others")) {
-                plugin.sendCFGmessage(player, noPermissionMsg);
-                return true;
-            }
-        }
-
-        int currentFood = target.getFoodLevel();
-        if (currentFood >= 20) {
-            if (target == player) {
-                plugin.sendCFGmessage(target, successMsg);
-            } else {
-                plugin.sendCFGmessage(target, targetMsg.replace("%s", player.getName()));
-                plugin.sendCFGmessage(player, targetMsg.replace("%s", target.getName()));
-            }
+        if (target == null) {
+            plugin.sendCFGmessage(player, plugin.getMessage("playerNotFound"));
             return true;
         }
 
-        Player finalTarget = target;
-        feedingTaskId = CAPIMainScheduler.scheduleSyncRepeatingTask(
+        if (target != player && !player.hasPermission("catapi.feed.others")) {
+            plugin.sendCFGmessage(player, plugin.getMessage("noPermission"));
+            return true;
+        }
+
+        stopFeeding(target.getUniqueId());
+
+        if (target.getFoodLevel() >= 20) {
+            sendSuccessMessages(player, target, "feedSuccess", "feedTargeted");
+            return true;
+        }
+
+        int taskId = CAPIMainScheduler.scheduleSyncRepeatingTask(
                 plugin,
                 () -> {
-                    if (!finalTarget.isOnline()) {
-                        stopFeeding();
+                    if (!target.isOnline()) {
+                        stopFeeding(target.getUniqueId());
                         return;
                     }
 
-                    int food = finalTarget.getFoodLevel();
+                    int food = target.getFoodLevel();
                     if (food >= 20) {
-                        stopFeeding();
-                        if (finalTarget == player) {
-                            plugin.sendCFGmessage(finalTarget, successMsg);
-                        } else {
-                            plugin.sendCFGmessage(finalTarget, targetMsg.replace("%s", player.getName()));
-                            plugin.sendCFGmessage(player, targetMsg.replace("%s", finalTarget.getName()));
-                        }
+                        stopFeeding(target.getUniqueId());
+                        sendSuccessMessages(player, target, "feedSuccess", "feedTargeted");
                         return;
                     }
 
-                    food = Math.min(food + 2, 20);
-                    finalTarget.setFoodLevel(food);
+                    target.setFoodLevel(Math.min(food + 2, 20));
                 },
                 0L,
                 20L
         );
 
+        feedingTasks.put(target.getUniqueId(), taskId);
         return true;
+    }
+
+    private void sendSuccessMessages(Player sender, Player target, String selfKey, String targetKey) {
+        if (target == sender) {
+            plugin.sendCFGmessage(target, plugin.getMessage(selfKey));
+        } else {
+            target.sendMessage(plugin.getMessage(targetKey).replace("%s", sender.getName()));
+            sender.sendMessage(plugin.getMessage(targetKey).replace("%s", target.getName()));
+        }
     }
 
     @Override
     protected boolean perform(CommandSender sender, Player player, String[] args) {
-        return false;
-    }
-
-    @Override
-    protected List<String> tabCompl(Player player, String[] args) {
-        List<String> completions = new ArrayList<>();
-        if (args.length == 1) {
-            String prefix = args[0].toLowerCase();
-            for (String onlinePlayer : getOnlinePlayerNames()) {
-                if (onlinePlayer.toLowerCase().startsWith(prefix)) {
-                    completions.add(onlinePlayer);
-                }
-            }
-            completions.add("self");
-            completions.sort(String.CASE_INSENSITIVE_ORDER);
-        }
-        return completions;
-    }
-
-    private List<String> getOnlinePlayerNames() {
-        return plugin.getServer().getOnlinePlayers().stream()
-                .map(Player::getName)
-                .toList();
+        sender.sendMessage(plugin.getMessage("playerOnlyCommand"));
+        return true;
     }
 
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-
-        Player damagedPlayer = (Player) event.getEntity();
-
-        if (isPlayerFeeding(damagedPlayer)) {
-            stopFeeding();
-            plugin.sendCFGmessage(damagedPlayer, damagedMsg);
+        if (event.getEntity() instanceof Player p) {
+            if (feedingTasks.containsKey(p.getUniqueId())) {
+                stopFeeding(p.getUniqueId());
+                plugin.sendCFGmessage(p, plugin.getMessage("feedDamaged"));
+            }
         }
     }
 
-    private boolean isPlayerFeeding(Player player) {
-        return feedingTaskId != -1;
+    private void stopFeeding(UUID uuid) {
+        Integer taskId = feedingTasks.remove(uuid);
+        if (taskId != null) {
+            Bukkit.getScheduler().cancelTask(taskId);
+        }
     }
 
-    private void stopFeeding() {
-        if (feedingTaskId != -1) {
-            CAPIMainScheduler.runTaskLater(plugin, () -> {
-                CAPIMainScheduler.scheduleSyncRepeatingTask(plugin, null, 0, 0);
-            }, 0);
-            feedingTaskId = -1;
+    @Override
+    protected List<String> tabCompl(Player player, String[] args) {
+        if (args.length == 1) {
+            String prefix = args[0].toLowerCase();
+            List<String> completions = new ArrayList<>();
+            Bukkit.getOnlinePlayers().forEach(p -> {
+                if (p.getName().toLowerCase().startsWith(prefix)) completions.add(p.getName());
+            });
+            if ("self".startsWith(prefix)) completions.add("self");
+            return completions;
         }
+        return List.of();
     }
 }

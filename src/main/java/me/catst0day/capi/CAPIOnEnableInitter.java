@@ -61,7 +61,7 @@ public class CAPIOnEnableInitter {
         fileDownloader = new FileDownloader(plugin);
         loadTranslations();
 
-        registerAllCommandsFromPackage(plugin, "me.catst0day.capi.Commands.Cmds");
+        registerAllCommandsFromPackage(plugin, "me.catst0day.capi.Commands.list");
         setupMain(plugin);
         this.homeManager = new CAPIHomeManager(plugin);
         this.warpManager = new CAPIWarpManager(plugin);
@@ -304,8 +304,6 @@ public class CAPIOnEnableInitter {
                             .replace("%command%", subCommandName));
                     return true;
                 }
-
-                // Prepare arguments for subcommand (remove first part)
                 String[] subArgs = new String[args.length - 1];
                 System.arraycopy(args, 1, subArgs, 0, subArgs.length);
 
@@ -319,13 +317,11 @@ public class CAPIOnEnableInitter {
                 List<String> completions = new ArrayList<>();
 
                 if (args.length == 1) {
-                    // Complete with available subcommands
                     completions.addAll(CAPICommandTemplate.getRegisteredCommands().keySet().stream()
                             .filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
-                            .collect(Collectors.toList()));
+                            .toList());
                     return completions;
                 } else if (args.length > 1) {
-                    // Try to get tabCompl completion from the subcommand
                     String subCommandName = args[0].toLowerCase();
                     CommandExecutor subCommand = CAPICommandTemplate.getRegisteredCommands().get(subCommandName);
 
@@ -339,7 +335,6 @@ public class CAPIOnEnableInitter {
                     }
                 }
 
-                // Return empty list if no completions found
                 return completions;
             }
         });

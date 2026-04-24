@@ -3,7 +3,8 @@ version: '1.0.2.133-022-U'
 main: me.catst0day.capi.CAPI
 api-version: 1.13
 website: https://github.com/CatsT0day/CAPI/
-
+softdepend:
+  - luckperms
 description: CMI 2.0
 author: CatsTOday
 

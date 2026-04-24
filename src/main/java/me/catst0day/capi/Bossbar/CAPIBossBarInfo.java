@@ -12,7 +12,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import me.catst0day.capi.Shedulers.CAPITask;
+import me.catst0day.capi.Schedulers.CAPITask;
 
 public class CAPIBossBarInfo {
     private Player player;

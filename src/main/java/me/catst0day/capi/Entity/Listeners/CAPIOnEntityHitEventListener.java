@@ -1,7 +1,7 @@
 package me.catst0day.capi.Entity.Listeners;
 
 import me.catst0day.capi.Bossbar.CAPIBarStyle;
-import me.catst0day.capi.Shedulers.CAPIMainScheduler;
+import me.catst0day.capi.Schedulers.CAPIMainScheduler;
 import me.catst0day.capi.Bossbar.CAPIBossBarInfo;
 import org.bukkit.ChatColor;
 import me.catst0day.capi.Bossbar.CAPIBarColor;

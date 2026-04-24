@@ -1,11 +1,11 @@
-# Cat application programming interface (CAPI)
-lang: RU
+# Content application programming interface (CAPI)
+lang: EN
 monochromeMode: false
 
 spawn:
   world: spawn
-  x: 0.4477384777701915
-  y: 93.0
-  z: 0.6335880333127843
-  yaw: -359.1185
-  pitch: 3.227538
+  x: 0
+  y: 0
+  z: 0
+  yaw: 0
+  pitch: 0

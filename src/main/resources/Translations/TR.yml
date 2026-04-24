@@ -1,0 +1,97 @@
+messages:
+  playerOnlyCommand: '╔═════════════════════════════════\n║ #ff6600⚠ &fHata! Bu komut sadece oyuncular içindir.\n╚═════════════════════════════════'
+  commandError: '╔═════════════════════════════════\n║ #ff6600✘ &fKomut yürütülürken bir hata oluştu.\n╚═════════════════════════════════'
+  cooldownMessage: '╔═════════════════════════════════\n║ #ff6600⚠ &fBekleme süresi: &e%%&f saniye\n╚═════════════════════════════════'
+  teleportWithDelay: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fIşınlanma &e%seconds%&f sn içinde...\n╚═════════════════════════════════'
+  teleportSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fBaşarıyla ışınlandınız!\n╚═════════════════════════════════'
+  teleportCancelled: '╔═════════════════════════════════\n║ #ff6600✘ &fIşınlanma iptal edildi!\n╚═════════════════════════════════'
+  chunkNotLoaded: '╔═════════════════════════════════\n║ #ff6600✘ &fHata: Chunk yüklenmedi!\n╚═════════════════════════════════'
+
+  help:
+    - '#ff6600╔════════════ Yardım Menüsü ══════════════'
+    - '&6 /heal &f- oyuncuyu iyileştirir'
+    - '&6 /feed &f- oyuncuyu doyurur'
+    - '&6 /spawn &f- başlangıç noktasına gider'
+    - '&6 /tpa &f- ışınlanma isteği'
+    - '&6 /warp &f- warplara ışınlanır'
+    - '&6 /home &f- ev yönetimi'
+    - '#ff6600╚═════════════════════════════════'
+  helpUnavailable: '╔═════════════════════════════════\n║ #ff6600✘ &fKomut listesi şu an kullanılamıyor.\n╚═════════════════════════════════'
+
+  backNoInfo: '╔═════════════════════════════════\n║ #ff6600✘ &fDönülecek konum bulunamadı!\n╚═════════════════════════════════'
+  backWorldBlacklisted: '╔═════════════════════════════════\n║ #ff6600✘ &fBu dünya kara listede!\n╚═════════════════════════════════'
+  backFeedback: '╔═════════════════════════════════\n║ #ff6600✔ &fGeri Dönüş: &e[worldName] &7([x], [y], [z])\n╚═════════════════════════════════'
+  backSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fBaşarıyla geri döndünüz.\n╚═════════════════════════════════'
+
+  speedCurrent: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fHızınız: &e%s\n╚═════════════════════════════════'
+  speedInvalid: '╔═════════════════════════════════\n║ #ff6600✘ &fGeçersiz değer (0-10).\n╚═════════════════════════════════'
+  speedSetWalk: '╔═════════════════════════════════\n║ #ff6600✔ &fYürüme hızı &e%player% &fiçin &6%s\n╚═════════════════════════════════'
+  speedSetFly: '╔═════════════════════════════════\n║ #ff6600✔ &fUçuş hızı &e%player% &fiçin &6%s\n╚═════════════════════════════════'
+
+  currentTime: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fZaman &e%player%&f: &6%time%\n╚═════════════════════════════════'
+  timeFrozen: '╔═════════════════════════════════\n║ #ff6600✔ &fZaman &e%player%&f için donduruldu.\n╚═════════════════════════════════'
+  timeUnfrozen: '╔═════════════════════════════════\n║ #ff6600✔ &fZaman &e%player%&f için çözüldü.\n╚═════════════════════════════════'
+  timeReset: '╔═════════════════════════════════\n║ #ff6600✔ &fZaman &e%player%&f için sıfırlandı.\n╚═════════════════════════════════'
+  timeSet: '╔═════════════════════════════════\n║ #ff6600✔ &fZaman &e%player%&f ayarlandı: &6%time%\n╚═════════════════════════════════'
+  yourTimeReset: '╔═════════════════════════════════\n║ #ff6600✔ &fZamanınız sunucu saatine sıfırlandı.\n╚═════════════════════════════════'
+  yourTimeSet: '╔═════════════════════════════════\n║ #ff6600✔ &fÖzel zamanınız &6%time% olarak ayarlandı\n╚═════════════════════════════════'
+
+  enabled: '&aaktif'
+  disabled: '&cdevre dışı'
+
+  afkSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fAFK moduna geçtiniz.\n╚═════════════════════════════════'
+  afkFail: '╔═════════════════════════════════\n║ #ff6600✘ &fAFK moduna geçilemedi.\n╚═════════════════════════════════'
+  afkReason: '╔═════════════════════════════════\n║ #ff6600✘ &fAFK Sebebi: &e%reason%\n╚═════════════════════════════════'
+  afkCheck: '╔═════════════════════════════════\n║ #ff6600✔ &fAFK Durumu: &e%is_afk%\n╚═════════════════════════════════'
+
+  currentWeather: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fHava Durumu &e%player%&f: &6%weather%\n╚═════════════════════════════════'
+  weatherReset: '╔═════════════════════════════════\n║ #ff6600✔ &fHava durumu &e%player%&f için sıfırlandı\n╚═════════════════════════════════'
+  yourWeatherReset: '╔═════════════════════════════════\n║ #ff6600✔ &fHava durumunuz sıfırlandı.\n╚═════════════════════════════════'
+  weatherSet: '╔═════════════════════════════════\n║ #ff6600✔ &fHava durumu &e%player%&f: &6%weather%\n╚═════════════════════════════════'
+  yourWeatherSet: '╔═════════════════════════════════\n║ #ff6600✔ &fHava durumunuz: &6%weather%\n╚═════════════════════════════════'
+
+  homeTeleported: '╔═════════════════════════════════\n║ #ff6600✔ &fEv: &e{homename}\n╚═════════════════════════════════'
+  homeCreatedSuccessfully: '╔═════════════════════════════════\n║ #ff6600✔ &fEv &e"{homename}" &foluşturuldu!\n╚═════════════════════════════════'
+  homeAlreadyExists: '╔═════════════════════════════════\n║ #ff6600✘ &fEv &e"{homename}" &fzaten mevcut.\n╚═════════════════════════════════'
+  homeNotFound: '╔═════════════════════════════════\n║ #ff6600✘ &fEv &e"{homename}" &fbulunamadı.\n╚═════════════════════════════════'
+  homeDeletionSuccess: '╔═════════════════════════════════\n║ #ffff00⚝ &fEv &e"{homename}" &fsilindi.\n╚═════════════════════════════════'
+  homeSet: '╔═════════════════════════════════\n║ #ffff00⚝ &fEv noktası &e%homename% &fayarlandı!\n╚═════════════════════════════════'
+
+  suicideMessage: '╔═════════════════════════════════\n║ #ff6600✝ &fYok olmayı seçtiniz...\n╚═════════════════════════════════'
+  suicideSuccess: '╔═════════════════════════════════\n║ #ff6600✝ &e%s &foyuncu bu dünyadan ayrıldı.\n╚═════════════════════════════════'
+
+  noPermission: '╔═════════════════════════════════\n║ #ff6600✘ &fBuna &cyetkiniz yok&f!\n╚═════════════════════════════════'
+  playerNotFound: '╔═════════════════════════════════\n║ #ff6600✘ &fOyuncu bulunamadı.\n╚═════════════════════════════════'
+
+  warpTeleported: '╔═════════════════════════════════\n║ #ff6600✔ &fWarp: &e{warpname}\n╚═════════════════════════════════'
+  warpCreatedSuccessfully: '╔═════════════════════════════════\n║ #ff6600✔ &fWarp &e"{warpname}" &foluşturuldu!\n╚═════════════════════════════════'
+  warpNotFound: '╔═════════════════════════════════\n║ #ff6600✘ &fWarp &e"{warpname}" &fbulunamadı.\n╚═════════════════════════════════'
+
+  spawnSet: '╔═════════════════════════════════\n║ #ff6600✔ &fSpawn noktası &6ayarlandı\n╚═════════════════════════════════'
+  spawnTeleportSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fSpawn''a &6ışınlanılıyor...\n╚═════════════════════════════════'
+
+  repairSuccessAll: '╔═════════════════════════════════\n║ #ff6600✔ &fTüm eşyalar tamir edildi!\n╚═════════════════════════════════'
+  repairSuccessHand: '╔═════════════════════════════════\n║ #ff6600✔ &fEldeki eşya tamir edildi.\n╚═════════════════════════════════'
+
+  tpaSent: '╔═════════════════════════════════\n║ #ff6600Ⓘ &fİstek &e%player% &fkişisine gönderildi!\n╚═════════════════════════════════'
+  tpaReceived: '╔═════════════════════════════════\n║ #ff6600Ⓘ &eOyuncu &f%player% &esize TP istiyor!\n╚═════════════════════════════════'
+  tpSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &e%s &fyanına ışınlandınız!\n╚═════════════════════════════════'
+  tpaDenied: '╔═════════════════════════════════\n║ #ff6600✘ &fOyuncu &e%player% &fisteği reddetti.\n╚═════════════════════════════════'
+
+  gmSuccess: '╔═════════════════════════════════\n║ #ff6600✔ &fOyun modu &e%s &folarak ayarlandı.\n╚═════════════════════════════════'
+  godToggled: '╔═════════════════════════════════\n║ #ff6600✔ &fÖlümsüzlük modu %s.\n╚═════════════════════════════════'
+  flyToggled: '╔═════════════════════════════════\n║ #ff6600✔ &fUçuş modu %s.\n╚═════════════════════════════════'
+
+  healSuccess: '╔═════════════════════════════════\n║ #ff6600❤ &fİyileştirildiniz.\n╚═════════════════════════════════'
+  healTargeted: '╔═════════════════════════════════\n║ #ff6600❤ &e%s &fiyileştirildi.\n╚═════════════════════════════════'
+  feedSuccess: '╔═════════════════════════════════\n║ #ff6600☕ &fAçlığınız giderildi.\n╚═════════════════════════════════'
+  feedTargeted: '╔═════════════════════════════════\n║ #ff6600☕ &e%s &fdoyuruldu.\n╚═════════════════════════════════'
+
+  vanishEnabled: '╔═════════════════════════════════\n║ #ff6600✔ &6Vanish &faktif.\n╚═════════════════════════════════'
+  vanishDisabled: '╔═════════════════════════════════\n║ #ff6600✘ &6Vanish &fdevre dışı.\n╚═════════════════════════════════'
+
+  gameModeMessages:
+    SURVIVAL: '╔═════════════════════════════════\n║ #ff6600⚡ &fOyun Modu: &6Hayatta Kalma\n╚═════════════════════════════════'
+    CREATIVE: '╔═════════════════════════════════\n║ #ff6600⚡ &fOyun Modu: &6Yaratıcı\n╚═════════════════════════════════'
+    ADVENTURE: '╔═════════════════════════════════\n║ #ff6600⚡ &fOyun Modu: &6Maceracı\n╚═════════════════════════════════'
+    SPECTATOR: '╔═════════════════════════════════\n║ #ff6600⚡ &fOyun Modu: &6İzleyici\n╚═════════════════════════════════'
