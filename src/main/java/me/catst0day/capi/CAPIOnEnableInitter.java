@@ -9,13 +9,13 @@ import me.catst0day.capi.EventListeners.CAPIOnItemPickupEvent;
 import me.catst0day.capi.GUI.CAPIGuiListener;
 import me.catst0day.capi.Managers.CAPIHomeManager;
 import me.catst0day.capi.Managers.CAPIWarpManager;
+import me.catst0day.capi.Utils.ResourceDownloader;
 import me.catst0day.capi.Utils.Util;
 import me.catst0day.capi.Utils.VersionChecker;
 import org.bukkit.boss.BossBar;
 import org.bukkit.command.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +28,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Collectors;
 
+import static me.catst0day.capi.Utils.Util.loadWithMessage;
 import static me.catst0day.capi.Utils.Util.log;
 import static org.bukkit.Bukkit.getCommandMap;
 
@@ -46,7 +46,7 @@ public class CAPIOnEnableInitter {
 
     private CAPIHomeManager homeManager;
     private CAPIWarpManager warpManager;
-    private static FileDownloader fileDownloader;
+    private static ResourceDownloader fileDownloader;
 
     public void OnEnable(CAPI plugin) {
         instance = plugin;
@@ -58,7 +58,7 @@ public class CAPIOnEnableInitter {
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
 
-        fileDownloader = new FileDownloader(plugin);
+        fileDownloader = new ResourceDownloader(plugin);
         loadTranslations();
 
         registerAllCommandsFromPackage(plugin, "me.catst0day.capi.Commands.list");
@@ -98,8 +98,7 @@ public class CAPIOnEnableInitter {
 
         try {
             if ("jar".equals(packageURL.getProtocol())) {
-                // Обработка JAR архива
-                log("&eScanning JAR archive for package: " + packageName);
+                log("&bScanning JAR archive for package: " + packageName);
 
                 JarURLConnection connection = (JarURLConnection) packageURL.openConnection();
                 JarFile jarFile = connection.getJarFile();
@@ -120,7 +119,7 @@ public class CAPIOnEnableInitter {
 
                                     Constructor<?> constructor = clazz.getConstructor(CAPI.class);
                                     CAPICommandTemplate commandInstance = (CAPICommandTemplate) constructor.newInstance(plugin);
-                                    registerCommandInBothFormats(plugin, commandInstance);
+                                    registerCommand(plugin, commandInstance);
                                 }
                             } catch (ClassNotFoundException | NoSuchMethodException |
                                      IllegalAccessException | InstantiationException e) {
@@ -142,7 +141,7 @@ public class CAPIOnEnableInitter {
                 File packageDir = new File(packageURL.toURI());
 
                 if (!packageDir.exists() || !packageDir.isDirectory()) {
-                    log("&cDirectory (" + packageName + ") does not exist");
+                    log("&4Directory &8(&e" + packageName + "&8)&4 does not exist");
                     return;
                 }
 
@@ -160,7 +159,7 @@ public class CAPIOnEnableInitter {
                                 Constructor<?> constructor = clazz.getConstructor(CAPI.class);
                                 CAPICommandTemplate commandInstance = (CAPICommandTemplate) constructor.newInstance(plugin);
 
-                                registerCommandInBothFormats(plugin, commandInstance);
+                                registerCommand(plugin, commandInstance);
                             }
                         } catch (ClassNotFoundException | NoSuchMethodException |
                                  IllegalAccessException | InstantiationException e) {
@@ -171,13 +170,11 @@ public class CAPIOnEnableInitter {
                     }
                 }
             }
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (URISyntaxException ex) {
+        } catch (IOException | URISyntaxException ex) {
             throw new RuntimeException(ex);
         }
     }
-    private static void registerCommandInBothFormats(CAPI plugin, CAPICommandTemplate command) {
+    private static void registerCommand(CAPI plugin, CAPICommandTemplate command) {
         String commandName = command.getName();
 
         SimpleCommandMap commandMap = (SimpleCommandMap) getCommandMap();
@@ -199,14 +196,14 @@ public class CAPIOnEnableInitter {
         };
 
         commandMap.register(plugin.getName(), bukkitCommand);
-        log("&aCommand registered: &6/" + commandName);
-
+        long var1 = System.currentTimeMillis();
+        loadWithMessage("1", "command", System.currentTimeMillis() - var1);
         if (command.getAliases() != null) {
             for (String alias : command.getAliases()) {
                 Command aliasCommand = new Command(alias) {
                     @Override
                     public boolean execute(CommandSender sender, String label, String[] args) {
-                        return command.onCommand(sender, this, label, args); // ИЗМЕНЕНО: передаём 'this' вместо 'plugin'
+                        return command.onCommand(sender, this, label, args);
                     }
 
                     @Override
@@ -218,7 +215,7 @@ public class CAPIOnEnableInitter {
                     }
                 };
                 commandMap.register(plugin.getName(), aliasCommand);
-                log("&aAlias registered: &6/" + alias);
+                loadWithMessage("1", "basic plugin alias", System.currentTimeMillis() - var1);
             }
         }
 

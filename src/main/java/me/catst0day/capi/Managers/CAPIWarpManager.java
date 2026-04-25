@@ -1,28 +1,51 @@
 package me.catst0day.capi.Managers;
 
 import me.catst0day.capi.CAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static me.catst0day.capi.Utils.Util.log;
 
 public class CAPIWarpManager {
     private final CAPI plugin;
     private final File warpsFolder;
+    private final Map<String, Location> warpCache = new ConcurrentHashMap<>();
 
     public CAPIWarpManager(CAPI plugin) {
         this.plugin = plugin;
-        warpsFolder = new File(plugin.getDataFolder(), "core/src/main/resources/warps");
+        this.warpsFolder = new File(plugin.getDataFolder(), "warps");
         if (!warpsFolder.exists()) {
             warpsFolder.mkdirs();
         }
+        loadAllToCache();
     }
 
-    // Сохраняет варп в файл
+    private void loadAllToCache() {
+        warpCache.clear();
+        File[] files = warpsFolder.listFiles((dir, name) -> name.endsWith(".yml"));
+        if (files == null) return;
+
+        for (File file : files) {
+            String name = file.getName().replace(".yml", "");
+            Location loc = loadWarpFromFile(name);
+            if (loc != null) {
+                warpCache.put(name.toLowerCase(), loc);
+            }
+        }
+        log("&aLoaded &6" + warpCache.size() + " &awarps into cache.");
+    }
+
     public boolean saveWarp(String name, Location location) {
         File warpFile = new File(warpsFolder, name + ".yml");
         FileConfiguration config = new YamlConfiguration();
@@ -31,58 +54,65 @@ public class CAPIWarpManager {
         config.set("x", location.getX());
         config.set("y", location.getY());
         config.set("z", location.getZ());
-        config.set("yaw", location.getYaw());
-        config.set("pitch", location.getPitch());
+        config.set("yaw", (float) location.getYaw());
+        config.set("pitch", (float) location.getPitch());
         config.set("name", name);
 
         try {
             config.save(warpFile);
+            warpCache.put(name.toLowerCase(), location.clone());
             return true;
         } catch (IOException e) {
-            plugin.getLogger().severe("Ошибка сохранения варпа '" + name + "': " + e.getMessage());
+            log("&4Cant save warp &8(&5" + e.getMessage() + "&8)");
             return false;
         }
     }
 
-    public File getWarpsFolder() {
-        return warpsFolder;
+    public boolean deleteWarp(String name) {
+        File warpFile = new File(warpsFolder, name + ".yml");
+        if (warpFile.exists() && warpFile.delete()) {
+            warpCache.remove(name.toLowerCase());
+            return true;
+        }
+        return false;
     }
-    // Загружает варп из файла
-    public Location loadWarp(String name) {
+
+    public Location getWarp(String name) {
+        return warpCache.get(name.toLowerCase());
+    }
+
+    private Location loadWarpFromFile(String name) {
         File warpFile = new File(warpsFolder, name + ".yml");
         if (!warpFile.exists()) return null;
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(warpFile);
-
         String worldName = config.getString("world");
-        World world = plugin.getServer().getWorld(worldName);
+        if (worldName == null) return null;
+
+        World world = Bukkit.getWorld(worldName);
         if (world == null) return null;
 
-        double x = config.getDouble("x");
-        double y = config.getDouble("y");
-        double z = config.getDouble("z");
-        float yaw = (float) config.getDouble("yaw");
-        float pitch = (float) config.getDouble("pitch");
-
-        return new Location(world, x, y, z, yaw, pitch);
+        return new Location(
+                world,
+                config.getDouble("x"),
+                config.getDouble("y"),
+                config.getDouble("z"),
+                (float) config.getDouble("yaw"),
+                (float) config.getDouble("pitch")
+        );
     }
 
-    // Получает список всех варпов
     public List<String> getWarpList() {
-        List<String> warps = new ArrayList<>();
-        File[] files = warpsFolder.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile() && file.getName().endsWith(".yml")) {
-                    warps.add(file.getName().replace(".yml", ""));
-                }
-            }
-        }
-        return warps;
+        List<String> list = new ArrayList<>(warpCache.keySet());
+        Collections.sort(list);
+        return list;
     }
 
-    // Проверяет существование варпа
     public boolean warpExists(String name) {
-        return new File(warpsFolder, name + ".yml").exists();
+        return warpCache.containsKey(name.toLowerCase());
+    }
+
+    public File getWarpsFolder() {
+        return warpsFolder;
     }
 }

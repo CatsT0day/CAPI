@@ -77,8 +77,6 @@ public class CAPIMainScheduler {
         return scheduleSyncRepeatingTask(plugin, () -> runAtLocation(plugin, location, runnable), delay, period);
     }
 
-    // --- Методы для работы с сущностями ---
-
     public static void runAtEntity(Plugin plugin, Entity entity, Runnable runnable) {
         if (entity != null && entity.isValid()) {
             runAtLocation(plugin, entity.getLocation(), runnable);

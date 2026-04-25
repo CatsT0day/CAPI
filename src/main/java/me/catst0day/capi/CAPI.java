@@ -11,15 +11,18 @@ import me.catst0day.capi.Managers.CAPIHomeManager;
 import me.catst0day.capi.Managers.CAPIWarpManager;
 import me.catst0day.capi.User.CAPIUser;
 import me.catst0day.capi.Utils.VersionChecker;
-import org.bukkit.*;
 import me.catst0day.capi.Bossbar.CAPIBarColor;
+
 import org.bukkit.boss.BossBar;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.*;
+
 import java.util.HashMap;
 import java.util.UUID;
+
 
 import static me.catst0day.capi.CAPIOnEnableInitter.langConfig;
 import static me.catst0day.capi.Utils.Util.log;

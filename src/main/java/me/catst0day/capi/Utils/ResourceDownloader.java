@@ -1,4 +1,4 @@
-package me.catst0day.capi;
+package me.catst0day.capi.Utils;
 
 import me.catst0day.capi.Schedulers.CAPIMainScheduler;
 import org.bukkit.plugin.Plugin;
@@ -10,12 +10,12 @@ import java.util.List;
 
 import static me.catst0day.capi.Utils.Util.log;
 
-public class FileDownloader {
+public class ResourceDownloader {
     private final Plugin plugin;
     private static final List<String> VALID_TYPES = new ArrayList<>(Arrays.asList("yml", "txt", "jar"));
 
 
-    public FileDownloader(Plugin plugin) {
+    public ResourceDownloader(Plugin plugin) {
         this.plugin = plugin;
     }
 

@@ -161,6 +161,7 @@ public class CAPIPermissionManager {
     }
 
     public enum CAPIPerm {
+        CEADMIN("capi.*", "all CAPI Enchants perms"),
         MAIN("capi.main", "gives perm to use main command (not all cmds)"),
         UPDATE_NOTIFY("capi.update.notify", "Receive update notifications for CAPI updates"),
         WARP_USE("catapi.warp.use", "Permission to use /warp command"),

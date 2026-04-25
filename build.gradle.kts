@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "me.CatsT0day"
-version = "1.11.2"
+version = "2.1.2.6"
 
 sourceSets {
     main {
@@ -46,6 +46,7 @@ dependencies {
     }
     compileOnly("net.luckperms:api:5.4") {
         isTransitive = false
+
     }
 }
 
