@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "me.CatsT0day"
-version = "2.1.2.6"
+version = "2.1.2.9"
 
 sourceSets {
     main {

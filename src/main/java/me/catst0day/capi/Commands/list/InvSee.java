@@ -3,6 +3,7 @@ package me.catst0day.capi.Commands.list;
 import me.catst0day.capi.CAPI;
 import me.catst0day.capi.Commands.commandAPI.CAPICommandTemplate;
 import me.catst0day.capi.Managers.CAPIPermissionManager;
+import me.catst0day.capi.Inventory.CAPIPlayerInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -10,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+
 import java.util.List;
 
 public class InvSee extends CAPICommandTemplate implements Listener {
@@ -32,26 +34,18 @@ public class InvSee extends CAPICommandTemplate implements Listener {
             return true;
         }
 
-        // Открываем РЕАЛЬНЫЙ инвентарь для синхронизации
         player.openInventory(target.getInventory());
         player.sendMessage(plugin.getMessage("invseeOpened").replace("%s", target.getName()));
         return true;
-    }
-
-    @Override
-    protected List<String> tabCompl(Player player, String[] args) {
-        return List.of();
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
 
-        Inventory topInv = event.getView().getTopInventory();
-
-        // Проверяем, что это инвентарь игрока (не GUI и не сундук)
-        if (topInv.getHolder() instanceof Player target && !target.equals(player)) {
-            // Если клик в верхнем слоте (чужой инвентарь)
+        Inventory topInv = CAPIPlayerInventory.getTopInventory(player);
+        if (topInv == null) return;
+        if (topInv.getHolder() instanceof Player target && !target.getUniqueId().equals(player.getUniqueId())) {
             if (event.getRawSlot() < topInv.getSize()) {
                 if (!player.hasPermission("catapi.invsee.edit")) {
                     event.setCancelled(true);
@@ -63,7 +57,11 @@ public class InvSee extends CAPICommandTemplate implements Listener {
 
     @Override
     protected boolean perform(CommandSender sender, Player player, String[] args) {
-        sender.sendMessage(plugin.getMessage("playerOnlyCommand"));
-        return true;
+        return false;
+    }
+
+    @Override
+    protected List<String> tabCompl(Player player, String[] args) {
+        return null;
     }
 }

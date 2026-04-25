@@ -1,29 +1,23 @@
 package me.catst0day.capi.Schedulers;
 
-import java.util.concurrent.CompletableFuture;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class CAPIMainScheduler {
 
-    private static BukkitScheduler getScheduler() {
-        return Bukkit.getScheduler();
-    }
-
-    // --- Базовые методы запуска ---
-
     public static void runTask(Plugin plugin, Runnable runnable) {
-        getScheduler().runTask(plugin, runnable);
+        Bukkit.getScheduler().runTask(plugin, runnable);
     }
 
     public static CompletableFuture<Void> runTaskAsync(Plugin plugin, Runnable runnable) {
         CompletableFuture<Void> future = new CompletableFuture<>();
-        getScheduler().runTaskAsynchronously(plugin, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 runnable.run();
                 future.complete(null);
@@ -34,47 +28,23 @@ public class CAPIMainScheduler {
         return future;
     }
 
-    public static int runTaskLater(Plugin plugin, Runnable runnable, long delay) {
-        return getScheduler().runTaskLater(plugin, runnable, delay).getTaskId();
+    public static BukkitTask runTaskLater(Plugin plugin, Runnable runnable, long delay) {
+        return Bukkit.getScheduler().runTaskLater(plugin, runnable, delay);
     }
 
-    public static int runLaterAsync(Plugin plugin, Runnable runnable, long delay) {
-        return getScheduler().runTaskLaterAsynchronously(plugin, runnable, delay).getTaskId();
+    public static void runTaskTimer(Plugin plugin, Consumer<BukkitTask> taskConsumer, long delay, long period) {
+        Bukkit.getScheduler().runTaskTimer(plugin, taskConsumer, delay, period);
+    }
+    public static BukkitTask scheduleSyncRepeatingTask(Plugin plugin, Runnable runnable, long delay, long period) {
+        return Bukkit.getScheduler().runTaskTimer(plugin, runnable, delay, period);
     }
 
-    public static int scheduleSyncRepeatingTask(Plugin plugin, Runnable runnable, long delay, long period) {
-        return getScheduler().runTaskTimer(plugin, runnable, delay, period).getTaskId();
-    }
-
-    public static int runTimerAsync(Plugin plugin, Runnable runnable, long delay, long period) {
-        return getScheduler().runTaskTimerAsynchronously(plugin, runnable, delay, period).getTaskId();
-    }
-
-    // --- Методы с проверкой локации (Безопасность чанков) ---
-
-    public static void runAtLocation(Plugin plugin, Location location, Runnable runnable) {
-        World world = location.getWorld();
-        if (world != null && world.isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) {
+    public static void runAtLocation(Plugin plugin, Location loc, Runnable runnable) {
+        if (isLocationLoaded(loc)) {
             runTask(plugin, runnable);
-        } else {
-            plugin.getLogger().warning("Task skipped: Chunk at " + location.toVector() + " is not loaded.");
+        } else if (loc != null) {
+            plugin.getLogger().warning("Task skipped: Chunk not loaded at " + loc.getBlockX() + "," + loc.getBlockZ());
         }
-    }
-
-    public static void runAtLocation(Plugin plugin, Chunk chunk, Runnable runnable) {
-        if (chunk.isLoaded()) {
-            runTask(plugin, runnable);
-        } else {
-            plugin.getLogger().warning("Task skipped: Chunk [" + chunk.getX() + "," + chunk.getZ() + "] is not loaded.");
-        }
-    }
-
-    public static int runAtLocationLater(Plugin plugin, Location location, Runnable runnable, long delay) {
-        return runTaskLater(plugin, () -> runAtLocation(plugin, location, runnable), delay);
-    }
-
-    public static int runAtLocationTimer(Plugin plugin, Location location, Runnable runnable, long delay, long period) {
-        return scheduleSyncRepeatingTask(plugin, () -> runAtLocation(plugin, location, runnable), delay, period);
     }
 
     public static void runAtEntity(Plugin plugin, Entity entity, Runnable runnable) {
@@ -83,29 +53,13 @@ public class CAPIMainScheduler {
         }
     }
 
-    public static void runAtEntityWithFallback(Plugin plugin, Entity entity, Runnable runnable, Runnable fallback) {
-        if (entity != null && entity.isValid() && entity.getLocation().getChunk().isLoaded()) {
-            runAtEntity(plugin, entity, runnable);
-        } else {
-            runTask(plugin, fallback);
-        }
-    }
-
-    public static int runAtEntityLater(Plugin plugin, Entity entity, Runnable runnable, long delay) {
-        return runTaskLater(plugin, () -> runAtEntity(plugin, entity, runnable), delay);
-    }
-
-    public static int runAtEntityTimer(Plugin plugin, Entity entity, Runnable runnable, long delay, long period) {
-        return scheduleSyncRepeatingTask(plugin, () -> runAtEntity(plugin, entity, runnable), delay, period);
-    }
-
-    @Deprecated(since = "1.0.2.133-021-U")
-    public static int scheduleSyncRepeatingTask(Runnable runnable, long delay, long period, Plugin plugin) {
-        return scheduleSyncRepeatingTask(plugin, runnable, delay, period);
+    public static boolean isLocationLoaded(Location loc) {
+        if (loc == null || loc.getWorld() == null) return false;
+        return loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4);
     }
 
     @Deprecated
     public static int runTaskLater(Runnable runnable, long delay, Plugin plugin) {
-        return runTaskLater(plugin, runnable, delay);
+        return runTaskLater(plugin, runnable, delay).getTaskId();
     }
 }

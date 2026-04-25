@@ -62,7 +62,7 @@ public class Heal extends CAPICommandTemplate implements Listener {
                 },
                 0L,
                 20L
-        );
+        ).getTaskId();
 
         healingTasks.put(target.getUniqueId(), taskId);
         return true;

@@ -15,7 +15,7 @@ Thank you for your interest in contributing to the CAPI project! I welcome contr
 ```bash
 git remote add upstream https://github.com/CatsT0day/CAPI
 ```
-Branching Strategy
+## Branching Strategy
 Never work directly on the main branch.
 
 Create a new branch for each feature or bug fix:
@@ -37,3 +37,6 @@ git merge upstream/main
 ## Code Style & Guidelines
  **Please, Follow the existing code style of the project.
   Before contributing look at the code, when you understand it you can contribute, if you won't follow I will not accept your request**
+ 
+
+ *****Happy coding! We look forward to seeing your contributions.*****

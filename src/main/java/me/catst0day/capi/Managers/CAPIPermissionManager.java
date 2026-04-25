@@ -202,7 +202,8 @@ public class CAPIPermissionManager {
         BACK("capi.back", "back to death loc"),
         CLEAR("capi.claerinventory", "clear user invenotry"),
         INVSEE("capi.seeinventory","see other player's invenory's"),
-        ELYTRAFLY("capi.elytrafly", "fly with elytra");
+        ELYTRAFLY("capi.elytrafly", "fly with elytra"),
+        EXP("capi.expierience", "edit exp");
 
         private final String permission;
         private final String description;

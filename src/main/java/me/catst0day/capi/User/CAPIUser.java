@@ -1,4 +1,3 @@
-
 package me.catst0day.capi.User;
 
 import me.catst0day.capi.CAPI;
@@ -6,12 +5,7 @@ import me.catst0day.capi.Chat.CAPIChatColor;
 import me.catst0day.capi.Entity.CAPIEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.GameMode;
 
 import java.util.*;
@@ -20,520 +14,137 @@ import java.util.concurrent.ConcurrentHashMap;
 import static me.catst0day.capi.Utils.Util.log;
 
 public class CAPIUser {
-    private UUID uuid;
+    private final UUID uuid;
     private Player player;
     private CAPIEntity entity;
+
     private String name;
     private String displayName;
     private Location logOutLocation;
-    private long lastLogin = 0L;
-    private long lastLogoff = 0L;
-    private long totalPlayTime = 0L;
     private Location deathLoc;
     private Location lastTeleportLocation;
-    private boolean isFakeAccount = false;
-    private Set<UUID> ignores;
-    private boolean silenceMode = false;
-    private boolean allowFlight = false;
-    private boolean flying = false;
-    private Map<String, Long> kitCooldowns;
-    private int voteCount = 0;
-    private List<Long> voteTimestamps;
-    private String customSkin;
-    private GameMode gameMode;
+
+    private final Set<UUID> ignores = new HashSet<>();
+    private final Map<String, Long> kitCooldowns = new HashMap<>();
+    private final Map<String, Object> metadata = new HashMap<>();
+    private final List<Long> voteTimestamps = new ArrayList<>();
+
+    private boolean silenceMode, allowFlight, flying, vanishMode, invulnerable;
     private double health = 20.0;
-    private int foodLevel = 20;
-    private float saturation = 5.0f;
-    private Map<String, Object> metadata;
-    private List<PotionEffect> activeEffects;
-    private boolean invulnerable = false;
-    private long invulnerabilityEndTime = 0L;
-    private boolean vanishMode = false;
-    private Location firstJoinLocation;
-    private int level = 0;
-    private float exp = 0.0f;
-    private long firstJoinTime = 0L;
+    private int foodLevel = 20, level = 0;
+    private float exp = 0.0f, saturation = 5.0f;
+    private long lastLogin, lastLogoff, totalPlayTime, invulnerabilityEndTime, firstJoinTime;
 
     private static final Map<UUID, Player> onlinePlayersCache = new ConcurrentHashMap<>();
 
     public CAPIUser(UUID uuid) {
         this.uuid = uuid;
-        this.player = getOnlinePlayer(uuid);
+        this.player = refreshOnlineStatus();
         if (this.player != null) {
             this.name = this.player.getName();
-            this.entity = new CAPIEntity(player);
-            loadFromPlayer(player);
-        } else {
-            this.entity = null;
+            syncWithPlayer(this.player);
         }
-        this.ignores = new HashSet<>();
-        this.kitCooldowns = new HashMap<>();
-        this.voteTimestamps = new ArrayList<>();
-        this.metadata = new HashMap<>();
-        this.activeEffects = new ArrayList<>();
     }
 
-    private void loadFromPlayer(Player player) {
-        this.gameMode = player.getGameMode();
-        this.health = player.getHealth();
-        this.foodLevel = player.getFoodLevel();
-        this.saturation = player.getSaturation();
-        this.level = player.getLevel();
-        this.exp = player.getExp();
+    private void syncWithPlayer(Player p) {
+        this.health = p.getHealth();
+        this.foodLevel = p.getFoodLevel();
+        this.saturation = p.getSaturation();
+        this.level = p.getLevel();
+        this.exp = p.getExp();
+        this.allowFlight = p.getAllowFlight();
+        this.flying = p.isFlying();
+    }
+
+
+    public boolean isOnline() {
+        return refreshOnlineStatus() != null;
+    }
+
+    private Player refreshOnlineStatus() {
+        if (player != null && player.isOnline()) return player;
+
+        Player online = Bukkit.getPlayer(uuid);
+        if (online != null) {
+            this.player = online;
+            onlinePlayersCache.put(uuid, online);
+        } else {
+            this.player = null;
+            onlinePlayersCache.remove(uuid);
+        }
+        return this.player;
+    }
+
+    public Player getPlayer() {
+        return refreshOnlineStatus();
     }
 
 
     public CAPIEntity getEntity() {
-        if (entity == null && isOnline()) {
-            entity = new CAPIEntity(getPlayer());
+        if (entity == null) {
+            Player p = getPlayer();
+            if (p != null) entity = new CAPIEntity(p);
         }
         return entity;
     }
 
 
-    public String getEntityName() {
-        CAPIEntity ent = getEntity();
-        return ent != null ? ent.getName() : getName();
-    }
-
-    public String getEntityCustomName() {
-        CAPIEntity ent = getEntity();
-        return ent != null ? ent.getCustomName() : getDisplayName();
-    }
-
-    public org.bukkit.inventory.Inventory getEntityInventory() {
-        CAPIEntity ent = getEntity();
-        return ent != null ? ent.getInventory() : null;
-    }
-
-    public boolean isEntityLiving() {
-        CAPIEntity ent = getEntity();
-        return ent != null && ent.isLiving();
-    }
-
-    public boolean isEntityPlayer() {
-        CAPIEntity ent = getEntity();
-        return ent != null && ent.isPlayer();
-    }
-
-    public double getEntityMaxHealth() {
-        CAPIEntity ent = getEntity();
-        return ent != null ? CAPIEntity.getMaxHealth(ent.getEnt()) : health;
-    }
-
-    public String formatEntityInfo() {
-        CAPIEntity ent = getEntity();
-        return ent != null ? ent.formatInfo() : "No entity data";
-    }
-
-    public static boolean isItemFrame(Entity entity) {
-        return CAPIEntity.isItemFrame(entity);
-    }
-
-    public ItemStack setEntityType(ItemStack itemStack, EntityType type) {
-        return CAPIEntity.setEntityType(itemStack, type);
-    }
-
-    public String serializeEntity(Entity entity) {
-        return CAPIEntity.serialize(entity);
-    }
-
-    public Entity deserializeEntity(String data) {
-        return CAPIEntity.deserialize(data);
-    }
-
-    public boolean setHome(String homeName, Location location) {
-        return CAPI.getInstance().getHomeManager().setHome(uuid, homeName, location);
-    }
-
-    public Location getHome(String homeName) {
-        return CAPI.getInstance().getHomeManager().getHome(uuid, homeName);
-    }
-
-    public boolean deleteHome(String homeName) {
-        return CAPI.getInstance().getHomeManager().deleteHome(uuid, homeName);
-    }
-
-    public List<String> getPlayerHomes() {
-        return CAPI.getInstance().getHomeManager().getPlayerHomes(uuid);
-    }
-
-    public boolean isOnline() {
-        if (player != null && player.isOnline()) {
-            return true;
-        }
-        player = getOnlinePlayer(uuid);
-        if (player != null) {
-            entity = new CAPIEntity(player);
-        }
-        return player != null;
-    }
-
-    public Location getLogOutLocation() {
-        if (logOutLocation == null && isOnline()) {
-            setLogOutLocation(getPlayer().getLocation());
-        }
-        return logOutLocation;
-    }
-
-    public void setLogOutLocation(Location location) {
-        this.logOutLocation = location;
-    }
-
-    public Location getLocation() {
-        return isOnline() ? getPlayer().getLocation() : getLogOutLocation();
-    }
-
-    public Player getPlayer() {
-        Player online = getOnlinePlayer(uuid);
-        if (online != null) {
-            player = online;
-            // Обновляем CAPIEntity при получении онлайн-игрока
-            if (entity == null) {
-                entity = new CAPIEntity(player);
-            }
-        }
-        return player;
-    }
-
     public String getName() {
-        if (isOnline()) {
-            name = getPlayer().getName();
-        } else if (name == null) {
-            OfflinePlayer offline = Bukkit.getOfflinePlayer(uuid);
-            name = offline.getName();
+        if (name == null) {
+            Player p = getPlayer();
+            name = (p != null) ? p.getName() : Bukkit.getOfflinePlayer(uuid).getName();
         }
         return name;
     }
 
-    public long getLastLogin() {
-        if (lastLogin == 0L) {
-            OfflinePlayer offline = Bukkit.getOfflinePlayer(uuid);
-            lastLogin = offline.getLastPlayed();
-        }
-        return lastLogin;
-    }
-
-    public void setLastLogin(long time) {
-        this.lastLogin = time;
-    }
-
-    public long getLastLogoff() {
-        if (lastLogoff == 0L) {
-            OfflinePlayer offline = Bukkit.getOfflinePlayer(uuid);
-            lastLogoff = offline.getLastPlayed();
-        }
-        return lastLogoff;
-    }
-
-    public void setLastLogoff(long time) {
-        this.lastLogoff = time;
-    }
-
-    public Location getDeathLoc() {
-        return deathLoc;
-    }
-
-    public void setDeathLoc(Location location) {
-        this.deathLoc = location;
-    }
-
-    public Location getLastTeleportLocation() {
-        return lastTeleportLocation;
-    }
-
-    public void setLastTeleportLocation(Location location) {
-        this.lastTeleportLocation = location;
-    }
-
-    public UUID getUniqueId() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-        this.player = getOnlinePlayer(uuid);
-        if (this.player != null) {
-            this.name = this.player.getName();
-            this.entity = new CAPIEntity(player);
-        }
-    }
-
-    public String getDisplayName() {
-        if (isOnline()) {
-            displayName = getPlayer().getDisplayName();
-        } else if (displayName == null) {
-            OfflinePlayer offline = Bukkit.getOfflinePlayer(uuid);
-            displayName = offline.getName();
-        }
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public boolean isFakeAccount() {
-        return isFakeAccount;
-    }
-
-    public void setFakeAccount(boolean fakeAccount) {
-        isFakeAccount = fakeAccount;
-    }
-
-
-    public Set<UUID> getIgnores() {
-        return ignores;
-    }
-
-    public void addIgnore(UUID playerUUID) {
-        ignores.add(playerUUID);
-    }
-
-    public void removeIgnore(UUID playerUUID) {
-        ignores.remove(playerUUID);
-    }
-
-    public boolean isSilenceMode() {
-        return silenceMode;
-    }
-
-    public void setSilenceMode(boolean silenceMode) {
-        this.silenceMode = silenceMode;
-    }
-
-    public boolean isAllowFlight() {
-        return allowFlight;
-    }
-
     public String sendMsg(String message) {
-        if (message == null) {
-            return null;
-        }
+        if (message == null) return null;
+        Player p = getPlayer();
+        if (p == null) return message;
 
-        Player player = getPlayer();
-
-        if (player == null) {
-            log("&4Error: No player!");
-            return message;
-        }
-
-        try {
-            String translatedMessage = CAPIChatColor.translate(message);
-            player.sendMessage(translatedMessage);
-        } catch (Exception e) {
-            log("&4Error: idk what happened, this should explain everything:" + e.getMessage());
-        }
-
+        p.sendMessage(CAPIChatColor.translate(message));
         return message;
     }
-    public void setAllowFlight(boolean allowFlight) {
-        this.allowFlight = allowFlight;
-        if (isOnline()) {
-            getPlayer().setAllowFlight(allowFlight);
-        }
+
+
+    public Location getLocation() {
+        Player p = getPlayer();
+        return (p != null) ? p.getLocation() : logOutLocation;
     }
 
-    public boolean isFlying() {
-        return flying;
+    public boolean setHome(String name, Location loc) {
+        return CAPI.getInstance().getHomeManager().setHome(uuid, name, loc);
     }
 
-    public void setFlying(boolean flying) {
-        this.flying = flying;
-        if (isOnline()) {
-            getPlayer().setFlying(flying);
-        }
-    }
 
-    public Map<String, Long> getKitCooldowns() {
-        return kitCooldowns;
-    }
-
-    public void setKitCooldown(String kitName, long cooldownEndTime) {
-        kitCooldowns.put(kitName, cooldownEndTime);
-    }
-
-    public long getKitCooldown(String kitName) {
-        return kitCooldowns.getOrDefault(kitName, 0L);
-    }
-
-    public int getVoteCount() {
-        return voteCount;
-    }
-
-    public void incrementVoteCount() {
-        voteCount++;
-    }
-
-    public void setVoteCount(int voteCount) {
-        this.voteCount = voteCount;
-    }
-
-    public List<Long> getVoteTimestamps() {
-        return voteTimestamps;
-    }
-
-    public void addVoteTimestamp(long timestamp) {
-        voteTimestamps.add(timestamp);
-    }
-
-    public String getCustomSkin() {
-        return customSkin;
-    }
-
-    public void setCustomSkin(String customSkin) {
-        this.customSkin = customSkin;
-    }
-
-    public GameMode getGameMode() {
-        return gameMode;
-    }
-
-    public void setGameMode(GameMode gameMode) {
-        this.gameMode = gameMode;
-        if (isOnline()) {
-            getPlayer().setGameMode(gameMode);
-        }
-    }
-
-    public double getHealth() {
-        return health;
+    public void setGameMode(GameMode mode) {
+        this.player = getPlayer();
+        if (player != null) player.setGameMode(mode);
     }
 
     public void setHealth(double health) {
         this.health = health;
-        if (isOnline()) {
-            getPlayer().setHealth(health);
-        }
+        Player p = getPlayer();
+        if (p != null) p.setHealth(health);
     }
 
-    public int getFoodLevel() {
-        return foodLevel;
+    public void setAllowFlight(boolean allow) {
+        this.allowFlight = allow;
+        Player p = getPlayer();
+        if (p != null) p.setAllowFlight(allow);
     }
 
-    public void setFoodLevel(int foodLevel) {
-        this.foodLevel = foodLevel;
-        if (isOnline()) {
-            getPlayer().setFoodLevel(foodLevel);
-        }
-    }
 
-    public float getSaturation() {
-        return saturation;
-    }
+    public void addIgnore(UUID other) { ignores.add(other); }
+    public void removeIgnore(UUID other) { ignores.remove(other); }
+    public boolean isIgnoring(UUID other) { return ignores.contains(other); }
 
-    public void setSaturation(float saturation) {
-        this.saturation = saturation;
-        if (isOnline()) {
-            getPlayer().setSaturation(saturation);
-        }
-    }
+    public void setMetadata(String key, Object val) { metadata.put(key, val); }
+    public Object getMetadata(String key) { return metadata.get(key); }
 
-    public Map<String, Object> getMetadata() {
-        return metadata;
-    }
-
-    public Object getMetadata(String key) {
-        return metadata.get(key);
-    }
-
-    public void setMetadata(String key, Object value) {
-        metadata.put(key, value);
-    }
-
-    public void removeMetadata(String key) {
-        metadata.remove(key);
-    }
-
-    public List<PotionEffect> getActiveEffects() {
-        return activeEffects;
-    }
-
-    public void addPotionEffect(PotionEffect effect) {
-        activeEffects.add(effect);
-        if (isOnline()) {
-            getPlayer().addPotionEffect(effect);
-        }
-    }
-
-    public boolean isInvulnerable() {
-        return invulnerable;
-    }
-
-    public void setInvulnerable(boolean invulnerable) {
-        this.invulnerable = invulnerable;
-    }
-
-    public long getInvulnerabilityEndTime() {
-        return invulnerabilityEndTime;
-    }
-
-    public void setInvulnerabilityEndTime(long invulnerabilityEndTime) {
-        this.invulnerabilityEndTime = invulnerabilityEndTime;
-    }
-
-    public boolean isVanishMode() {
-        return vanishMode;
-    }
-
-    public void setVanishMode(boolean vanishMode) {
-        this.vanishMode = vanishMode;
-    }
-
-    public Location getFirstJoinLocation() {
-        return firstJoinLocation;
-    }
-
-    public void setFirstJoinLocation(Location firstJoinLocation) {
-        this.firstJoinLocation = firstJoinLocation;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-        if (isOnline()) {
-            getPlayer().setLevel(level);
-        }
-    }
-
-    public float getExp() {
-        return exp;
-    }
-
-    public void setExp(float exp) {
-        this.exp = exp;
-        if (isOnline()) {
-            getPlayer().setExp(exp);
-        }
-    }
-
-    public long getFirstJoinTime() {
-        return firstJoinTime;
-    }
-
-    public void setFirstJoinTime(long firstJoinTime) {
-        this.firstJoinTime = firstJoinTime;
-    }
-
-    public long getTotalPlayTime() {
-        return totalPlayTime;
-    }
-
-    public void setTotalPlayTime(long totalPlayTime) {
-        this.totalPlayTime = totalPlayTime;
-    }
-
-    private Player getOnlinePlayer(UUID uuid) {
-        Player online = onlinePlayersCache.get(uuid);
-        if (online == null || !online.isOnline()) {
-            online = Bukkit.getPlayer(uuid);
-            if (online != null) {
-                onlinePlayersCache.put(uuid, online);
-            }
-        }
-        return online;
-    }
+    public UUID getUniqueId() { return uuid; }
+    public Location getDeathLoc() { return deathLoc; }
+    public void setDeathLoc(Location loc) { this.deathLoc = loc; }
+    public long getTotalPlayTime() { return totalPlayTime; }
+    public void setTotalPlayTime(long time) { this.totalPlayTime = time; }
 }

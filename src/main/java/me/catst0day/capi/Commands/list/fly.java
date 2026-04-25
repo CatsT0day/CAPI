@@ -62,7 +62,7 @@ public class fly extends CAPICommandTemplate {
 
         target.setFallDistance(0.0F);
         user.setAllowFlight(state);
-        if (!state) user.setFlying(false);
+        if (!state) user.setAllowFlight(false);
 
         String statusLabel = state ? plugin.getMessage("enabled") : plugin.getMessage("disabled");
 

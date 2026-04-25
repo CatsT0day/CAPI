@@ -26,7 +26,7 @@ public class Gm extends CAPICommandTemplate {
         GameMode gm = parseGameMode(args[0].toLowerCase());
         if (gm != null) {
             player.setGameMode(gm);
-            player.sendMessage(plugin.getGameModeMessage(gm));
+            player.sendMessage(plugin.getGameModeMessage(String.valueOf(gm)));
         } else {
             player.sendMessage(plugin.getMessage("invalidMode"));
         }

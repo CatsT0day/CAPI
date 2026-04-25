@@ -2,34 +2,36 @@ package me.catst0day.capi.Commands.commandAPI;
 
 import me.catst0day.capi.CAPI;
 import me.catst0day.capi.EventListeners.CAPIOnCommandEvent;
-import me.catst0day.capi.Managers.CAPIPermissionManager;
+import me.catst0day.capi.Managers.CAPIPermissionManager.CAPIPerm;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
 import static me.catst0day.capi.Utils.Util.log;
 
 public abstract class CAPICommandTemplate implements CommandExecutor, TabCompleter {
     private static final HashMap<String, CommandExecutor> registeredCommands = new HashMap<>();
+
     protected final CAPI plugin;
     protected final String name;
     protected final List<String> aliases;
-    protected final CAPIPermissionManager.CAPIPerm perm;
+    protected final CAPIPerm perm;
     protected final boolean requirePlayer;
-    protected List<String> tabCompleteArguments = new ArrayList<>();
-    private final Map<String, Long> cooldowns = new HashMap<>();
-    private final long cooldownSeconds;
+    protected final long cooldownSeconds;
     protected final String description;
 
-
+    protected List<String> tabCompleteArguments = new ArrayList<>();
+    private final Map<UUID, Long> cooldowns = new HashMap<>();
 
     protected CAPICommandTemplate(CAPI plugin, String name, List<String> aliases,
-                                  CAPIPermissionManager.CAPIPerm perm, boolean requirePlayer,
+                                  CAPIPerm perm, boolean requirePlayer,
                                   long cooldownSeconds, String description) {
         this.plugin = plugin;
         this.name = name;
@@ -47,23 +49,19 @@ public abstract class CAPICommandTemplate implements CommandExecutor, TabComplet
         }
     }
 
-
-
     public boolean perform(CAPI plugin, CommandSender sender, String[] args) {
         return onCommand(sender, args);
     }
 
     private boolean onCommand(CommandSender sender, String[] args) {
-        if (sender == null) {
-            log("Command executed with null sender - ignoring");
-            return false;
-        }
+        if (sender == null) return false;
 
         CAPIOnCommandEvent event = new CAPIOnCommandEvent(sender, this.name, args);
         plugin.getServer().getPluginManager().callEvent(event);
+
         if (event.isCancelled()) {
             Boolean result = event.getCommandResult();
-            return result != null ? result : false;
+            return result != null && result;
         }
 
         if (!hasPermission(sender, args)) {
@@ -71,121 +69,77 @@ public abstract class CAPICommandTemplate implements CommandExecutor, TabComplet
             return true;
         }
 
-        if (requirePlayer && !(sender instanceof Player)) {
+        Player player = (sender instanceof Player p) ? p : null;
+
+        if (requirePlayer && player == null) {
             sender.sendMessage(plugin.getMessage("playerOnlyCommand"));
             return true;
         }
 
-        Player player = requirePlayer ? (Player) sender : null;
-
-        if (requirePlayer && player != null) {
-            if (!player.hasPermission("catapi.cooldown.bypass")) {
-                if (isOnCooldown(player)) {
-                    return true;
-                }
-                startCooldown(player);
-            }
+        if (player != null && cooldownSeconds > 0 && !player.hasPermission("catapi.cooldown.bypass")) {
+            if (isOnCooldown(player)) return true;
+            cooldowns.put(player.getUniqueId(), System.currentTimeMillis());
         }
 
         try {
-            boolean result = executeWithPlayer(player, args);
-            if (result) {
-                return true;
+            if (player != null) {
+                if (perform(player, args)) return true;
             }
             return perform(sender, player, args);
         } catch (Exception e) {
-            if (sender != null) sender.sendMessage(plugin.getMessage("commandError"));
-            log("&4Error executing command " + name + "&7( &6" + e.getMessage() + "&7)");
-            e.printStackTrace();
-            return false;
-        }
-    }
-    protected List<String> getTabCompleteArguments() {
-        return tabCompleteArguments;
-    }
-
-    protected boolean hasPermission(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) return true;
-        return player.hasPermission(perm.getPermission(args));
-    }
-
-    private boolean executeWithPlayer(Player player, String[] args) {
-        try {
-            return perform(player, args);
-        } catch (AbstractMethodError | UnsupportedOperationException e) {
+            sender.sendMessage(plugin.getMessage("commandError"));
+            log("&4Error executing " + name + ": &c" + e.getMessage());
             return false;
         }
     }
 
     private boolean isOnCooldown(Player player) {
-        Long lastUse = cooldowns.get(player.getName());
-        if (lastUse == null) return false;
-
-        long currentTime = System.currentTimeMillis();
-        long timeLeft = (lastUse + cooldownSeconds * 1000) - currentTime;
+        long lastUse = cooldowns.getOrDefault(player.getUniqueId(), 0L);
+        long timeLeft = (lastUse + (cooldownSeconds * 1000)) - System.currentTimeMillis();
 
         if (timeLeft > 0) {
-            long secondsLeft = (timeLeft + 999) / 1000;
-            player.sendMessage(String.format(plugin.getMessage("cooldownMessage"), secondsLeft));
+            long secondsLeft = (timeLeft / 1000) + 1;
+            String msg = plugin.getMessage("cooldownMessage");
+            if (msg != null) player.sendMessage(msg.replace("%seconds%", String.valueOf(secondsLeft)));
             return true;
         }
         return false;
     }
 
-    private void startCooldown(Player player) {
-        cooldowns.put(player.getName(), System.currentTimeMillis());
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-
-    public String getDescription() {
-        return description;
-    }
-
-    public static HashMap<String, CommandExecutor> getRegisteredCommands() {
-        return registeredCommands;
-    }
-
-
-    public List<String> getAliases() {
-        return aliases != null ? aliases : new ArrayList<>();
-    }
-
-    public void setTabCompleteArguments(List<String> arguments) {
-        this.tabCompleteArguments = arguments;
+    protected boolean hasPermission(CommandSender sender, String[] args) {
+        return sender.hasPermission(perm.getPermission(args));
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        return perform(plugin, sender, args);
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        return onCommand(sender, args);
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        Player player = (sender instanceof Player p) ? p : null;
+        if (requirePlayer && player == null) return Collections.emptyList();
 
-        if (requirePlayer && !(sender instanceof Player)) {
-            return Collections.emptyList();
-        }
-
-        Player player = (Player) sender;
-
-        if (!tabCompleteArguments.isEmpty() && args.length == 1) {
+        if (args.length == 1 && !tabCompleteArguments.isEmpty()) {
             return tabCompleteArguments.stream()
                     .filter(arg -> arg.toLowerCase().startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         }
 
-        List<String> result = tabCompl(player, args);
-        return result != null ? result : Collections.emptyList();
+        return tabCompl(player, args);
     }
 
-    protected abstract boolean perform(CommandSender sender, Player player, String[] args);
-
+    // --- Abstract Methods ---
+    protected abstract boolean perform(CommandSender sender, @Nullable Player player, String[] args);
     protected abstract boolean perform(Player player, String[] args);
+    protected abstract List<String> tabCompl(@Nullable Player player, String[] args);
 
-    protected abstract List<String> tabCompl(Player player, String[] args);
+    // --- Restored All Getters & Setters ---
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public List<String> getAliases() { return aliases != null ? aliases : new ArrayList<>(); }
+    public static HashMap<String, CommandExecutor> getRegisteredCommands() { return registeredCommands; }
+
+    public List<String> getTabCompleteArguments() { return tabCompleteArguments; }
+    public void setTabCompleteArguments(List<String> arguments) { this.tabCompleteArguments = arguments; }
 }

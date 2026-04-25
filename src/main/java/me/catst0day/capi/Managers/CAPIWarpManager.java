@@ -43,7 +43,7 @@ public class CAPIWarpManager {
                 warpCache.put(name.toLowerCase(), loc);
             }
         }
-        log("&aLoaded &6" + warpCache.size() + " &awarps into cache.");
+        log("Loaded &6" + warpCache.size() + " #3B1757warps into cache.");
     }
 
     public boolean saveWarp(String name, Location location) {

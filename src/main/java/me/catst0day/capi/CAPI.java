@@ -1,333 +1,213 @@
 package me.catst0day.capi;
 
-import me.catst0day.capi.Bossbar.CAPIBarStyle;
+import me.catst0day.capi.Bossbar.*;
 import me.catst0day.capi.Chat.CAPIChatColor;
-import me.catst0day.capi.Commands.commandAPI.CAPICommandTemplate;
-import me.catst0day.capi.Managers.CAPIAliasManager;
-import me.catst0day.capi.Managers.CAPIPermissionManager;
+import me.catst0day.capi.Managers.*;
 import me.catst0day.capi.Schedulers.CAPIMainScheduler;
-import me.catst0day.capi.Bossbar.CAPIBossBarInfo;
-import me.catst0day.capi.Managers.CAPIHomeManager;
-import me.catst0day.capi.Managers.CAPIWarpManager;
 import me.catst0day.capi.User.CAPIUser;
 import me.catst0day.capi.Utils.VersionChecker;
-import me.catst0day.capi.Bossbar.CAPIBarColor;
-
+import org.bukkit.*;
 import org.bukkit.boss.BossBar;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.*;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
-import java.util.UUID;
-
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static me.catst0day.capi.CAPIOnEnableInitter.langConfig;
+
 import static me.catst0day.capi.Utils.Util.log;
 
 public class CAPI extends JavaPlugin {
-    private static me.catst0day.capi.CAPI instance;
-    private final HashMap<UUID, Boolean> godMode = new HashMap<>();
-    private final HashMap<UUID, Boolean> flyMode = new HashMap<>();
-    private final HashMap<UUID, UUID> tpaRequests = new HashMap<>();
-    private final HashMap<UUID, BossBar> bossBars = new HashMap<>();
+    private static CAPI instance;
+
+    private final Map<UUID, Boolean> godMode = new ConcurrentHashMap<>();
+    private final Map<UUID, Boolean> flyMode = new ConcurrentHashMap<>();
+    private final Map<UUID, UUID> tpaRequests = new ConcurrentHashMap<>();
+    private final Map<UUID, BossBar> bossBars = new ConcurrentHashMap<>();
 
     public static boolean fullyLoaded = false;
+    public static String prefix;
 
     private CAPIHomeManager homeManager;
     private CAPIWarpManager warpManager;
     private CAPIPermissionManager permManager;
     private CAPIAliasManager aliasManager;
     private VersionChecker versionCheckManager;
-    private CAPICommandTemplate CmdTemplate;
-    public static String prefix;
 
     @Override
     public void onEnable() {
-        CAPIOnEnableInitter initializer = new CAPIOnEnableInitter();
-        initializer.OnEnable(this);
-    }
-
-    public static CAPI getInstance() {
-        if (instance == null) {
-            instance = JavaPlugin.getPlugin(CAPI.class);
-        }
-        return instance;
-    }
-
-    public CAPIHomeManager getHomeManager() {
-        if (this.homeManager == null) {
-            this.homeManager = new CAPIHomeManager(this);
-        }
-        return this.homeManager;
-    }
-
-    public CAPIPermissionManager getPermissionManager() {
-        if (this.permManager == null) {
-            this.permManager = new CAPIPermissionManager(this);
-        }
-        return this.permManager;
-    }
-
-    public CAPIWarpManager getWarpManager() {
-        if (this.warpManager == null) {
-            this.warpManager = new CAPIWarpManager(this);
-        }
-        return this.warpManager;
-    }
-
-    public VersionChecker getVersionCheckManager() {
-        if (versionCheckManager == null) {
-            this.versionCheckManager = new VersionChecker(
-                    CAPI.getInstance(),
-                    "CatsT0day", "CAPI"
-            );
-        }
-        return this.versionCheckManager;
-    }
-
-    public CAPIAliasManager getAliasManager() {
-        if (aliasManager == null) {
-            aliasManager = new CAPIAliasManager(this);
-        }
-        return aliasManager;
-    }
-
-    // API
-    public boolean isGodMode(UUID uuid) {
-        return godMode.getOrDefault(uuid, false);
-    }
-
-    public void toggleGodMode(Player player, String[] args) {
-        Player target = args.length == 1 ? Bukkit.getPlayer(args[0]) : player;
-
-        if (target == null) {
-            if (player != null) player.sendMessage(getMessage("playerNotFound"));
-            return;
-        }
-
-        togglePlayerGodMode(target, player);
-    }
-
-    private void togglePlayerGodMode(Player target, Player sender) {
-        UUID targetUUID = target.getUniqueId();
-        boolean isGodMode = godMode.getOrDefault(targetUUID, false);
-        godMode.put(targetUUID, !isGodMode);
-
-        String status = isGodMode ? getMessage("godDisabled") : getMessage("godEnabled");
-        target.sendMessage(getMessage("godToggled").replace("%status%", status));
-
-        if (!target.equals(sender)) {
-            sender.sendMessage(getMessage("godToggleSuccess")
-                    .replace("%player%", target.getName()));
-        }
-    }
-
-    public boolean isFlyMode(UUID uuid) {
-        return flyMode.getOrDefault(uuid, false);
-    }
-
-    public void setFlyMode(UUID uuid, boolean enabled) {
-        flyMode.put(uuid, enabled);
-    }
-
-    public HashMap<UUID, UUID> getTpaRequests() {
-        return tpaRequests;
-    }
-
-    public String getMessage(String key) {
-        String messagePath = "messages." + key;
-        String defaultValue = "Msg '" + key + "' not loaded";
-
-        if (langConfig == null) {
-            getLogger().severe("Translation not loaded!");
-            return defaultValue;
-        }
-
-        if (langConfig.contains(messagePath)) {
-            String message = langConfig.getString(messagePath, defaultValue);
-            return CAPIChatColor.translate(message);
-        }
-
-        getLogger().warning("No key for translation: " + key);
-        return defaultValue;
-    }
-
-    public String sendCFGmessage(Player plr, String key) {
-        if (plr == null) return "";
-
-        String messagePath = "messages." + key;
-        String defaultValue = "Msg '" + key + "' not loaded";
-
-        if (langConfig == null) {
-            log("Translation not loaded!");
-            return getUser(plr).sendMsg(defaultValue);
-        }
-
-        if (langConfig.contains(messagePath)) {
-            String message = langConfig.getString(messagePath, defaultValue);
-            return getUser(plr).sendMsg(message);
-        }
-
-        log("No key for translation: " + key);
-        return defaultValue;
-    }
-
-    public String sendCFGmessage(CommandSender plr, String key) {
-        if (!(plr instanceof Player player)) return "";
-
-        String messagePath = "messages." + key;
-        String defaultValue = "Msg '" + key + "' not loaded";
-
-        if (langConfig == null) {
-            log("Translation not loaded!");
-            return getUser(player).sendMsg(defaultValue);
-        }
-
-        if (langConfig.contains(messagePath)) {
-            String message = langConfig.getString(messagePath, defaultValue);
-            return getUser(player).sendMsg(message);
-        }
-
-        log("No key for translation: " + key);
-        return defaultValue;
-    }
-
-    public String getGameModeMessage(GameMode mode) {
-        String messagePath = "messages.gameModeMessages." + mode.name();
-        String defaultValue = "Msg '" + mode + "' not loaded";
-
-        if (langConfig == null || !langConfig.contains(messagePath)) {
-            getLogger().warning("No translation: " + mode.name());
-            return defaultValue;
-        }
-
-        String message = langConfig.getString(messagePath, defaultValue);
-        return CAPIChatColor.translate(message);
-    }
-
-    public void teleport(Player player, Location target) {
-        long delayTicks = 0L;
-        int delaySeconds = 0;
-
-        for (String permission : player.getEffectivePermissions().stream()
-                .map(PermissionAttachmentInfo::getPermission)
-                .filter(perm -> perm.startsWith("catapi.teleport.delay."))
-                .toArray(String[]::new)) {
-            String suffix = permission.substring("catapi.teleport.delay.".length());
-            try {
-                delaySeconds = Integer.parseInt(suffix);
-                delayTicks = delaySeconds * 20L;
-                break;
-            } catch (NumberFormatException e) {
-                continue;
-            }
-        }
-
-        if (delayTicks == 0) {
-            delaySeconds = 7;
-            delayTicks = 140L;
-        }
-
-        if (delaySeconds == 0) {
-            if (target != null && target.getWorld() != null) {
-                player.teleport(target);
-                if (player != null) player.sendMessage(getMessage("teleportSuccess"));
-            } else {
-                if (player != null) player.sendMessage(getMessage("invalidLocation"));
-            }
-            return;
-        }
-
-        CAPIBossBarInfo bossBarInfo = new CAPIBossBarInfo(this, player, "teleport_delay");
-        bossBarInfo.setTitleOfBar(getMessage("teleportWithDelay")
-                .replace("%seconds%", String.valueOf(delaySeconds)));
-        bossBarInfo.setColor(CAPIBarColor.BLUE);
-        bossBarInfo.setStyle(CAPIBarStyle.SOLID);
-        bossBarInfo.setSeconds(delaySeconds);
-
-        bossBars.put(player.getUniqueId(), bossBarInfo.getBar());
-
-        final int[] taskIdHolder = new int[1];
-
-        taskIdHolder[0] = CAPIMainScheduler.scheduleSyncRepeatingTask(this, new Runnable() {
-            @Override
-            public void run() {
-                if (player == null || !player.isValid() || !bossBarInfo.stillRunning()) {
-                    Bukkit.getScheduler().cancelTask(taskIdHolder[0]);
-                    bossBarInfo.remove();
-                    bossBars.remove(player.getUniqueId());
-                    return;
-                }
-
-                long leftDuration = bossBarInfo.getLeftDuration();
-                int secondsRemaining = (int) (leftDuration / 1000);
-
-                if (secondsRemaining <= 0) {
-                    if (target != null && target.getWorld() != null &&
-                            target.getWorld().isChunkLoaded(
-                                    target.getBlockX() >> 4,
-                                    target.getBlockZ() >> 4)) {
-                        player.teleport(target);
-                        player.sendMessage(getMessage("teleportSuccess"));
-                    } else {
-                        if (player != null) player.sendMessage(getMessage("chunkNotLoaded"));
-                    }
-
-                    bossBarInfo.remove();
-                    bossBars.remove(player.getUniqueId());
-                    Bukkit.getScheduler().cancelTask(taskIdHolder[0]);
-                } else {
-                    bossBarInfo.setTitleOfBar(
-                            getMessage("teleportWithDelay").replace("%seconds%",
-                                    String.valueOf(secondsRemaining))
-                    );
-                }
-            }
-        }, 0L, 20L);
+        instance = this;
+        new CAPIOnEnableInitter().OnEnable(this);
     }
 
     @Override
     public void onDisable() {
         Bukkit.getScheduler().cancelTasks(this);
-        for (BossBar bar : bossBars.values()) {
-            bar.removeAll();
-        }
+
+        bossBars.values().forEach(BossBar::removeAll);
         bossBars.clear();
     }
 
-    public CAPIUser getUser(CommandSender sender, String playerName) {
-        return getUser(playerName);
+    public static CAPI getInstance() {
+        return instance == null ? JavaPlugin.getPlugin(CAPI.class) : instance;
     }
 
-    public CAPIUser getUser(Player player) {
-        if (player == null) return null;
-        return new CAPIUser(player.getUniqueId());
+    // --- some getters here btw---
+
+    public CAPIHomeManager getHomeManager() {
+        return homeManager == null ? (homeManager = new CAPIHomeManager(this)) : homeManager;
     }
 
-    public CAPIUser getUser(String playerName) {
-        if (playerName == null) {
-            return null;
-        }
-
-        Player onlinePlayer = Bukkit.getPlayer(playerName);
-        if (onlinePlayer != null) {
-            return new CAPIUser(onlinePlayer.getUniqueId());
-        }
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
-        if (offlinePlayer.hasPlayedBefore() || offlinePlayer.isOnline()) {
-            return new CAPIUser(offlinePlayer.getUniqueId());
-        }
-
-        return null;
+    public CAPIPermissionManager getPermissionManager() {
+        return permManager == null ? (permManager = new CAPIPermissionManager(this)) : permManager;
     }
 
-    public CAPIUser getUser(UUID uuid) {
-        if (uuid == null) {
-            return null;
+    public CAPIWarpManager getWarpManager() {
+        return warpManager == null ? (warpManager = new CAPIWarpManager(this)) : warpManager;
+    }
+
+    public CAPIAliasManager getAliasManager() {
+        return aliasManager == null ? (aliasManager = new CAPIAliasManager(this)) : aliasManager;
+    }
+
+    public VersionChecker getVersionCheckManager() {
+        return versionCheckManager == null ? (versionCheckManager = new VersionChecker(this, "CatsT0day", "CAPI")) : versionCheckManager;
+    }
+
+    // --- API Methods ---
+
+    public boolean isGodMode(UUID uuid) { return godMode.getOrDefault(uuid, false); }
+    public boolean isFlyMode(UUID uuid) { return flyMode.getOrDefault(uuid, false); }
+    public void setFlyMode(UUID uuid, boolean enabled) { flyMode.put(uuid, enabled); }
+    public Map<UUID, UUID> getTpaRequests() { return tpaRequests; }
+
+    public void toggleGodMode(Player sender, String[] args) {
+        Player target = (args.length == 1) ? Bukkit.getPlayer(args[0]) : sender;
+
+        if (target == null) {
+            if (sender != null) sender.sendMessage(getMessage("playerNotFound"));
+            return;
         }
-        return new CAPIUser(uuid);
+
+        UUID uuid = target.getUniqueId();
+        boolean newState = !isGodMode(uuid);
+        godMode.put(uuid, newState);
+
+        String status = newState ? getMessage("godEnabled") : getMessage("godDisabled");
+        target.sendMessage(getMessage("godToggled").replace("%status%", status));
+
+        if (sender != null && !target.equals(sender)) {
+            sender.sendMessage(getMessage("godToggleSuccess").replace("%player%", target.getName()));
+        }
+    }
+
+    // --- Msg sys ---
+
+    public String getMessage(String key) {
+        if (langConfig == null) return "§cLang not loaded";
+
+        String path = "messages." + key;
+        String raw = langConfig.getString(path);
+
+        if (raw == null) {
+            getLogger().warning("Missing translation key: " + key);
+            return "Msg '" + key + "' missing";
+        }
+        return CAPIChatColor.translate(raw);
+    }
+    public String getGameModeMessage(String key) {
+        if (langConfig == null) return "§cLang not loaded";
+
+        String path = "messages.gamemodes" + key;
+        String raw = langConfig.getString(path);
+
+        if (raw == null) {
+            getLogger().warning("Missing translation key: " + key);
+            return "Msg '" + key + "' missing";
+        }
+        return CAPIChatColor.translate(raw);
+    }
+
+
+    public String sendCFGmessage(CommandSender sender, String key) {
+        String msg = getMessage(key);
+        if (sender instanceof Player player) {
+            return getUser(player).sendMsg(msg);
+        }
+        sender.sendMessage(msg);
+        return msg;
+    }
+
+    // --- TP here btw ---
+
+    public void teleport(Player player, Location target) {
+        if (target == null || target.getWorld() == null) {
+            player.sendMessage(getMessage("invalidLocation"));
+            return;
+        }
+
+        int delaySeconds = player.getEffectivePermissions().stream()
+                .map(PermissionAttachmentInfo::getPermission)
+                .filter(p -> p.startsWith("catapi.teleport.delay."))
+                .map(p -> p.substring(22))
+                .filter(s -> s.matches("\\d+"))
+                .mapToInt(Integer::parseInt)
+                .findFirst()
+                .orElse(7);
+
+        if (delaySeconds <= 0) {
+            player.teleport(target);
+            player.sendMessage(getMessage("teleportSuccess"));
+            return;
+        }
+
+        startTeleportTask(player, target, delaySeconds);
+    }
+
+    private void startTeleportTask(Player player, Location target, int seconds) {
+        CAPIBossBarInfo barInfo = new CAPIBossBarInfo(this, player, "teleport_delay");
+        barInfo.setColor(CAPIBarColor.BLUE);
+        barInfo.setStyle(CAPIBarStyle.SOLID);
+        barInfo.setSeconds(seconds);
+
+        bossBars.put(player.getUniqueId(), barInfo.getBar());
+
+        CAPIMainScheduler.runTaskTimer(this, task -> {
+            if (!player.isOnline() || !barInfo.stillRunning()) {
+                cleanupTeleport(player, barInfo, task.getTaskId());
+                return;
+            }
+
+            int remaining = (int) (barInfo.getLeftDuration() / 1000);
+            if (remaining <= 0) {
+                player.teleport(target);
+                player.sendMessage(getMessage("teleportSuccess"));
+                cleanupTeleport(player, barInfo, task.getTaskId());
+            } else {
+                barInfo.setTitleOfBar(getMessage("teleportWithDelay").replace("%seconds%", String.valueOf(remaining)));
+            }
+        }, 0L, 20L);
+    }
+
+    private void cleanupTeleport(Player p, CAPIBossBarInfo bar, int taskId) {
+        bar.remove();
+        bossBars.remove(p.getUniqueId());
+        Bukkit.getScheduler().cancelTask(taskId);
+    }
+
+    // --- User Things ---
+
+    public CAPIUser getUser(UUID uuid) { return uuid == null ? null : new CAPIUser(uuid); }
+    public CAPIUser getUser(Player player) { return player == null ? null : new CAPIUser(player.getUniqueId()); }
+
+    public CAPIUser getUser(String name) {
+        Player p = Bukkit.getPlayer(name);
+        if (p != null) return getUser(p);
+
+        OfflinePlayer op = Bukkit.getOfflinePlayer(name);
+        return (op.hasPlayedBefore()) ? new CAPIUser(op.getUniqueId()) : null;
     }
 }

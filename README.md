@@ -1,4 +1,4 @@
-# CAPI - 30 commands, API, customizable massages.
+# CAPI - 40+ commands, API, customizable massages.
 
 ## What is this?
 CAPI is **A+** code minecraft plugin, made by one person, 
@@ -33,7 +33,7 @@ I even added alias editor!
 # Run PackMerger debug tool
 ./gradlew :core:runPackMergerDebug --args="path/to/pack"
 ```
-### how to use API:
+## Add CAPI as a dependency: 
 ### if you're using gradle + kotlin: (gradle.kts)
 add this to the settings.gradle.kts:
 ```kotlin
@@ -89,7 +89,7 @@ Add the dependency
 	    <version>Tag</version>
 	</dependency>
 ```
-Note: Replace Tag in the dependency with the actual version tag (e.g., 1.0.0, main-SNAPSHOT, etc.).
+Note: Replace Tag in the dependency with the actual version tag (e.g., 2.1.2.9, latest, etc.).
 ## some api examples: 
  ### wanna get the player with this api and control them?
  no problem, import: 
@@ -112,7 +112,7 @@ public class Example {
         if (apiUser != null) {
             sender.sendMessage("Omg, I found you, and whoever is reading this, I hope they understand how to use this API: " + apiUser.getName());
         } else {
-            sender.sendMessage("Bro where are you, i cant find you :(((( - java, sorry for my english.");
+            sender.sendMessage("Bro where are you, i cant find you :(((( - java, sorry for my english, if i did smthing wrong.");
         }
     }
 }
@@ -204,9 +204,11 @@ private CAPIGuiButton createButton(Player player, String homeName) {
     return button;
 }
 ```
-<<<<<<< HEAD
+
 *****That's it, read license and contributing files!*****
 Thanks for reading/contributing/downloading
-=======
 Thats it! Thanks for visiting/downloading my plugin 
->>>>>>> origin/master
+> *****That's it, read license and contributing files!*****
+Thanks for reading/contributing/downloading
+
+
