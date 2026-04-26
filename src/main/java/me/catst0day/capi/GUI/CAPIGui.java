@@ -13,7 +13,7 @@ public class CAPIGui {
     private Inventory inventory;
     private final Map<Integer, CAPIGuiButton> buttons = new HashMap<>();
     private final LinkedHashSet<CAPIGuiButton> noSlotButtons = new LinkedHashSet<>();
-    private String title = "CAPI GUI";
+    private String title = "guitestname";
     private int rows = 3;
 
     public CAPIGui(Player player, String title, int rows) {

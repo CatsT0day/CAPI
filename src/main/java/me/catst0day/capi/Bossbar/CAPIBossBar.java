@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Random;
 import me.catst0day.capi.Schedulers.CAPITask;
 
-public class CAPIBossBarInfo {
+public class CAPIBossBar {
     private Player player;
     private Double percentage = null;
     private Double adjustPerc = null;
@@ -38,15 +38,15 @@ public class CAPIBossBarInfo {
     private long nextColorChange = 0L;
     private final Plugin plugin;
 
-    public CAPIBossBarInfo(Plugin plugin, String nameOfBar) {
+    public CAPIBossBar(Plugin plugin, String nameOfBar) {
         this(plugin, null, nameOfBar, null);
     }
 
-    public CAPIBossBarInfo(Plugin plugin, Player player, String nameOfBar) {
+    public CAPIBossBar(Plugin plugin, Player player, String nameOfBar) {
         this(plugin, player, nameOfBar, null);
     }
 
-    public CAPIBossBarInfo(Plugin plugin, Player player, String nameOfBar, BossBar bar) {
+    public CAPIBossBar(Plugin plugin, Player player, String nameOfBar, BossBar bar) {
         this.plugin = plugin;
         this.player = player;
         this.nameOfBar = nameOfBar;
@@ -81,8 +81,8 @@ public class CAPIBossBarInfo {
         }
     }
 
-    public CAPIBossBarInfo clone(Player player) {
-        CAPIBossBarInfo barInfo = new CAPIBossBarInfo(plugin, player, nameOfBar);
+    public CAPIBossBar clone(Player player) {
+        CAPIBossBar barInfo = new CAPIBossBar(plugin, player, nameOfBar);
         barInfo.percentage = percentage;
         barInfo.adjustPerc = adjustPerc;
         barInfo.keepFor = keepFor;

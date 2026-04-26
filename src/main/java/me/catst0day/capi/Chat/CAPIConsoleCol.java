@@ -1,6 +1,6 @@
 package me.catst0day.capi.Chat;
 
-public enum CAPIConsoleColor {
+public enum CAPIConsoleCol {
 
     Primary("p", "{#FFAA00}", "Primary color for general text"),
     Secondary("s", "{#FFFF55}", "Usually used for variables and placeholders"),
@@ -14,9 +14,9 @@ public enum CAPIConsoleColor {
     private String color = "{#ffffff}";
     private String description;
 
-    private CAPIConsoleColor(String id, String color, String description) {
-        this.id = CAPIChatColor.globalColorPrefix + id + "}";
-        this.color = CAPIChatColor.translate(color);
+    private CAPIConsoleCol(String id, String color, String description) {
+        this.id = CAPICol.globalColorPrefix + id + "}";
+        this.color = CAPICol.translate(color);
         this.description = description;
     }
 
@@ -29,7 +29,7 @@ public enum CAPIConsoleColor {
     }
 
     public void setColor(String color) {
-        this.color = CAPIChatColor.translate(color);
+        this.color = CAPICol.translate(color);
     }
 
     public String getDescription() {

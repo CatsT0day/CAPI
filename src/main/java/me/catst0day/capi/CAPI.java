@@ -1,7 +1,7 @@
 package me.catst0day.capi;
 
 import me.catst0day.capi.Bossbar.*;
-import me.catst0day.capi.Chat.CAPIChatColor;
+import me.catst0day.capi.Chat.CAPICol;
 import me.catst0day.capi.Managers.*;
 import me.catst0day.capi.Schedulers.CAPIMainScheduler;
 import me.catst0day.capi.User.CAPIUser;
@@ -17,8 +17,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static me.catst0day.capi.CAPIOnEnableInitter.langConfig;
-
-import static me.catst0day.capi.Utils.Util.log;
 
 public class CAPI extends JavaPlugin {
     private static CAPI instance;
@@ -116,7 +114,7 @@ public class CAPI extends JavaPlugin {
             getLogger().warning("Missing translation key: " + key);
             return "Msg '" + key + "' missing";
         }
-        return CAPIChatColor.translate(raw);
+        return CAPICol.translate(raw);
     }
     public String getGameModeMessage(String key) {
         if (langConfig == null) return "§cLang not loaded";
@@ -128,7 +126,7 @@ public class CAPI extends JavaPlugin {
             getLogger().warning("Missing translation key: " + key);
             return "Msg '" + key + "' missing";
         }
-        return CAPIChatColor.translate(raw);
+        return CAPICol.translate(raw);
     }
 
 
@@ -168,7 +166,7 @@ public class CAPI extends JavaPlugin {
     }
 
     private void startTeleportTask(Player player, Location target, int seconds) {
-        CAPIBossBarInfo barInfo = new CAPIBossBarInfo(this, player, "teleport_delay");
+        CAPIBossBar barInfo = new CAPIBossBar(this, player, "teleport_delay");
         barInfo.setColor(CAPIBarColor.BLUE);
         barInfo.setStyle(CAPIBarStyle.SOLID);
         barInfo.setSeconds(seconds);
@@ -192,7 +190,7 @@ public class CAPI extends JavaPlugin {
         }, 0L, 20L);
     }
 
-    private void cleanupTeleport(Player p, CAPIBossBarInfo bar, int taskId) {
+    private void cleanupTeleport(Player p, CAPIBossBar bar, int taskId) {
         bar.remove();
         bossBars.remove(p.getUniqueId());
         Bukkit.getScheduler().cancelTask(taskId);

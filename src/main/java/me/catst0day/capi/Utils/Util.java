@@ -1,13 +1,13 @@
 package me.catst0day.capi.Utils;
 
 import me.catst0day.capi.CAPI;
-import me.catst0day.capi.Chat.CAPIChatColor;
+import me.catst0day.capi.Chat.CAPICol;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Util {
-    private static final String PREFIX = CAPIChatColor.YELLOW + "[CAPI] ";
+    private static final String PREFIX = CAPICol.YELLOW + "[CAPI] ";
     private static final String PURPLE = "#3B1757";
 
     public static void printStartupBanner(JavaPlugin plugin) {
@@ -34,7 +34,7 @@ public class Util {
         };
 
         for (String line : banner) {
-            console.sendMessage(PREFIX + CAPIChatColor.translate(line));
+            console.sendMessage(PREFIX + CAPICol.translate(line));
         }
     }
 
@@ -43,9 +43,9 @@ public class Util {
         boolean monochrome = CAPI.getInstance().getConfig().getBoolean("monochromeMode", false);
 
         if (monochrome) {
-            console.sendMessage(PREFIX + CAPIChatColor.stripColor(CAPIChatColor.translate(text)));
+            console.sendMessage(PREFIX + CAPICol.stripColor(CAPICol.translate(text)));
         } else {
-            console.sendMessage(PREFIX + CAPIChatColor.translate(PURPLE + text));
+            console.sendMessage(PREFIX + CAPICol.translate(PURPLE + text));
         }
     }
 
@@ -54,6 +54,6 @@ public class Util {
     }
 
     public static String color(String message) {
-        return CAPIChatColor.translate(message);
+        return CAPICol.translate(message);
     }
 }

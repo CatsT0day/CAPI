@@ -6,13 +6,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CAPIChatColor {
+public class CAPICol {
 
-    private static final Map<String, CAPIChatColor> BY_CHAR = new HashMap<>();
-    private static final Map<String, CAPIChatColor> BY_NAME = new HashMap<>();
-    private static final LinkedHashMap<String, CAPIChatColor> CUSTOM_BY_NAME = new LinkedHashMap<>();
-    private static final Map<String, CAPIChatColor> CUSTOM_BY_HEX = new HashMap<>();
-    private static final TreeMap<String, CAPIChatColor> CUSTOM_BY_RGB = new TreeMap<>();
+    private static final Map<String, CAPICol> BY_CHAR = new HashMap<>();
+    private static final Map<String, CAPICol> BY_NAME = new HashMap<>();
+    private static final LinkedHashMap<String, CAPICol> CUSTOM_BY_NAME = new LinkedHashMap<>();
+    private static final Map<String, CAPICol> CUSTOM_BY_HEX = new HashMap<>();
+    private static final TreeMap<String, CAPICol> CUSTOM_BY_RGB = new TreeMap<>();
 
 
     public static final String colorReplacerPlaceholder = "\uFF06";
@@ -43,30 +43,30 @@ public class CAPIChatColor {
     public static final Pattern fullPattern = Pattern.compile("(&[0123456789abcdefklmnorABCDEFKLMNOR])|" + hexColorRegex + "|" + ColorNameRegex + "|" + ColorFontRegex);
     public static final Pattern formatPattern = Pattern.compile("(&[klmnorKLMNOR])");
 
-    public static final CAPIChatColor BLACK = new CAPIChatColor("Black", '0', 0, 0, 0);
-    public static final CAPIChatColor DARK_BLUE = new CAPIChatColor("Dark_Blue", '1', 0, 0, 170);
-    public static final CAPIChatColor DARK_GREEN = new CAPIChatColor("Dark_Green", '2', 0, 170, 0);
-    public static final CAPIChatColor DARK_AQUA = new CAPIChatColor("Dark_Aqua", '3', 0, 170, 170);
-    public static final CAPIChatColor DARK_RED = new CAPIChatColor("Dark_Red", '4', 170, 0, 0);
-    public static final CAPIChatColor DARK_PURPLE = new CAPIChatColor("Dark_Purple", '5', 170, 0, 170);
-    public static final CAPIChatColor GOLD = new CAPIChatColor("Gold", '6', 255, 170, 0);
-    public static final CAPIChatColor GRAY = new CAPIChatColor("Gray", '7', 170, 170, 170);
-    public static final CAPIChatColor DARK_GRAY = new CAPIChatColor("Dark_Gray", '8', 85, 85, 85);
-    public static final CAPIChatColor BLUE = new CAPIChatColor("Blue", '9', 85, 85, 255);
-    public static final CAPIChatColor GREEN = new CAPIChatColor("Green", 'a', 85, 255, 85);
-    public static final CAPIChatColor AQUA = new CAPIChatColor("Aqua", 'b', 85, 255, 255);
-    public static final CAPIChatColor RED = new CAPIChatColor("Red", 'c', 255, 85, 85);
-    public static final CAPIChatColor LIGHT_PURPLE = new CAPIChatColor("Light_Purple", 'd', 255, 85, 255);
-    public static final CAPIChatColor YELLOW = new CAPIChatColor("Yellow", 'e', 255, 255, 85);
-    public static final CAPIChatColor WHITE = new CAPIChatColor("White", 'f', 255, 255, 255);
+    public static final CAPICol BLACK = new CAPICol("Black", '0', 0, 0, 0);
+    public static final CAPICol DARK_BLUE = new CAPICol("Dark_Blue", '1', 0, 0, 170);
+    public static final CAPICol DARK_GREEN = new CAPICol("Dark_Green", '2', 0, 170, 0);
+    public static final CAPICol DARK_AQUA = new CAPICol("Dark_Aqua", '3', 0, 170, 170);
+    public static final CAPICol DARK_RED = new CAPICol("Dark_Red", '4', 170, 0, 0);
+    public static final CAPICol DARK_PURPLE = new CAPICol("Dark_Purple", '5', 170, 0, 170);
+    public static final CAPICol GOLD = new CAPICol("Gold", '6', 255, 170, 0);
+    public static final CAPICol GRAY = new CAPICol("Gray", '7', 170, 170, 170);
+    public static final CAPICol DARK_GRAY = new CAPICol("Dark_Gray", '8', 85, 85, 85);
+    public static final CAPICol BLUE = new CAPICol("Blue", '9', 85, 85, 255);
+    public static final CAPICol GREEN = new CAPICol("Green", 'a', 85, 255, 85);
+    public static final CAPICol AQUA = new CAPICol("Aqua", 'b', 85, 255, 255);
+    public static final CAPICol RED = new CAPICol("Red", 'c', 255, 85, 85);
+    public static final CAPICol LIGHT_PURPLE = new CAPICol("Light_Purple", 'd', 255, 85, 255);
+    public static final CAPICol YELLOW = new CAPICol("Yellow", 'e', 255, 255, 85);
+    public static final CAPICol WHITE = new CAPICol("White", 'f', 255, 255, 255);
 
-    public static final CAPIChatColor OBFUSCATED = new CAPIChatColor("Obfuscated", 'k', false);
-    public static final CAPIChatColor BOLD = new CAPIChatColor("Bold", 'l', false);
-    public static final CAPIChatColor STRIKETHROUGH = new CAPIChatColor("Strikethrough", 'm', false);
-    public static final CAPIChatColor UNDERLINE = new CAPIChatColor("Underline", 'n', false);
-    public static final CAPIChatColor ITALIC = new CAPIChatColor("Italic", 'o', false);
-    public static final CAPIChatColor RESET = new CAPIChatColor("Reset", 'r', false, true);
-    public static final CAPIChatColor HEX = new CAPIChatColor("Hex", 'x', false, false);
+    public static final CAPICol OBFUSCATED = new CAPICol("Obfuscated", 'k', false);
+    public static final CAPICol BOLD = new CAPICol("Bold", 'l', false);
+    public static final CAPICol STRIKETHROUGH = new CAPICol("Strikethrough", 'm', false);
+    public static final CAPICol UNDERLINE = new CAPICol("Underline", 'n', false);
+    public static final CAPICol ITALIC = new CAPICol("Italic", 'o', false);
+    public static final CAPICol RESET = new CAPICol("Reset", 'r', false, true);
+    public static final CAPICol HEX = new CAPICol("Hex", 'x', false, false);
 
     private char c = 10;
     private boolean color = true;
@@ -83,15 +83,15 @@ public class CAPIChatColor {
     public String toString() {
         return "§" + c;
     }
-    public CAPIChatColor(String name, char c, int red, int green, int blue) {
+    public CAPICol(String name, char c, int red, int green, int blue) {
         this(name, c, true, false, red, green, blue);
     }
 
-    public CAPIChatColor(String hex, char m, boolean b) {
+    public CAPICol(String hex, char m, boolean b) {
         this(null, hex);
     }
 
-    public CAPIChatColor(String name, String hex) {
+    public CAPICol(String name, String hex) {
         if (hex == null) return;
 
         if (hex.startsWith(colorCodePrefix)) {
@@ -134,7 +134,7 @@ public class CAPIChatColor {
         }
     }
 
-    private CAPIChatColor(String name, char c, boolean color, boolean isReset, int red, int green, int blue) {
+    private CAPICol(String name, char c, boolean color, boolean isReset, int red, int green, int blue) {
         this.name = name;
         this.c = c;
         this.color = color;
@@ -144,7 +144,7 @@ public class CAPIChatColor {
         this.blueChannel = blue;
     }
 
-    private CAPIChatColor(String name, char c, boolean format, boolean isReset) {
+    private CAPICol(String name, char c, boolean format, boolean isReset) {
         this.name = name;
         this.c = c;
         this.color = format;
@@ -181,7 +181,7 @@ public class CAPIChatColor {
     public static String stripColor(String text) {
         if (text == null)
             return null;
-        text = CAPIChatColor.translate(text);
+        text = CAPICol.translate(text);
         return ChatColor.stripColor(text);
     }
 

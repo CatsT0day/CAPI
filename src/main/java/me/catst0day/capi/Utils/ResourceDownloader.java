@@ -10,7 +10,7 @@ import static me.catst0day.capi.Utils.Util.log;
 
 public class ResourceDownloader {
     private final Plugin plugin;
-    private static final Set<String> VALID_TYPES = Set.of("yml", "txt", "jar");
+    private static final Set<String> valid = Set.of("yml", "txt", "jar");
 
     public ResourceDownloader(Plugin plugin) {
         this.plugin = plugin;
@@ -19,7 +19,7 @@ public class ResourceDownloader {
     public void downloadFromResources(String resourcePath, String targetPath, boolean inform) {
         String extension = getFileExtension(resourcePath);
 
-        if (!VALID_TYPES.contains(extension)) {
+        if (!valid.contains(extension)) {
             if (inform) log("Unsupported file extension: " + extension);
             return;
         }
@@ -27,8 +27,6 @@ public class ResourceDownloader {
         CAPIMainScheduler.runTask(plugin, () -> {
             try {
                 File targetFile = new File(plugin.getDataFolder(), resourcePath);
-
-                // saveResource handles directory creation automatically
                 plugin.saveResource(resourcePath, false);
 
                 if (targetFile.exists()) {

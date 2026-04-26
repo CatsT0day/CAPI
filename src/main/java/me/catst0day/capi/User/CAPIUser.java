@@ -1,7 +1,7 @@
 package me.catst0day.capi.User;
 
 import me.catst0day.capi.CAPI;
-import me.catst0day.capi.Chat.CAPIChatColor;
+import me.catst0day.capi.Chat.CAPICol;
 import me.catst0day.capi.Entity.CAPIEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -10,8 +10,6 @@ import org.bukkit.GameMode;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static me.catst0day.capi.Utils.Util.log;
 
 public class CAPIUser {
     private final UUID uuid;
@@ -102,7 +100,7 @@ public class CAPIUser {
         Player p = getPlayer();
         if (p == null) return message;
 
-        p.sendMessage(CAPIChatColor.translate(message));
+        p.sendMessage(CAPICol.translate(message));
         return message;
     }
 

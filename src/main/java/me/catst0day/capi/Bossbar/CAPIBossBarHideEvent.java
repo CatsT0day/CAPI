@@ -9,9 +9,9 @@ import me.catst0day.capi.Annotations.Events.EventAnnotation;
 public final class CAPIBossBarHideEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancel;
-    private CAPIBossBarInfo bossBar = null;
+    private CAPIBossBar bossBar = null;
 
-    public CAPIBossBarHideEvent(CAPIBossBarInfo bossBar) {
+    public CAPIBossBarHideEvent(CAPIBossBar bossBar) {
         this.bossBar = bossBar;
     }
 
@@ -34,11 +34,11 @@ public final class CAPIBossBarHideEvent extends Event implements Cancellable {
         return cancel;
     }
 
-    public CAPIBossBarInfo getBossBar() {
+    public CAPIBossBar getBossBar() {
         return bossBar;
     }
 
-    public void setBossBar(CAPIBossBarInfo bossBar) {
+    public void setBossBar(CAPIBossBar bossBar) {
         this.bossBar = bossBar;
     }
 }

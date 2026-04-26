@@ -2,7 +2,7 @@ package me.catst0day.capi.Entity.Listeners;
 
 import me.catst0day.capi.Bossbar.CAPIBarStyle;
 import me.catst0day.capi.Schedulers.CAPIMainScheduler;
-import me.catst0day.capi.Bossbar.CAPIBossBarInfo;
+import me.catst0day.capi.Bossbar.CAPIBossBar;
 import org.bukkit.ChatColor;
 import me.catst0day.capi.Bossbar.CAPIBarColor;
 import org.bukkit.attribute.Attribute;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 public class CAPIOnEntityHitEventListener implements Listener {
     private final Plugin plugin;
-    private final HashMap<UUID, CAPIBossBarInfo> activeBars = new HashMap<>();
+    private final HashMap<UUID, CAPIBossBar> activeBars = new HashMap<>();
 
     public CAPIOnEntityHitEventListener(Plugin plugin) {
         this.plugin = plugin;
@@ -45,13 +45,13 @@ public class CAPIOnEntityHitEventListener implements Listener {
         String barName = "entity_health_" + entityId;
 
 
-        CAPIBossBarInfo oldBar = activeBars.get(entityId);
+        CAPIBossBar oldBar = activeBars.get(entityId);
         if (oldBar != null) {
             oldBar.remove();
         }
 
 
-        CAPIBossBarInfo barInfo = new CAPIBossBarInfo(plugin, player, barName);
+        CAPIBossBar barInfo = new CAPIBossBar(plugin, player, barName);
         barInfo.setPercentage(maxHealth, currentHealth);
         barInfo.setTitleOfBar(ChatColor.RED + entity.getType().name() + " " +
                 ChatColor.WHITE + "(" + (int) currentHealth + "/" + (int) maxHealth + " HP)");

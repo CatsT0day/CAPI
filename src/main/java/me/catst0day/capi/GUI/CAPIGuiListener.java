@@ -15,21 +15,11 @@ public class CAPIGuiListener implements Listener {
 
         Player player = (Player) event.getWhoClicked();
         CAPIGui gui = CAPIGuiManager.getInstance().getGui(player);
-
-        // Проверяем, что это наш GUI — сравниваем сам инвентарь
         if (gui == null || event.getInventory() != gui.getInventory()) return;
-
-        // ПОЛНАЯ блокировка: отменяем все действия
         event.setCancelled(true);
-
-        // Гарантированно блокируем перемещение предметов
         event.setCurrentItem(null);
         event.setCursor(null);
-
-        // Блокируем все виды Shift‑кликов
         if (event.isShiftClick()) return;
-
-        // Проверяем валидность слота
         int slot = event.getSlot();
         if (slot < 0 || slot >= gui.getInventory().getSize()) return;
 
@@ -38,7 +28,7 @@ public class CAPIGuiListener implements Listener {
         if (button != null) {
             boolean isRightClick = event.isRightClick();
             button.executeClick(player, isRightClick);
-            gui.update(); // Обновляем GUI после клика
+            gui.update();
         }
     }
 
@@ -50,7 +40,6 @@ public class CAPIGuiListener implements Listener {
         CAPIGui gui = CAPIGuiManager.getInstance().getGui(player);
 
         if (gui != null && event.getInventory() == gui.getInventory()) {
-            // ПОЛНАЯ блокировка перетаскивания
             event.setCancelled(true);
         }
     }

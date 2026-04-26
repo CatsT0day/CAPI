@@ -1,5 +1,6 @@
 package me.catst0day.capi.GUI;
 
+import me.catst0day.capi.CAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -75,7 +76,7 @@ public class CAPIGuiButton {
             }
             if (closeOnClick) player.closeInventory();
         } catch (Exception e) {
-            player.sendMessage("§cОшибка при выполнении команды!");
+            player.sendMessage(CAPI.getInstance().getMessage(""));
             e.printStackTrace();
         }
     }

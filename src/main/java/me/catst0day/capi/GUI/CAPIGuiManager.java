@@ -11,16 +11,8 @@ public class CAPIGuiManager {
     private static final CAPIGuiManager instance = new CAPIGuiManager();
     private final Map<Player, CAPIGui> openGuis = new HashMap<>();
 
-    /**
-     * Приватный конструктор для реализации паттерна Singleton.
-     */
     private CAPIGuiManager() {}
 
-    /**
-     * Получает единственный экземпляр менеджера.
-     *
-     * @return экземпляр CAPIGuiManager
-     */
     public static CAPIGuiManager getInstance() {
         return instance;
     }

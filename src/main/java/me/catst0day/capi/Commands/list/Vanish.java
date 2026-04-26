@@ -2,7 +2,7 @@ package me.catst0day.capi.Commands.list;
 
 import me.catst0day.capi.Bossbar.CAPIBarStyle;
 import me.catst0day.capi.CAPI;
-import me.catst0day.capi.Bossbar.CAPIBossBarInfo;
+import me.catst0day.capi.Bossbar.CAPIBossBar;
 import me.catst0day.capi.Commands.commandAPI.CAPICommandTemplate;
 import me.catst0day.capi.Managers.CAPIPermissionManager.CAPIPerm;
 import me.catst0day.capi.Bossbar.CAPIBarColor;
@@ -15,7 +15,7 @@ import java.util.*;
 public class Vanish extends CAPICommandTemplate {
 
     private final HashSet<UUID> vanishedPlayers = new HashSet<>();
-    private final HashMap<UUID, CAPIBossBarInfo> bossBars = new HashMap<>();
+    private final HashMap<UUID, CAPIBossBar> bossBars = new HashMap<>();
 
     public Vanish(CAPI plugin) {
         super(plugin, "vanish", List.of("v"), CAPIPerm.VANISH, false, 0, "Toggle invisibility");
@@ -67,7 +67,7 @@ public class Vanish extends CAPICommandTemplate {
         if (vanishedPlayers.add(player.getUniqueId())) {
             Bukkit.getOnlinePlayers().forEach(p -> p.hidePlayer(plugin, player));
 
-            CAPIBossBarInfo bar = new CAPIBossBarInfo(plugin, player, "vanish_" + player.getUniqueId());
+            CAPIBossBar bar = new CAPIBossBar(plugin, player, "vanish_" + player.getUniqueId());
             bar.setTitleOfBar("&cVanish Active");
             bar.setColor(CAPIBarColor.WHITE);
             bar.setStyle(CAPIBarStyle.SEGMENTED_20);
