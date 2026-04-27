@@ -1,11 +1,11 @@
 plugins {
     java
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("maven-publish")
+    `maven-publish`
 }
 
 group = "me.CatsT0day"
-version = "1.0.0.2"
+version = "1.0.0.3"
 
 sourceSets {
     main {
