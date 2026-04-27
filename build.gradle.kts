@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "me.CatsT0day"
-version = "1.0.0.3"
+version = "1.0.0.4"
 
 sourceSets {
     main {
@@ -34,7 +34,6 @@ repositories {
     }
 }
 
-
 java {
     sourceCompatibility = JavaVersion.VERSION_16
     targetCompatibility = JavaVersion.VERSION_16
@@ -48,7 +47,6 @@ dependencies {
     }
     compileOnly("net.luckperms:api:5.4") {
         isTransitive = false
-
     }
 }
 
@@ -73,10 +71,9 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.shadowJar {
-    archiveBaseName = "EclipseApi" +
-            ""
-    archiveClassifier = ""
-    archiveVersion = project.version.toString()
+    archiveBaseName.set("EclipseApi")
+    archiveClassifier.set("")
+    archiveVersion.set(project.version.toString())
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {
@@ -92,4 +89,16 @@ tasks.shadowJar {
     exclude("META-INF/*.SF")
     exclude("META-INF/*.DSA")
     exclude("META-INF/*.RSA")
+}
+
+configure<PublishingExtension> {
+    publications {
+        register<MavenPublication>("maven") {
+            groupId = "com.github.CatsT0day"
+            artifactId = "EclipseAPI"
+            version = project.version.toString()
+
+            artifact(tasks.shadowJar)
+        }
+    }
 }
