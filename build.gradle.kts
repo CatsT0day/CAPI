@@ -48,4 +48,7 @@ configure<PublishingExtension> {
             artifact(tasks.shadowJar)
         }
     }
+    tasks.withType<PublishToMavenLocal> {
+        dependsOn(tasks.shadowJar)
+    }
 }
