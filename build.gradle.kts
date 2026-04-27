@@ -1,6 +1,7 @@
 plugins {
     java
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
     `maven-publish`
 }
 
