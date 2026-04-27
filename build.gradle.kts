@@ -1,96 +1,41 @@
 plugins {
     java
-    id("com.github.johnrengelman.shadow") version "8.1.1"
     `maven-publish`
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-group = "me.CatsT0day"
-version = "1.0.0.5"
-
-sourceSets {
-    main {
-        java {
-            setSrcDirs(listOf("src/main/java"))
-        }
-        resources {
-            setSrcDirs(listOf("src/main/resources"))
-        }
-    }
-}
-
-repositories {
-    mavenCentral()
-    maven {
-        url = uri("https://repo.papermc.io/repository/maven-public/")
-    }
-    maven {
-        url = uri("https://oss.sonatype.org/content/groups/public/")
-    }
-    maven {
-        url = uri("https://ci.ender.zone/plugin/repository/snapshots/")
-    }
-    maven {
-        url = uri("https://repo.lucko.me/")
-    }
-}
-
+group = "com.github.CatsT0day"
+version = "1.0.0.6"
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(16))
-    }
-}
-
-dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
-    implementation("org.reflections:reflections:0.10.2")
-    compileOnly("net.luckperms:api:4.4") {
-        isTransitive = false
-    }
-    compileOnly("net.luckperms:api:5.4") {
-        isTransitive = false
-    }
-}
-
-tasks.processResources {
-    filteringCharset = "UTF-8"
-    filesMatching("**/*.yml") {
-        expand(
-            "version" to project.version,
-            "name" to project.name
-        )
-    }
-    filesMatching("**/*.properties") {
-        expand(
-            "version" to project.version,
-            "name" to project.name
-        )
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
+    options.release.set(16)
+}
+
+repositories {
+    mavenCentral()
+    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://jitpack.io")
+    maven("https://lucko.me")
+}
+
+dependencies {
+    compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
+    implementation("org.reflections:reflections:0.10.2")
+    compileOnly("net.luckperms:api:5.4")
 }
 
 tasks.shadowJar {
-    archiveBaseName.set("EclipseApi")
+    archiveBaseName.set("EclipseAPI")
     archiveClassifier.set("")
     archiveVersion.set(project.version.toString())
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    manifest {
-        attributes(
-            mapOf(
-                "Main-Class" to "me.CatsT0day.Eclipse.Eclipse",
-                "Implementation-Title" to project.name,
-                "Implementation-Version" to project.version
-            )
-        )
-    }
-
-    exclude("META-INF/*.SF")
-    exclude("META-INF/*.DSA")
-    exclude("META-INF/*.RSA")
 }
 
 configure<PublishingExtension> {
