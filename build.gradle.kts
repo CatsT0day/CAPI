@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "me.CatsT0day"
-version = "2.1.2.9"
+version = "1.0.0.0"
 
 sourceSets {
     main {
@@ -71,7 +71,8 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.shadowJar {
-    archiveBaseName = "CAPI"
+    archiveBaseName = "EclipseApi" +
+            ""
     archiveClassifier = ""
     archiveVersion = project.version.toString()
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -79,7 +80,7 @@ tasks.shadowJar {
     manifest {
         attributes(
             mapOf(
-                "Main-Class" to "me.CatsT0day.capi.CAPI",
+                "Main-Class" to "me.CatsT0day.Eclipse.Eclipse",
                 "Implementation-Title" to project.name,
                 "Implementation-Version" to project.version
             )

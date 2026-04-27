@@ -1,4 +1,4 @@
-# CAPI - 40+ commands, API, customizable massages.
+# Eclipse - 40+ commands, API, customizable massages.
 
 ## What is this?
 CAPI is **A+** code minecraft plugin, made by one person, 
@@ -94,14 +94,14 @@ Note: Replace Tag in the dependency with the actual version tag (e.g., 2.1.2.9, 
  ### wanna get the player with this api and control them?
  no problem, import: 
   ```java
-   import me.catst0day.capi.User.CAPIUser;
+   import me.catst0day.Eclipse.User.CAPIUser;
 ```
 here's some exaples to get the user, and use it: 
 #### with UUID: 
 ```java
 package put.yourpackage.here;
 
-import me.catst0day.capi.User.CAPIUser;
+import me.catst0day.Eclipse.User.CAPIUser;
 import org.bukkit.command.CommandSender;
 import java.util.UUID;
 
@@ -119,7 +119,7 @@ public class Example {
 ```
 #### Setting home with nickname of the plr: 
 ``` java
-package me.catst0day.capi;
+package reader.put.yourpackage.here;
 
 import me.catst0day.capi.User.CAPIUser;
 import org.bukkit.Location;
@@ -145,11 +145,12 @@ public class Example {
 ```
 #### you also can create the menus like in AbstractMenus (without animations :( )
 import:
+
 ```java
-import me.catst0day.capi.GUI.CAPIGui;
-import me.catst0day.capi.GUI.CAPIGuiButton;
-import me.catst0day.capi.GUI.CAPIGuiManager;
-import me.catst0day.capi.GUI.CAPIGuiListener;
+import me.catst0day.Eclipse.Entity.Player.Gui;
+import me.catst0day.Eclipse.Entity.Player.GuiButton;
+import me.catst0day.Eclipse.Entity.Player.GuiManager;
+import me.catst0day.Eclipse.Entity.Player.GuiListener;
 ```
 for example, you can use it to create homes with GUI, as CMI did: 
 ```java
@@ -204,10 +205,6 @@ private CAPIGuiButton createButton(Player player, String homeName) {
     return button;
 }
 ```
-
-*****That's it, read license and contributing files!*****
-Thanks for reading/contributing/downloading
-Thats it! Thanks for visiting/downloading my plugin 
 > *****That's it, read license and contributing files!*****
 Thanks for reading/contributing/downloading
 
